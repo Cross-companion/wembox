@@ -6,10 +6,15 @@ const morgan = require('morgan');
 
 //Importing Custom modules
 const usersRouter = require('./routers/userRoutes');
+const globalErrorHandler = require('./controllers/globalErrorHandler');
+
 const app = express();
 
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Body parser, reading data from body to req.body
+app.use(express.json()); // Limits to datacan be added
 
 // Use morgan on dev only
 if (process.env.NODE_ENV === 'development') {
@@ -23,7 +28,7 @@ app.use((req, res, next) => {
 });
 
 // MOUNTING ROUTERS
-app.use('api/v1/user', usersRouter);
+app.use('/api/v1/users', usersRouter);
 
 app.all('*', (req, res, next) => {
   const errMessage = `Can't find ${req.originalUrl} on this server`;
@@ -34,5 +39,7 @@ app.all('*', (req, res, next) => {
     message: errMessage,
   });
 });
+
+app.use(globalErrorHandler);
 
 module.exports = app;

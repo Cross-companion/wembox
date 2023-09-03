@@ -1,0 +1,218 @@
+const jwt = require('jsonwebtoken');
+const request = require('request');
+const crypto = require('crypto');
+
+const User = require('../models/userModel');
+const catchAsync = require('../utilities/catchAsync');
+const AppError = require('../utilities/AppError');
+const sendEmail = require('../utilities/email');
+
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+
+const createSendToken = (res, user, statusCode) => {
+  const token = signToken(user._id);
+
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 1000 * 60 * 60 * 24
+    ),
+    secure: true,
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV === 'development') cookieOptions.secure = false;
+
+  res.cookie('jwt', token, cookieOptions);
+
+  user.password = undefined;
+
+  res.status(statusCode).json({
+    status: 'success',
+    user,
+    token,
+  });
+};
+
+exports.dataExists = catchAsync(async (req, res, next) => {
+  let emailExists, usernameExists;
+  const { email, username } = req.body;
+
+  if (email && !username) {
+    emailExists = (await User.findOne({ email })) ? true : false;
+
+    res.status(200).json({
+      status: 'success',
+      emailExists,
+    });
+  } else if (username && !email) {
+    usernameExists = (await User.findOne({ username })) ? true : false;
+
+    res.status(200).json({
+      status: 'success',
+      usernameExists,
+    });
+  } else if (username && email)
+    return next(
+      new AppError('This route verifies only one email or username', 400)
+    );
+  else
+    return next(
+      new AppError(`Please provide a username or an email to be verified`, 400)
+    );
+});
+
+exports.captcha = catchAsync(async (req, res, next) => {
+  const captchaResponse = req.body.captcha;
+  const verifyURL = `${process.env.RECATPCHA_VERIFY_URL}?secret=${process.env.RECATPCHA_SECRET_KEY}&response=${captchaResponse}&remoteip=${req.connection.remoteAddress}`;
+
+  request(verifyURL, (err, response, body) => {
+    body = JSON.parse(body);
+    if (body.success === true) {
+      res
+        .status(200)
+        .json({ status: 'success', message: 'Verification passed' });
+    } else return next(new AppError('Your verification failed'));
+  });
+});
+
+exports.signup = catchAsync(async (req, res, next) => {
+  const newUser = await User.create({
+    name: req.body.name,
+    frontEndUsername: req.body.username,
+    username: req.body.username,
+    email: req.body.email,
+    accountType: req.body.accountType,
+    dateOfBirth: req.body.dateOfBirth,
+    password: req.body.password,
+    passwordConfirm: req.body.passwordConfirm,
+    passwordChangedAt: req.body.passwordChangedAt,
+    following: req.body.following,
+  });
+
+  // const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
+
+  // await sendEmail({
+  //   email: req.body.email,
+  //   subject: 'Welcome to WEMBOX!!',
+  //   message,
+  // });
+
+  createSendToken(res, newUser, 200);
+});
+
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, username, password } = req.body;
+
+  if (!password || (!username && !email))
+    return next(new AppError('Please input your username or password.', 404));
+
+  const user = email
+    ? await User.findOne({ email }).select('password')
+    : await User.findOne({ username }).select('password');
+
+  if (!user || !(await user?.isCorrectPassword(password, user?.password)))
+    return next(
+      new AppError('Incorrect password. Please input your correct password')
+    );
+
+  createSendToken(res, user, 200);
+});
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  const { email, username } = req.body;
+
+  if (!email && !username)
+    return next(new AppError('Please specify a username or email'));
+
+  const user = email
+    ? await User.findOne({ email })
+    : await User.findOne({ username });
+
+  if (!user) {
+    return next(
+      new AppError(
+        `This ${email ? 'email' : 'username'} does not exist on our database`
+      )
+    );
+  }
+
+  const resetToken = user.createPasswordResetToken();
+
+  try {
+    const resetUrl = `${req.protocol}//${req.get(
+      'host'
+    )}/api/v1/users/reset-password/${resetToken}`;
+
+    const message = `Reset your password at ${resetUrl}`;
+
+    await sendEmail({
+      email: user.email,
+      subject: 'Reset Your wembox password (Expires in 10 minutes).',
+      message,
+    });
+
+    await user.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'The email has been sent',
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpire = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(
+      new AppError(
+        'There was an error sending the email. Please try again',
+        500
+      )
+    );
+  }
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  const { password, passwordConfirm } = req.body;
+
+  if (!password || !passwordConfirm)
+    return next(
+      new AppError('Please provide a new password and Password confirmation')
+    );
+
+  if (password !== passwordConfirm)
+    return next(
+      new AppError('Your new password is different from your password confirm')
+    );
+
+  const token = req.params.token;
+  const hashedPassword = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashedPassword,
+    passwordResetTokenExpire: { $gt: Date.now() },
+  });
+
+  if (!user) return next(new AppError('Token is invalid or has expired', 400));
+
+  user.password = password;
+  user.passwordConfirm = passwordConfirm;
+
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpire = undefined;
+
+  user.passwordChangedAt = Date.now();
+
+  await user.save();
+
+  createSendToken(res, user, 201);
+});
+
+// setTimeout(async () => {
+//   const deleted = await User.deleteMany();
+// console.log('deleted', deleted);
+// }, 10000);

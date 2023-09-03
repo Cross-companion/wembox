@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -9,20 +11,29 @@ const userSchema = new mongoose.Schema({
     maxlength: [40, `A user's name must have 1 or more characters`],
     minlength: [1, `A user's name must have 1 or more characters`],
   },
-  username: {
+  frontEndUsername: {
     type: String,
-    required: [true, 'Please, a username is required to proceed e.g @example'],
     maxlength: [15, `You username cannot be longer than 15 characters`],
     minlength: [1, 'You must have at least 1 valid character on your username'],
   },
-  authUsername: {
+  username: {
     type: String,
-    required: [true, 'Please, a username is required to proceed e.g @example'],
-    unique: true,
-    lowercase: true,
-    maxlength: [15, 'You username cannot be longer than 15 characters'],
+    maxlength: [15, `Your auth-username cannot be longer than 15 characters`],
     minlength: [1, 'You must have at least 1 valid character on your username'],
-    select: false,
+    required: [true, 'Please, a username is required to proceed e.g @example'],
+    unique: [
+      true,
+      'Username has been taken by another user. Please choose another username.',
+    ],
+    lowercase: true,
+    validate: {
+      validator: function (value) {
+        // Allows only alphanumeric characters and underscores
+        return /^[A-Za-z_][A-Za-z0-9_]*$/.test(value);
+      },
+      message:
+        'Invalid username format. Usernames can only contain letters, numbers, and underscores and must start with a letter or underscore.',
+    },
   },
   email: {
     type: String,
@@ -38,7 +49,6 @@ const userSchema = new mongoose.Schema({
       5,
       `A user's email address must be greater than or equal to 5 characters`,
     ],
-    select: false,
   },
   isHuman: {
     type: Boolean,
@@ -53,7 +63,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'default-user-bkg.jpg',
   },
-  acctType: {
+  accountType: {
     type: String,
     enum: {
       values: [
@@ -68,13 +78,29 @@ const userSchema = new mongoose.Schema({
     },
     default: 'user',
   },
+  // new Date(`${new Date().getFullYear() - 7}`).toISOString().split('T')[0],
+  dateOfBirth: {
+    type: Date,
+    min: [
+      new Date('1900-01-01'),
+      'Invalid date: Sorry, the date you specified is above our age limit',
+    ],
+    max: [
+      new Date(`${new Date().getFullYear() - process.env.AGE_MINIMUM}-01-01`),
+      'Invalid date: Sorry, the date you specified is below our age limit',
+    ],
+    required: [
+      true,
+      'Please tell us your date of birth so we can personalize you experience.',
+    ],
+  },
   password: {
     type: String,
     required: [true, `Please provide a password`],
     validate: {
       validator: function (value) {
         // Custom password validator function
-        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+        return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/.test(
           value
         );
       },
@@ -97,6 +123,34 @@ const userSchema = new mongoose.Schema({
       'Your confirming password must not be less than 8 characters',
     ],
   },
+  contacts: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+  ],
+  following: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+  ],
+  followers: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+  ],
+  wems: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Wem',
+    },
+  ],
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetTokenExpire: Date,
@@ -106,6 +160,37 @@ const userSchema = new mongoose.Schema({
     select: false,
   },
 });
+
+// Chats would be virtually Populated
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+
+  this.password = await bcrypt.hash(this.password, 12);
+
+  this.passwordConfirm = undefined;
+
+  next();
+});
+
+userSchema.methods.isCorrectPassword = async (
+  candidatePassword,
+  encryptedPassword
+) => {
+  return bcrypt.compare(candidatePassword, encryptedPassword);
+};
+
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+  this.passwordResetTokenExpire = Date.now() + 1000 * 60 * 10;
+
+  return resetToken;
+};
 
 const User = mongoose.model('User', userSchema);
 

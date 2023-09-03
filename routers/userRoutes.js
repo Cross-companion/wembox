@@ -1,23 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
+const authController = require('../controllers/authController');
 const usersController = require('../controllers/usersController');
 
+router.route('/data-exists').get(authController.dataExists);
+router.route('/captcha').post(authController.captcha);
+router.route('/signup').post(authController.signup);
+router.route('/login').post(authController.login);
+router.route('/forgot-password').post(authController.forgotPassword);
+router.route('/reset-password/:token').post(authController.resetPassword);
 // KEEPING OLD CODE AWAY
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 // USE THIS FOR AS EXAMPLES
 
 // router.route('/signup').post(authController.signup);
