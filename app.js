@@ -3,6 +3,7 @@ const path = require('path');
 // IMPORTING 3rd party MODULES
 const express = require('express');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 //Importing Custom modules
 const usersRouter = require('./routers/userRoutes');
@@ -12,6 +13,7 @@ const app = express();
 
 // Serving static files
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 
 // Body parser, reading data from body to req.body
 app.use(express.json()); // Limits to datacan be added

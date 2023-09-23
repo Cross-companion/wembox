@@ -2,7 +2,9 @@
 
 #### With Every Memory
 
-Processes needed to to bring wembie to life
+#### Meet Your People, Rollout new projects.
+
+Processes needed to bring wembee to life
 
 ### Base Processes to get started (Each process is carefully explained after)
 

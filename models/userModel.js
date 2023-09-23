@@ -206,6 +206,15 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
+userSchema.methods.isPasswordChanged = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    changedAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
+
+    return changedAt > JWTTimestamp;
+  }
+  return false;
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

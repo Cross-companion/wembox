@@ -6,6 +6,7 @@ const User = require('../models/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
 const sendEmail = require('../utilities/email');
+const { promisify } = require('util');
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -120,11 +121,62 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(res, user, 200);
 });
 
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'logout successfull', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+
+  res.status(200).json({ status: 'success' });
+};
+
+exports.protect = catchAsync(async (req, res, next) => {
+  const jwtPasedByHeader = req.headers?.authorization?.startsWith('Bearer')
+    ? req.headers?.authorization?.split(' ')[1]
+    : '';
+  let token = req.cookies.jwt ?? jwtPasedByHeader;
+
+  if (!token) {
+    return next(
+      new AppError(
+        'Hey there, You are not logged in!. Please login to continue',
+        401
+      )
+    );
+  }
+
+  const decoded = await promisify(jwt.verify)(
+    token,
+    process.env.JWT_SECRET
+  ).catch((err) => {
+    return next(new AppError('JWT invalid', 401));
+  });
+
+  // Checks if user still exists (using the ID because it is used to create the jwt)
+  const user = await User.findById(decoded.id);
+  if (!user) {
+    return next(new AppError('Sorry, this User no longer exits.', 404));
+  }
+
+  if (user.isPasswordChanged(decoded.iat)) {
+    return next(
+      new AppError(
+        'Looks like you have chaged your password. Please login with your new password'
+      )
+    );
+  }
+
+  // GRANT ACCESS TO PROTECTED ROUTE
+  req.user = user;
+  res.locals.user = user; // Store in response locals for possible rendering
+  return next();
+});
+
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const { email, username } = req.body;
 
   if (!email && !username)
-    return next(new AppError('Please specify a username or email'));
+    return next(new AppError('Please specify a username or email', 400));
 
   const user = email
     ? await User.findOne({ email })
