@@ -107,7 +107,14 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
 
   if (!password || (!username && !email))
-    return next(new AppError('Please input your username or password.', 404));
+    return next(
+      new AppError(
+        `Incorrect details. Please input your correct ${
+          username ? 'username' : 'email'
+        } or password`,
+        400
+      )
+    );
 
   const user = email
     ? await User.findOne({ email }).select('password')
@@ -115,7 +122,12 @@ exports.login = catchAsync(async (req, res, next) => {
 
   if (!user || !(await user?.isCorrectPassword(password, user?.password)))
     return next(
-      new AppError('Incorrect password. Please input your correct password')
+      new AppError(
+        `Incorrect details. Please input your correct ${
+          username ? 'username' : 'email'
+        } or password`,
+        400
+      )
     );
 
   createSendToken(res, user, 200);
@@ -263,8 +275,3 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   createSendToken(res, user, 201);
 });
-
-// setTimeout(async () => {
-//   const deleted = await User.deleteMany();
-// console.log('deleted', deleted);
-// }, 10000);

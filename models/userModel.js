@@ -126,41 +126,17 @@ const userSchema = new mongoose.Schema({
       'Your confirming password must not be less than 8 characters',
     ],
   },
-  contacts: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Contact',
-    },
-  ],
-  contactRequests: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'ContactRequest',
-    },
-  ],
-  following: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Following',
-    },
-  ],
-  followers: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Follower',
-    },
-  ],
   wems: [
     {
       type: mongoose.Schema.ObjectId,
       ref: 'Wem',
     },
   ],
-  constactsLength: Number,
-  constactRequestsLength: Number,
-  followingLength: Number,
-  followersLength: Number,
-  wemsLength: Number,
+  numberOfConstacts: Number,
+  numberOfConstactRequests: Number,
+  numberOfFollowing: Number,
+  numberOfFollowers: Number,
+  numberOfWems: Number,
   createdAt: {
     type: Date,
     default: Date.now(),
