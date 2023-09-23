@@ -78,7 +78,6 @@ const userSchema = new mongoose.Schema({
     },
     default: 'user',
   },
-  // new Date(`${new Date().getFullYear() - 7}`).toISOString().split('T')[0],
   dateOfBirth: {
     type: Date,
     min: [
@@ -94,6 +93,10 @@ const userSchema = new mongoose.Schema({
       'Please tell us your date of birth so we can personalize you experience.',
     ],
   },
+  interests: [String],
+  interestsTopics: [String],
+  shadowInterests: [String],
+  shadowInterestsTopics: [String],
   password: {
     type: String,
     required: [true, `Please provide a password`],
@@ -126,19 +129,25 @@ const userSchema = new mongoose.Schema({
   contacts: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: 'Contact',
+    },
+  ],
+  contactRequests: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'ContactRequest',
     },
   ],
   following: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: 'Following',
     },
   ],
   followers: [
     {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
+      ref: 'Follower',
     },
   ],
   wems: [
@@ -147,6 +156,11 @@ const userSchema = new mongoose.Schema({
       ref: 'Wem',
     },
   ],
+  constactsLength: Number,
+  constactRequestsLength: Number,
+  followingLength: Number,
+  followersLength: Number,
+  wemsLength: Number,
   createdAt: {
     type: Date,
     default: Date.now(),
