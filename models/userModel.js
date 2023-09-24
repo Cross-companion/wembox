@@ -66,27 +66,20 @@ const userSchema = new mongoose.Schema({
   accountType: {
     type: String,
     enum: {
-      values: [
-        'user',
-        'verified-user',
-        'verified-organization',
-        'verified-enterprise',
-        'governmental',
-      ],
-      message:
-        'Account type can only either be: user, verified-user, verified-organisation, verified-enterprise, governmental',
+      values: process.env.ACCOUNT_TYPES.split(','),
+      message: 'Invalid account type. Check your spellings and try again.',
     },
     default: 'user',
   },
   dateOfBirth: {
     type: Date,
     min: [
-      new Date('1900-01-01'),
-      'Invalid date: Sorry, the date you specified is above our age limit',
+      new Date(`${new Date().getFullYear() - process.env.AGE_MAXIMUM}-01-01`),
+      'Invalid date: Sorry, the date you specified is above our maximum age limit',
     ],
     max: [
       new Date(`${new Date().getFullYear() - process.env.AGE_MINIMUM}-01-01`),
-      'Invalid date: Sorry, the date you specified is below our age limit',
+      'Invalid date: Sorry, the date you specified is below our minimum age limit',
     ],
     required: [
       true,

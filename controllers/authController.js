@@ -84,7 +84,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     frontEndUsername: req.body.username,
     username: req.body.username,
     email: req.body.email,
-    accountType: req.body.accountType,
     dateOfBirth: req.body.dateOfBirth,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
@@ -134,7 +133,7 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res) => {
-  res.cookie('jwt', 'logout successfull', {
+  res.cookie('jwt', '', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
@@ -157,12 +156,8 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  const decoded = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_SECRET
-  ).catch((err) => {
-    return next(new AppError('JWT invalid', 401));
-  });
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  if (!decoded) return next(new AppError('Invalid JWT', 401));
 
   // Checks if user still exists (using the ID because it is used to create the jwt)
   const user = await User.findById(decoded.id);
@@ -178,6 +173,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
+  user.isAdmin = user.accountType.startsWith(
+    JSON.parse(process.env.ADMIN_TYPES).normalAdmin
+  );
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = user;
   res.locals.user = user; // Store in response locals for possible rendering
