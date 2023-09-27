@@ -1,12 +1,20 @@
+const { promisify } = require('util');
+
 const jwt = require('jsonwebtoken');
 const request = require('request');
 const crypto = require('crypto');
+const Redis = require('ioredis');
 
 const User = require('../models/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
 const sendEmail = require('../utilities/email');
-const { promisify } = require('util');
+const { generateRandomToken } = require('../utilities/helper');
+
+const redis = new Redis({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+});
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -32,7 +40,6 @@ const createSendToken = (res, user, statusCode) => {
   res.status(statusCode).json({
     status: 'success',
     user,
-    token,
   });
 };
 
@@ -71,11 +78,58 @@ exports.captcha = catchAsync(async (req, res, next) => {
   request(verifyURL, (err, response, body) => {
     body = JSON.parse(body);
     if (body.success === true) {
-      res
-        .status(200)
-        .json({ status: 'success', message: 'Verification passed' });
+      return next();
     } else return next(new AppError('Your verification failed'));
   });
+});
+
+exports.sendEmailOtp = catchAsync(async (req, res, next) => {
+  const email = req.body.email;
+  if (!email)
+    return next(
+      new AppError(
+        'Please provide your email address to get a verification email.',
+        400
+      )
+    ); // Contemplating. this is the only email because because it would still undergo token and DB verification
+  const token = generateRandomToken();
+  const emailKey = process.env.EMAIL_CACHE_KEY + email;
+  redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
+  const message = `Hello ${req.body.name}, \nYour email verification token is: ${token}.\n Please do not share this with anyone. Thanks.\nNwodoh Daniel\nLead-member`;
+
+  await sendEmail({
+    email,
+    subject: 'Wembox verification token. (Expires in 10 minutes)',
+    message,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Verification passed and 6 digit otp has been sent to email.',
+  });
+});
+
+exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
+  const { email, emailOtp } = req.body;
+  if (!email)
+    return next(
+      new AppError(
+        'Please provide your email address for the confirmation of your otp.',
+        400
+      )
+    );
+  if (!emailOtp)
+    return next(new AppError('Invalid token. Input your token and try again.'));
+
+  const emailKey = process.env.EMAIL_CACHE_KEY + email;
+  const originalToken = await redis.get(emailKey);
+
+  if (!originalToken) return next(new AppError('Your token expired.', 404));
+
+  if (emailOtp !== originalToken)
+    return next(new AppError('Incorrect token. Try again.'));
+
+  next();
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -91,13 +145,13 @@ exports.signup = catchAsync(async (req, res, next) => {
     following: req.body.following,
   });
 
-  // const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
+  const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
 
-  // await sendEmail({
-  //   email: req.body.email,
-  //   subject: 'Welcome to WEMBOX!!',
-  //   message,
-  // });
+  await sendEmail({
+    email: req.body.email,
+    subject: 'Welcome to WEMBOX!!',
+    message,
+  });
 
   createSendToken(res, newUser, 200);
 });
@@ -137,7 +191,6 @@ exports.logout = (req, res) => {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
-
   res.status(200).json({ status: 'success' });
 };
 
@@ -146,7 +199,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     ? req.headers?.authorization?.split(' ')[1]
     : '';
   let token = req.cookies.jwt ?? jwtPasedByHeader;
-
   if (!token) {
     return next(
       new AppError(
@@ -155,7 +207,6 @@ exports.protect = catchAsync(async (req, res, next) => {
       )
     );
   }
-
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   if (!decoded) return next(new AppError('Invalid JWT', 401));
 
@@ -164,7 +215,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new AppError('Sorry, this User no longer exits.', 404));
   }
-
   if (user.isPasswordChanged(decoded.iat)) {
     return next(
       new AppError(

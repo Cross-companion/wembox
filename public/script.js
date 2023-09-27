@@ -10,7 +10,7 @@ recaptcha.addEventListener('submit', async (e) => {
     headers: {
       'Content-type': 'application/json',
     },
-    body: JSON.stringify({ captcha }),
+    body: JSON.stringify({ captcha, email: 'volunteer102@wm.com' }),
   }).then((res) => res.json());
 
   console.log(verified);
