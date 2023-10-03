@@ -22,12 +22,11 @@ router.use(authController.protect);
 router.route('/logout').get(authController.logout); // the logout route is protected
 router.route('/follow').post(usersController.follow);
 router.route('/unfollow').delete(usersController.unfollow);
-router.route('/my_followers').get(usersController.getUserFollowers);
-router.route('/my_followings').get(usersController.getUserFollowings);
-router.route('/user_followers/:user_id?').get(usersController.getUserFollowers);
+router.route('/followers/:user_id?').get(usersController.getFollowers);
+router.route('/followings/:user_id?').get(usersController.getFollowings);
 router
-  .route('/user_followings/:user_id?')
-  .get(usersController.getUserFollowings);
+  .route('/all_follows')
+  .get(authController.restrictTo('admin'), usersController.getAllFollows);
 
 // // Protect all routes AFTER this middleware
 // router.use(authController.protect);

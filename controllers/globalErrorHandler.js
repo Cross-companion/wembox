@@ -20,6 +20,6 @@ module.exports = (err, req, res, next) => {
 
   if (process.env.NODE_ENV === 'development') sendErrorDev(err, req, res, next);
   else {
-    // ** CODE YET TO BE IMPLEMENTED ** //
+    sendErrorDev(err, req, res, next); // ** CODE YET TO BE IMPLEMENTED ** //
   }
 };

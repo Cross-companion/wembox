@@ -17,6 +17,11 @@
     These should be final included in final touches I would make when the final version of Wembee is a finished product.
     I can also check the existing terms and conditions on othe social sites and try to adapt from theirs.
 
+#### GLOBAL VARIABLES
+
+- 26/9/2023
+  - Global variables are a feature that would grant users the ability to store data which they can easily re-use through the app or in a chat environment. They are the predessecors for more intimate variable features like AI memes that are generate using images a user stores and made accessible to it's usable scope.
+
 ### Frontend
 
 ### Backend

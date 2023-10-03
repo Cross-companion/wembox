@@ -1,14 +1,19 @@
 const Follow = require('../models/followModel');
 const User = require('../models/userModel');
-const handlerFactory = require('./handlerFactory');
+const factory = require('./handlerFactory');
 const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
 const helper = require('../utilities/helper');
+
+const populateFollowItems = [
+  'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing',
+];
 
 exports.follow = catchAsync(async (req, res, next) => {
   // 1. create a new follow document with the appropriate parameters
   const follower = req.user.id;
   const { following } = req.body;
+  console.log(follower, following);
   if (!follower || !following) {
     return next(
       new AppError(
@@ -41,15 +46,34 @@ exports.follow = catchAsync(async (req, res, next) => {
   res.status(200).json({ status: 'success', follow: createFollow });
 });
 
-exports.getUserFollowers = catchAsync(async (req, res, next) => {
-  const filterBy = helper.getFollowsFilterBy(req);
-  handlerFactory.getAll(Follow, filterBy)(req, res, next);
+exports.getFollowers = catchAsync(async (req, res, next) => {
+  const findBy = { following: req.params.user_id || req.user.id };
+  const populateBy = ['follower'];
+  factory.findAll(
+    Follow,
+    findBy,
+    populateBy,
+    populateFollowItems
+  )(req, res, next);
 });
 
-exports.getUserFollowings = catchAsync(async (req, res, next) => {
-  const filterBy = helper.getFollowsFilterBy(req, 'follower');
-  handlerFactory.getAll(Follow, filterBy)(req, res, next);
+exports.getFollowings = catchAsync(async (req, res, next) => {
+  const findBy = { follower: req.params.user_id || req.user.id };
+  const populate = ['following'];
+  factory.findAll(
+    Follow,
+    findBy,
+    populate,
+    populateFollowItems
+  )(req, res, next);
 });
+
+exports.getAllFollows = factory.findAll(
+  Follow,
+  undefined,
+  ['following', 'follower'],
+  [...populateFollowItems, ...populateFollowItems]
+);
 
 exports.unfollow = catchAsync(async (req, res, next) => {
   const { following } = req.body;
@@ -78,7 +102,7 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 // CREATE VOLUNTEERS
 // setTimeout(async () => {
 //   const dummy = {
-//     number: 10,
+//     number: 14,
 //     name: 'volunteer',
 //     frontEndUsername: 'Volunteer',
 //     dateOfBirth: '2003-07-06',
@@ -100,7 +124,33 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //   }
 // }, 10000);
 
-// DELETE ALL
+// CREATE FOLLOWS
+// setTimeout(async () => {
+//   const allUsers = await User.find();
+//   const following = allUsers[0].id;
+//   const promises = allUsers.slice(1).map(async (user) => {
+//     const follower = user._id;
+//     const createFollow = await Follow.create({ follower, following });
+//     await User.findByIdAndUpdate(
+//       { _id: follower },
+//       { $inc: { numberOfFollowing: 1 } }
+//     );
+//     await User.findByIdAndUpdate(
+//       { _id: following },
+//       { $inc: { numberOfFollowers: 1 } }
+//     );
+//   });
+
+//   await Promise.all(promises);
+// }, 10000);
+
+// DELETE ALL FOLLOWS
+// setTimeout(async () => {
+//   const deleted = await Follow.deleteMany();
+//   console.log('deleted', deleted);
+// }, 10000);
+
+// // DELETE ALL USERS
 // setTimeout(async () => {
 //   const deleted = await User.deleteMany();
 //   console.log('deleted', deleted);
