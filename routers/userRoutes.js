@@ -20,6 +20,9 @@ router.route('/reset_password/:token').post(authController.resetPassword);
 
 router.use(authController.protect);
 router.route('/logout').get(authController.logout); // the logout route is protected
+router
+  .route('/all_users')
+  .get(authController.restrictTo('admin'), usersController.getAllUsers);
 router.route('/follow').post(usersController.follow);
 router.route('/unfollow').delete(usersController.unfollow);
 router.route('/followers/:user_id?').get(usersController.getFollowers);

@@ -9,6 +9,8 @@ const populateFollowItems = [
   'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing',
 ];
 
+exports.getAllUsers = factory.findAll(User);
+
 exports.follow = catchAsync(async (req, res, next) => {
   // 1. create a new follow document with the appropriate parameters
   const follower = req.user.id;
