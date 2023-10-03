@@ -5,7 +5,6 @@ class APIFeature {
   }
 
   filter() {
-    console.log(this.queryString);
     const { page, sort, limit, fields, ...filteredQuery } = this.queryString;
 
     let queryStr = JSON.stringify(filteredQuery).split(' ').join();

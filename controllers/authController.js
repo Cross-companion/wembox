@@ -207,7 +207,6 @@ exports.restrictTo = (...roles) => {
 };
 
 exports.protect = catchAsync(async (req, res, next) => {
-  console.log('PROTECT!!!!!!!!');
   const jwtPasedByHeader = req.headers?.authorization?.startsWith('Bearer')
     ? req.headers?.authorization?.split(' ')[1]
     : '';
@@ -240,8 +239,6 @@ exports.protect = catchAsync(async (req, res, next) => {
     JSON.parse(process.env.ADMIN_TYPES).normalAdmin
   );
   // GRANT ACCESS TO PROTECTED ROUTE
-  console.log(user, 'REQUEST>USER ///////////');
-
   req.user = user;
   res.locals.user = user; // Store in response locals for possible rendering
   return next();
