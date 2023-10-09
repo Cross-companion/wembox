@@ -6,7 +6,8 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
 //Importing Custom modules
-const usersRouter = require('./routers/userRoutes');
+const userRouter = require('./routers/userRoutes');
+const suggestionRouter = require('./routers/suggestionRoutes');
 const globalErrorHandler = require('./controllers/globalErrorHandler');
 
 const app = express();
@@ -30,7 +31,8 @@ app.use((req, res, next) => {
 });
 
 // MOUNTING ROUTERS
-app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/suggest', suggestionRouter);
 
 app.all('*', (req, res, next) => {
   const errMessage = `Can't find ${req.originalUrl} on this server`;

@@ -3,11 +3,26 @@ const APIFeatures = require('../utilities/APIFeatures');
 const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
 
+exports.createMany = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const createData = [...req.body.data];
+    if (!Model) return next(new AppError('Query Model not specified.', 500));
+    if (!createData.length)
+      return next(new AppError('No Document to be create was specified.', 500));
+
+    await Model.insertMany(createData);
+
+    res
+      .status(200)
+      .json({ status: 'success', messaage: 'Documents created successfully.' });
+  });
+
 exports.findAll = (
   Model,
   findBy = {},
   populateOptions = [],
-  populateData = []
+  populateData = [],
+  APIOptions = {}
 ) =>
   catchAsync(async (req, res, next) => {
     let query = Model.find(findBy);
@@ -16,14 +31,14 @@ exports.findAll = (
       (field, i) => (query = query.populate(field, populateData[i]))
     );
 
-    const Features = new APIFeatures(query, req.query)
-      .filter()
-      .sort()
-      .limitFields()
-      .paginate();
+    let Features = new APIFeatures(query, req.query);
+    if (APIOptions.filter !== false) Features.filter();
+    if (APIOptions.sort !== false) Features.sort();
+    if (APIOptions.limitFields !== false) Features.limitFields();
+    if (APIOptions.paginate !== false) Features.paginate();
 
     const doc = await Features.query;
-    if (!doc) return new AppError('Document not found', 404);
+    if (!doc) return next(new AppError('Document not found', 404));
 
     res.status(200).json({
       status: 'success',
@@ -32,10 +47,10 @@ exports.findAll = (
     });
   });
 
-const findOne = (Model, queryOptions = { findBy: {}, select: [] }) =>
+exports.findOne = (Model, queryOptions = { findBy: {}, select: [] }) =>
   catchAsync(async (req, res, next) => {
     const { findBy, select } = queryOptions;
-    if (!Model) return next('Query Model not specified.', 500);
+    if (!Model) return next(new AppError('Query Model not specified.', 500));
 
     let query = Model.findOne(findBy);
 
@@ -56,7 +71,7 @@ const findOne = (Model, queryOptions = { findBy: {}, select: [] }) =>
 exports.deleteOne = (Model, queryOptions = { findBy: {} }) =>
   catchAsync(async (req, res, next) => {
     const { findBy } = queryOptions;
-    if (!Model) return next('Query Model not specified.', 500);
+    if (!Model) return next(new AppError('Query Model not specified.', 500));
 
     let query = Model.findOneAndDelete(findBy);
     const data = await query;

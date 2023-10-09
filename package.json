@@ -32,6 +32,7 @@
     "request": "^2.88.2",
     "sharp": "^0.32.1",
     "slugify": "^1.6.6",
+    "validate-color": "^2.2.4",
     "validator": "^13.9.0"
   }
 }

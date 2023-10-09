@@ -11,10 +11,11 @@ const AppError = require('../utilities/AppError');
 const sendEmail = require('../utilities/email');
 const { generateRandomToken } = require('../utilities/helper');
 
-const redis = new Redis({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-});
+// ---?? Redis disabled for testing
+// const redis = new Redis({
+//   host: process.env.REDIS_HOST,
+//   port: process.env.REDIS_PORT,
+// });
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
