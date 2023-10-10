@@ -19,9 +19,7 @@ exports.createMany = (Model) =>
 
 exports.findAll = (
   Model,
-  findBy = {},
-  populateOptions = [],
-  populateData = [],
+  { findBy = {}, populateOptions = [], populateData = [] } = {},
   APIOptions = {}
 ) =>
   catchAsync(async (req, res, next) => {
@@ -47,9 +45,8 @@ exports.findAll = (
     });
   });
 
-exports.findOne = (Model, queryOptions = { findBy: {}, select: [] }) =>
+exports.findOne = (Model, { findBy = {}, select = [] } = {}) =>
   catchAsync(async (req, res, next) => {
-    const { findBy, select } = queryOptions;
     if (!Model) return next(new AppError('Query Model not specified.', 500));
 
     let query = Model.findOne(findBy);
@@ -68,9 +65,8 @@ exports.findOne = (Model, queryOptions = { findBy: {}, select: [] }) =>
     res.status(200).json({ status: 'success', data });
   });
 
-exports.deleteOne = (Model, queryOptions = { findBy: {} }) =>
+exports.deleteOne = (Model, { findBy = {} } = {}) =>
   catchAsync(async (req, res, next) => {
-    const { findBy } = queryOptions;
     if (!Model) return next(new AppError('Query Model not specified.', 500));
 
     let query = Model.findOneAndDelete(findBy);

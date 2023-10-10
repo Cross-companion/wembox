@@ -28,7 +28,7 @@ followSchema.index({ follower: 1, following: 1 }, { unique: true });
 // Define the schema options to exclude the 'id' field while transforming to JSON
 followSchema.set('toJSON', {
   transform: function (doc, ret) {
-    delete ret.id;
+    delete ret._id;
   },
 });
 

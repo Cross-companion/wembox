@@ -35,18 +35,17 @@ const interestSchema = new mongoose.Schema(
   },
   {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   }
 );
-
-interestSchema.virtual('numberOfTopics').get(function () {
-  return this.interestTopics.length;
-});
 
 interestSchema.virtual('interestTopics', {
   ref: 'InterestTopic',
   localField: 'name',
   foreignField: 'interest',
+});
+
+interestSchema.virtual('numberOfTopics').get(function () {
+  return this.interestTopics.length;
 });
 
 const Interest = mongoose.model('Interest', interestSchema);

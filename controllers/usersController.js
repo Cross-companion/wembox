@@ -51,38 +51,34 @@ exports.follow = catchAsync(async (req, res, next) => {
 exports.getFollowers = catchAsync(async (req, res, next) => {
   const findBy = { following: req.params.user_id || req.user.id };
   const populateBy = ['follower'];
-  factory.findAll(
-    Follow,
+  factory.findAll(Follow, {
     findBy,
-    populateBy,
-    populateFollowItems
-  )(req, res, next);
+    populateOptions: populateBy,
+    populateData: populateFollowItems,
+  })(req, res, next);
 });
 
 exports.getFollowings = catchAsync(async (req, res, next) => {
   const findBy = { follower: req.params.user_id || req.user.id };
-  const populate = ['following'];
-  factory.findAll(
-    Follow,
+  const populateBy = ['following'];
+  factory.findAll(Follow, {
     findBy,
-    populate,
-    populateFollowItems
-  )(req, res, next);
+    populateOptions: populateBy,
+    populateData: populateFollowItems,
+  })(req, res, next);
 });
 
-exports.getAllFollows = factory.findAll(
-  Follow,
-  undefined,
-  ['following', 'follower'],
-  [...populateFollowItems, ...populateFollowItems]
-);
+exports.getAllFollows = factory.findAll(Follow, {
+  populateOptions: ['following', 'follower'],
+  populateData: [...populateFollowItems, ...populateFollowItems],
+});
 
 exports.unfollow = catchAsync(async (req, res, next) => {
   const { following } = req.body;
   const follower = req.user.id;
 
   if (follower === following)
-    return next(new AppError('You unable to unfollow your account.'));
+    return next(new AppError('You are unable to unfollow your account.'));
   const deletedFollow = await Follow.findOneAndDelete({ follower, following });
   if (!deletedFollow)
     return next(new AppError('You do not yet follow this account.', 404));

@@ -7,21 +7,20 @@ const interestController = require('../controllers/userInterest/interestControll
 router.use(authController.protect);
 
 router
-  .route('/create_interests')
-  .get(
+  .route('/interests')
+  .get(interestController.getAllInterests)
+  .post(
     authController.restrictTo('senior-admin'),
     interestController.createInterests
   );
+
 router
-  .route('/create_interest_topics')
-  .get(
+  .route('/interests/topics')
+  .get(interestController.getAllInterestTopics)
+  .post(
     authController.restrictTo('senior-admin'),
     interestController.createInterestTopics
   );
-router.route('/get_interests').get(interestController.getAllInterests);
-router
-  .route('/get_interest_topics')
-  .get(interestController.getAllInterestTopics);
 
 //-- <> -- //
 module.exports = router;

@@ -19,21 +19,18 @@ exports.getFollowers = catchAsync(async (req, res, next) => {
 exports.createInterests = factory.createMany(Interest);
 exports.getAllInterests = factory.findAll(
   Interest,
-  undefined,
-  ['interestTopics'],
-  undefined,
+  {
+    populateOptions: ['interestTopics'],
+    populateData: ['chosenAtSignUp name -_id -interest'],
+  },
   {
     paginate: false,
   }
 );
 exports.deleteInterest = catchAsync(async (req, res, next) => {});
 exports.createInterestTopics = factory.createMany(InterestTopic);
-exports.getAllInterestTopics = factory.findAll(
-  InterestTopic,
-  undefined,
-  undefined,
-  undefined,
-  { paginate: false }
-);
+exports.getAllInterestTopics = factory.findAll(InterestTopic, undefined, {
+  paginate: false,
+});
 exports.getOneInterestTopic = catchAsync(async (req, res, next) => {});
 exports.deleteInterestTopic = catchAsync(async (req, res, next) => {});

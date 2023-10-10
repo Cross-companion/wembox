@@ -22,14 +22,20 @@ router.use(authController.protect);
 router.route('/logout').get(authController.logout); // the logout route is protected
 router
   .route('/all_users')
-  .get(authController.restrictTo('admin'), usersController.getAllUsers);
+  .get(
+    authController.restrictTo('admin', 'senior-admin'),
+    usersController.getAllUsers
+  );
 router.route('/follow').post(usersController.follow);
 router.route('/unfollow').delete(usersController.unfollow);
 router.route('/followers/:user_id?').get(usersController.getFollowers);
 router.route('/followings/:user_id?').get(usersController.getFollowings);
 router
   .route('/all_follows')
-  .get(authController.restrictTo('admin'), usersController.getAllFollows);
+  .get(
+    authController.restrictTo('admin', 'senior-admin'),
+    usersController.getAllFollows
+  );
 
 //-- <> -- //
 module.exports = router;

@@ -3,6 +3,8 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
+const userConfig = require('../config/userConfig');
+
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -76,7 +78,7 @@ const userSchema = new mongoose.Schema(
     accountType: {
       type: String,
       enum: {
-        values: process.env.ACCOUNT_TYPES.split(','),
+        values: userConfig.ACCOUNT_TYPES,
         message: 'Invalid account type. Check your spellings and try again.',
       },
       default: 'user',
