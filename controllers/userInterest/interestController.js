@@ -1,5 +1,5 @@
-const Interest = require('../../models/userInterestModel/interestModel');
-const InterestTopic = require('../../models/userInterestModel/interestTopicModel');
+const Interest = require('../../models/interest/interestModel');
+const InterestTopic = require('../../models/interest/interestTopicModel');
 
 const factory = require('../handlerFactory');
 const catchAsync = require('../../utilities/catchAsync');

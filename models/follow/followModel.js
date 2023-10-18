@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const AppError = require('./../utilities/AppError');
+const AppError = require('../../utilities/AppError');
 
 const followSchema = new mongoose.Schema(
   {

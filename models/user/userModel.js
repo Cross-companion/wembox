@@ -3,7 +3,7 @@ const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
-const userConfig = require('../config/userConfig');
+const userConfig = require('../../config/userConfig');
 
 const userSchema = new mongoose.Schema(
   {
@@ -151,27 +151,32 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     interests: {
-      type: mongoose.Schema.Types.Mixed,
-      default: {
-        userGenerated: userConfig.DEFAULT_INTEREST_OBJECT,
-        dynamicallyGenerated: userConfig.DEFAULT_INTEREST_OBJECT,
+      type: {
+        interest: {
+          type: mongoose.Schema.Types.Map,
+        },
+        topic: {
+          type: mongoose.Schema.Types.Map,
+        },
       },
-    },
-    interestTopics: {
-      type: mongoose.Schema.Types.Mixed,
       default: {
-        userGenerated: userConfig.DEFAULT_INTEREST_TOPIC_OBJECT,
-        dynamicallyGenerated: userConfig.DEFAULT_INTEREST_TOPIC_OBJECT,
+        interest: userConfig.DEFAULT_INTEREST_OBJECT,
+        topic: userConfig.DEFAULT_INTEREST_TOPIC_OBJECT,
       },
+      select: false,
     },
     contentType: {
       type: {
-        userGenerated: {
-          type: String,
+        interest: {
+          type: mongoose.Schema.Types.Map,
         },
-        dynamicallyGenerated: {
-          type: String,
+        topic: {
+          type: mongoose.Schema.Types.Map,
         },
+      },
+      default: {
+        interest: {},
+        topic: {},
       },
     },
     IPGeoLocation: {

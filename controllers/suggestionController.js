@@ -1,11 +1,13 @@
-exports.captcha = catchAsync(async (req, res, next) => {
-  const captchaResponse = req.body.captcha;
-  const verifyURL = `${process.env.RECATPCHA_VERIFY_URL}?secret=${process.env.RECATPCHA_SECRET_KEY}&response=${captchaResponse}&remoteip=${req.connection.remoteAddress}`;
+const User = require('../models/user/userModel');
+const factory = require('./handlerFactory');
+const catchAsync = require('../utilities/catchAsync');
+const AppError = require('../utilities/AppError');
 
-  request(verifyURL, (err, response, body) => {
-    body = JSON.parse(body);
-    if (body.success === true) {
-      return next();
-    } else return next(new AppError('Your verification failed'));
+exports.suggestCreator = catchAsync(async (req, res, next) => {
+  const topic = req.params?.topic;
+  const users = factory.findAll(User);
+  res.status(200).json({
+    status: 'success',
+    users,
   });
 });

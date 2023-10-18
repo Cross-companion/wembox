@@ -1,6 +1,6 @@
 const factory = require('../controllers/handlerFactory');
-const Interest = require('../models/userInterestModel/interestModel');
-const InterestTopics = require('../models/userInterestModel/interestTopicModel');
+const Interest = require('../models/interest/interestModel');
+const InterestTopics = require('../models/interest/interestTopicModel');
 
 class UserConfig {
   constructor() {

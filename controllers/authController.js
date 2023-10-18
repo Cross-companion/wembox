@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const ip = require('ip');
 const Redis = require('ioredis');
 
-const User = require('../models/userModel');
+const User = require('../models/user/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
 const sendEmail = require('../utilities/email');
@@ -199,6 +199,7 @@ exports.logout = (req, res) => {
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
+    console.log(req.user.accountType);
     if (!roles.includes(req.user.accountType)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)
