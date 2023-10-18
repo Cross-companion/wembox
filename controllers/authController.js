@@ -1,15 +1,16 @@
 const { promisify } = require('util');
-
 const jwt = require('jsonwebtoken');
 const request = require('request');
 const crypto = require('crypto');
+const ip = require('ip');
 const Redis = require('ioredis');
 
 const User = require('../models/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
 const sendEmail = require('../utilities/email');
-const { generateRandomToken } = require('../utilities/helper');
+const helpers = require('../utilities/helpers');
+const userConfig = require('../config/userConfig');
 
 // ---?? Redis disabled for testing
 // const redis = new Redis({
@@ -46,8 +47,8 @@ const createSendToken = (res, user, statusCode) => {
 
 exports.dataExists = catchAsync(async (req, res, next) => {
   let emailExists, usernameExists;
-  const { email, username } = req.body;
 
+  const { email, username } = req.body;
   if (email && !username) {
     emailExists = (await User.findOne({ email })) ? true : false;
 
@@ -93,7 +94,7 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
         400
       )
     ); // Contemplating. this is the only email because because it would still undergo token and DB verification
-  const token = generateRandomToken();
+  const token = helpers.generateRandomToken();
   const emailKey = process.env.EMAIL_CACHE_KEY + email;
   redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
   const message = `Hello ${req.body.name}, \nYour email verification token is: ${token}.\n Please do not share this with anyone. Thanks.\nNwodoh Daniel\nLead-member`;
@@ -144,6 +145,10 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
     following: req.body.following,
+    interests: req.body.interests,
+    interestTopics: req.body.interestTopics,
+    interestTopics: req.body.interestTopics,
+    contentType: req.body.contentType,
   });
 
   const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
@@ -231,14 +236,11 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (user.isPasswordChanged(decoded.iat)) {
     return next(
       new AppError(
-        'Looks like you have chaged your password. Please login with your new password'
+        'Looks like you have changed your password. Please login with your new password'
       )
     );
   }
 
-  user.isAdmin = user.accountType.startsWith(
-    JSON.parse(process.env.ADMIN_TYPES).normalAdmin
-  );
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = user;
   res.locals.user = user; // Store in response locals for possible rendering

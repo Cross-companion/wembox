@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 const factory = require('./handlerFactory');
 const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
-const helper = require('../utilities/helper');
+const helper = require('../utilities/helpers');
 
 const populateFollowItems = [
   'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing',

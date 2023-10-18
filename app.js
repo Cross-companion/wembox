@@ -13,6 +13,7 @@ const globalErrorHandler = require('./controllers/globalErrorHandler');
 const app = express();
 
 // Serving static files
+app.set('trust proxy', true);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 

@@ -98,10 +98,6 @@ const userSchema = new mongoose.Schema(
         'Please tell us your date of birth so we can personalize you experience.',
       ],
     },
-    interests: [String],
-    interestsTopics: [String],
-    shadowInterests: [String],
-    shadowInterestsTopics: [String],
     password: {
       type: String,
       required: [true, `Please provide a password`],
@@ -153,6 +149,83 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
       select: false,
+    },
+    interests: {
+      type: {
+        userGenerated: {
+          type: Object,
+          properties: {
+            type: {
+              type: String,
+              enum: [
+                'sports',
+                'entertainment',
+                'business and entrepreneurship',
+                'health and fitness',
+                'movies and comics',
+                'news',
+              ],
+            },
+          },
+        },
+        dynamicallyGenerated: {
+          type: Object,
+          properties: {
+            type: {
+              type: String,
+              enum: [
+                'sports',
+                'entertainment',
+                'business and entrepreneurship',
+                'health and fitness',
+                'movies and comics',
+                'news',
+              ],
+            },
+          },
+        },
+      },
+    },
+    interestTopics: {
+      type: {
+        userGenerated: {
+          type: String,
+        },
+        dynamicallyGenerated: {
+          type: String,
+        },
+      },
+    },
+    contentType: {
+      type: {
+        userGenerated: {
+          type: String,
+        },
+        dynamicallyGenerated: {
+          type: String,
+        },
+      },
+    },
+    IPGeoLocation: {
+      type: {
+        country: {
+          type: String,
+          default: 'global',
+        },
+        city: {
+          type: String,
+          default: 'global',
+        },
+        continent: {
+          type: String,
+          default: 'global',
+        },
+      },
+      default: {
+        country: 'global',
+        city: 'global',
+        continent: 'global',
+      },
     },
   },
   {

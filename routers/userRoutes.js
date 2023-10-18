@@ -10,9 +10,11 @@ router
   .route('/captcha')
   .post(authController.captcha, authController.sendEmailOtp);
 
-router
-  .route('/signup')
-  .post(authController.verifyEmailOtp, authController.signup);
+// router
+//   .route('/signup')
+//   .post(authController.verifyEmailOtp, authController.signup);
+
+router.route('/signup').post(authController.signup);
 
 router.route('/login').post(authController.login);
 router.route('/forgot_password').post(authController.forgotPassword);
