@@ -151,49 +151,17 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     interests: {
-      type: {
-        userGenerated: {
-          type: Object,
-          properties: {
-            type: {
-              type: String,
-              enum: [
-                'sports',
-                'entertainment',
-                'business and entrepreneurship',
-                'health and fitness',
-                'movies and comics',
-                'news',
-              ],
-            },
-          },
-        },
-        dynamicallyGenerated: {
-          type: Object,
-          properties: {
-            type: {
-              type: String,
-              enum: [
-                'sports',
-                'entertainment',
-                'business and entrepreneurship',
-                'health and fitness',
-                'movies and comics',
-                'news',
-              ],
-            },
-          },
-        },
+      type: mongoose.Schema.Types.Mixed,
+      default: {
+        userGenerated: userConfig.DEFAULT_INTEREST_OBJECT,
+        dynamicallyGenerated: userConfig.DEFAULT_INTEREST_OBJECT,
       },
     },
     interestTopics: {
-      type: {
-        userGenerated: {
-          type: String,
-        },
-        dynamicallyGenerated: {
-          type: String,
-        },
+      type: mongoose.Schema.Types.Mixed,
+      default: {
+        userGenerated: userConfig.DEFAULT_INTEREST_TOPIC_OBJECT,
+        dynamicallyGenerated: userConfig.DEFAULT_INTEREST_TOPIC_OBJECT,
       },
     },
     contentType: {

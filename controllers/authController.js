@@ -145,9 +145,6 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
     following: req.body.following,
-    interests: req.body.interests,
-    interestTopics: req.body.interestTopics,
-    interestTopics: req.body.interestTopics,
     contentType: req.body.contentType,
   });
 
