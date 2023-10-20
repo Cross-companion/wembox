@@ -22,6 +22,11 @@
 - 26/9/2023
   - Global variables are a feature that would grant users the ability to store data which they can easily re-use through the app or in a chat environment. They are the predessecors for more intimate variable features like AI memes that are generate using images a user stores and made accessible to it's usable scope.
 
+#### ADJUST THE PROCESS OF CREATING A NEW INTEREST TOPIC (SENIOR-ADMIN)
+
+- 18/10/2023
+  - When creating a new interest topic, I have to adjust the implementation so that if the process is running and a new interest / interest topic is created, it reflects on the userConfig file and in all the already created users. I will do this by adding the newly created item to the userConfig.INTEREST / .DEFAULT variables so that any new user created automatically recieves this new item. And also, add the newly created item to all the users in the users collection.
+
 ### Frontend
 
 ### Backend

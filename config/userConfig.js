@@ -1,6 +1,4 @@
-const factory = require('../controllers/handlerFactory');
 const Interest = require('../models/interest/interestModel');
-const InterestTopics = require('../models/interest/interestTopicModel');
 
 class UserConfig {
   constructor() {
@@ -17,38 +15,49 @@ class UserConfig {
     ];
     this.ADMIN_TYPES = { normalAdmin: 'admin', seniorAdmin: 'senior-admin' };
     this.INTEREST_TYPES = [];
-    this.INTEREST_TOPIC_TYPES = [];
+    this.DEFAULT_INTEREST_ARRAY = [];
     process.env.NODE_ENV === 'development'
       ? this._testInitialise()
       : this._initialise();
   }
 
+  // INTEREST_TYPES: Array containing all the possible interest that a user can chose from.
+  // DEFAULT_INTEREST_ARRAY: Array containing all the
   async _initialise() {
-    this.INTEREST_TYPES =
-      (await this._getInterests(Interest)) || this.INTEREST_TYPES;
-    this.INTEREST_TOPIC_TYPES =
-      (await this._getInterests(InterestTopics)) || this.INTEREST_TOPIC_TYPES;
-    this.DEFAULT_INTEREST_OBJECT = this._setDefaultInterestObject(
-      this.INTEREST_TYPES
-    );
-    this.DEFAULT_INTEREST_TOPIC_OBJECT = this._setDefaultInterestObject(
-      this.INTEREST_TOPIC_TYPES
-    );
+    const interestData = await this.setInterests();
+    console.log('PROD INIT');
   }
 
-  _setDefaultInterestObject(TYPE) {
-    const objectToSet = {};
-    TYPE.forEach((item) => (objectToSet[item.toString()] = 0));
-    return objectToSet;
-  }
-
-  async _getInterests(Model) {
+  async setInterests() {
     try {
-      const interests = await Model.find().select('name -_id');
-      const interestNames = interests.map((item) => item.name);
-      return interestNames;
+      const maxNumOfElem = 5;
+      const interests = await Interest.find().select('-__v -themeColor -_id');
+
+      const types = [];
+      const defaultArray = interests
+        .sort((a, b) => {
+          const typeToAdd = a.interest.toString();
+          !types.includes(typeToAdd) ? types.push(typeToAdd) : '';
+
+          return b.chosenAtSignUp - a.chosenAtSignUp;
+        })
+        .splice(0, maxNumOfElem)
+        .map((item) => {
+          return {
+            topic: item.topic,
+            interest: item.interest,
+            value: 0,
+          };
+        });
+
+      this.INTEREST_TYPES = types;
+      this.DEFAULT_INTEREST_ARRAY = defaultArray;
+      return { types, defaultArray };
     } catch (err) {
-      return false;
+      const errorMsg =
+        'There was an error processing this function. This mostly because database connection failed. Try restarting the process.';
+      console.log(errorMsg);
+      process.exit(1);
     }
   }
 
@@ -71,114 +80,18 @@ class UserConfig {
       'outdoors',
       'fitness',
     ];
-    this.INTEREST_TOPIC_TYPES = [
-      'movies',
-      'recipes',
-      'cultural experiences',
-      'family activities',
-      'game reviews',
-      'beauty products',
-      'fashion trends',
-      'adventure travel',
-      'scientific discoveries',
-      'education',
-      'research breakthroughs',
-      'music production',
-      'backpacking',
-      'basketball',
-      'culinary techniques',
-      'cultural heritage',
-      'music reviews',
-      'gadgets',
-      'animation studios',
-      'tennis',
-      'fitness nutrition',
-      'stock market',
-      'parenting tips',
-      'video games',
-      'food reviews',
-      'baseball',
-      'literature',
-      'football (soccer)',
-      'wildlife',
-      'restaurant reviews',
-      'cultural events',
-      'travel adventures',
-      'comic books',
-      'visual arts',
-      'destinations',
-      'professional growth',
-      'virtual reality',
-      'personal finance',
-      'environment',
-      'rugby',
-      'cryptocurrency',
-      'american football',
-      'performing arts',
-      'startups',
-      'music festivals',
-      'esports',
-      'family health',
-      'relationship advice',
-      'comic artists',
-      'camping',
-      'software',
-      'freelancing',
-      'workplace tips',
-      'tech news',
-      'food trends',
-      'award shows',
-      'theater',
-      'outdoor gear',
-      'cooking',
-      'golf',
-      'gaming communities',
-      'cricket',
-      'entrepreneurship',
-      'job search',
-      'job interviews',
-      'comic conventions',
-      'business trends',
-      'animation techniques',
-      'workouts',
-      'travel tips',
-      'history',
-      'psychology',
-      'fitness challenges',
-      'makeup',
-      'mathematics',
-      'fashion shows',
-      'gaming news',
-      'animation films',
-      'exercise routines',
-      'outdoor activities',
-      'astronomy',
-      'fitness trends',
-      'gaming consoles',
-      'fitness equipment',
-      'parenting',
-      'artificial intelligence',
-      'nature exploration',
-      'hiking',
-      'beauty tips',
-      'marriage',
-      'formula 1',
-      'smartphones',
-      'music artists',
-      'tv shows',
-      'career development',
-      'art history',
-      'celebrities',
-      'music history',
-      'fashion designers',
-      'music genres',
+    this.DEFAULT_INTEREST_ARRAY = [
+      {
+        topic: 'comic artists',
+        interest: 'animation and comics',
+        value: 0,
+      },
+      { topic: 'camping', interest: 'outdoors', value: 0 },
+      { topic: 'astronomy', interest: 'science', value: 0 },
+      { topic: 'movies', interest: 'entertainment', value: 0 },
+      { topic: 'software', interest: 'technology', value: 0 },
     ];
-    this.DEFAULT_INTEREST_OBJECT = this._setDefaultInterestObject(
-      this.INTEREST_TYPES
-    );
-    this.DEFAULT_INTEREST_TOPIC_OBJECT = this._setDefaultInterestObject(
-      this.INTEREST_TOPIC_TYPES
-    );
+    console.log('DEV INIT');
   }
 }
 

@@ -96,13 +96,13 @@ exports.unfollow = catchAsync(async (req, res, next) => {
   });
 });
 
-//
-// CREATE VOLUNTEERS
+// //
+// // CREATE VOLUNTEERS
 // setTimeout(async () => {
 //   const dummy = {
-//     number: 14,
+//     number: 15,
 //     name: 'volunteer',
-//     frontEndUsername: 'Volunteer',
+//     frontEndUsername: 'VolunteeR',
 //     dateOfBirth: '2003-07-06',
 //     password: '#1234567eR',
 //     dummyEmailExtension: '@wm.com',
@@ -122,12 +122,17 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //   }
 // }, 10000);
 
-// CREATE FOLLOWS
+// // CREATE FOLLOWS
 // setTimeout(async () => {
 //   const allUsers = await User.find();
-//   const following = allUsers[0].id;
-//   const promises = allUsers.slice(1).map(async (user) => {
+//   const promises = allUsers.map(async (user, i) => {
+//     const randNum = Math.floor(Math.random() * allUsers.length);
+//     let following = allUsers[randNum]._id;
 //     const follower = user._id;
+//     following =
+//       following !== follower
+//         ? following
+//         : allUsers[randNum + 1]?._id || allUsers[randNum - 1]?._id;
 //     const createFollow = await Follow.create({ follower, following });
 //     await User.findByIdAndUpdate(
 //       { _id: follower },
@@ -140,15 +145,16 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //   });
 
 //   await Promise.all(promises);
-// }, 10000);
+//   console.log('FOLLOWED');
+// }, 30000);
 
-// DELETE ALL FOLLOWS
+// // DELETE ALL FOLLOWS
 // setTimeout(async () => {
 //   const deleted = await Follow.deleteMany();
 //   console.log('deleted', deleted);
 // }, 10000);
 
-// DELETE ALL USERS
+// // DELETE ALL USERS
 // setTimeout(async () => {
 //   const deleted = await User.deleteMany();
 //   console.log('deleted', deleted);

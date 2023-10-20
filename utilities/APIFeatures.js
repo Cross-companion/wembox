@@ -1,5 +1,5 @@
 class APIFeature {
-  constructor(query, queryString) {
+  constructor(query, queryString = {}) {
     this.query = query;
     this.queryString = queryString;
   }
@@ -15,9 +15,9 @@ class APIFeature {
     return this;
   }
 
-  sort() {
-    if (this.queryString.sort) {
-      const sortBy = this.queryString.sort.split(',').join(' ');
+  sort(sortByStr) {
+    if (this.queryString.sort || sortByStr) {
+      const sortBy = sortByStr || this.queryString.sort.split(',').join(' ');
       this.query = this.query.sort(sortBy);
     } else {
       this.query = this.query.sort('createdAt');
@@ -38,9 +38,9 @@ class APIFeature {
     return this;
   }
 
-  paginate() {
-    const page = this.queryString.page * 1 || 1;
-    const limit = this.queryString.limit * 1 || 10;
+  paginate(pageNum = 0, limitNum = 0) {
+    const page = pageNum || this.queryString.page * 1 || 1;
+    const limit = limitNum || this.queryString.limit * 1 || 10;
     const skip = (page - 1) * limit;
 
     this.query = this.query.skip(skip).limit(limit);

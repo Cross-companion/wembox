@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 
 const userConfig = require('../../config/userConfig');
 
@@ -151,33 +151,44 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     interests: {
-      type: {
-        interest: {
-          type: mongoose.Schema.Types.Map,
+      type: [
+        {
+          interest: {
+            type: String,
+            validate: {
+              validator: async function (value) {
+                const isValid = userConfig.INTEREST_TYPES.includes(value);
+                return isValid;
+              },
+              message:
+                'Invalid interest type specified. Check your spellings and try again.',
+            },
+          },
+          topic: String,
+          value: {
+            type: Number,
+            default: 0,
+          },
         },
-        topic: {
-          type: mongoose.Schema.Types.Map,
-        },
-      },
-      default: {
-        interest: userConfig.DEFAULT_INTEREST_OBJECT,
-        topic: userConfig.DEFAULT_INTEREST_TOPIC_OBJECT,
-      },
+      ],
+      default: [],
       select: false,
     },
     contentType: {
-      type: {
-        interest: {
-          type: mongoose.Schema.Types.Map,
+      type: [
+        {
+          interests: {
+            type: String,
+            enum: {
+              values: userConfig.INTEREST_TYPES,
+              message:
+                'Invalid interest type specified. Check your spellings and try again.',
+            },
+          },
+          topics: String,
         },
-        topic: {
-          type: mongoose.Schema.Types.Map,
-        },
-      },
-      default: {
-        interest: {},
-        topic: {},
-      },
+      ],
+      default: [],
     },
     IPGeoLocation: {
       type: {
@@ -220,10 +231,30 @@ userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
-
   this.passwordConfirm = undefined;
 
   next();
+});
+
+// This middleware can be very powerful. I can add some default topics to every user. eg `wembee` if useful.
+userSchema.pre('save', async function (next) {
+  const defaultArray = userConfig.DEFAULT_INTEREST_ARRAY;
+  const minInterestNum = 2;
+
+  if (this.interests.length < minInterestNum) {
+    defaultArray.forEach((el) => {
+      const elExits = this.interests.some(
+        (item) => item.interest === el.interest && item.topic === el.topic
+      );
+      elExits ? '' : this.interests.push(el);
+    });
+  }
+
+  next();
+});
+
+userSchema.post('save', function (doc) {
+  userConfig.setInterests();
 });
 
 userSchema.methods.isCorrectPassword = async (

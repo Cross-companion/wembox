@@ -1,51 +1,33 @@
 const mongoose = require('mongoose');
 const validateColor = require('validate-color').default;
 
-const interestSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      lowercase: true,
-      required: [true, 'A user interest must have a name.'],
-      unique: [true, 'An interest must be unique name.'],
-    },
-    themeColor: {
-      type: String,
-      lowercase: true,
-      validate: {
-        validator: function (value) {
-          // Validate that the string recieved is a valid color.
-          return validateColor(value);
-        },
-      },
-      default: '#ffffff',
-    },
-    chosenAtSignUp: {
-      type: Number,
-      default: 0,
-    },
-    interestTopicsRef: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'InterestTopic',
-      },
-    ],
-    // interestTopics -- Virtually populated
-    // numberOfTopics -- Virtually populated
+const interestSchema = new mongoose.Schema({
+  interest: {
+    type: String,
+    lowercase: true,
+    required: [true, 'A user interest must have a name.'],
+    unique: [true, 'A user interest must be unique name.'],
   },
-  {
-    toJSON: { virtuals: true },
-  }
-);
-
-interestSchema.virtual('interestTopics', {
-  ref: 'InterestTopic',
-  localField: 'name',
-  foreignField: 'interest',
-});
-
-interestSchema.virtual('numberOfTopics').get(function () {
-  return this.interestTopics.length;
+  topic: {
+    type: String,
+    lowercase: true,
+    required: [true, 'No topic was specified for this interest.'],
+  },
+  themeColor: {
+    type: String,
+    lowercase: true,
+    validate: {
+      validator: function (value) {
+        // Validate that the string recieved is a valid color.
+        return validateColor(value);
+      },
+    },
+    default: '#ffffff',
+  },
+  chosenAtSignUp: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Interest = mongoose.model('Interest', interestSchema);

@@ -15,14 +15,6 @@ router
     interestController.createInterests
   );
 
-router
-  .route('/interests/topics')
-  .get(interestController.getAllInterestTopics)
-  .post(
-    authController.restrictTo('senior-admin'),
-    interestController.createInterestTopics
-  );
-
 router.route('/creator/:topic?').get(suggestionController.suggestCreator);
 
 //-- <> -- //

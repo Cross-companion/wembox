@@ -1,36 +1,38 @@
 const Interest = require('../../models/interest/interestModel');
-const InterestTopic = require('../../models/interest/interestTopicModel');
 
 const factory = require('../handlerFactory');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
+const userConfig = require('../../config/userConfig');
 
-exports.getFollowers = catchAsync(async (req, res, next) => {
-  const findBy = { following: req.params.user_id || req.user.id };
-  const populateBy = ['follower'];
-  factory.findAll(
-    Follow,
-    findBy,
-    populateBy,
-    populateFollowItems
-  )(req, res, next);
+exports.createInterests = catchAsync(async (req, res, next) => {
+  const createData = [...req.body.data];
+  if (!createData.length)
+    return next(new AppError('No Document to be create was specified.', 400));
+
+  const newInterests = await Interest.insertMany(createData);
+  newInterests.forEach((item) => {
+    const newType = item.interest.toString();
+    const newObject = { topic: item.topic, interest: item.interest };
+    userConfig.INTEREST_TYPES.push(newType);
+    userConfig.DEFAULT_INTEREST_ARRAY.push(newObject);
+  });
+
+  res
+    .status(200)
+    .json({
+      status: 'success',
+      messaage: 'User interests created successfully.',
+    });
 });
 
-exports.createInterests = factory.createMany(Interest);
 exports.getAllInterests = factory.findAll(
   Interest,
   {
-    populateOptions: ['interestTopics'],
-    populateData: ['chosenAtSignUp name -_id -interest'],
+    populateData: ['chosenAtSignUp interest -_id'],
   },
   {
     paginate: false,
   }
 );
 exports.deleteInterest = catchAsync(async (req, res, next) => {});
-exports.createInterestTopics = factory.createMany(InterestTopic);
-exports.getAllInterestTopics = factory.findAll(InterestTopic, undefined, {
-  paginate: false,
-});
-exports.getOneInterestTopic = catchAsync(async (req, res, next) => {});
-exports.deleteInterestTopic = catchAsync(async (req, res, next) => {});
