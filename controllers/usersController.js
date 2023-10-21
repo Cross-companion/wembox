@@ -4,6 +4,7 @@ const factory = require('./handlerFactory');
 const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
 const helper = require('../utilities/helpers');
+const interestConfig = require('../config/interestConfig');
 
 const populateFollowItems = [
   'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing',
@@ -99,14 +100,50 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 // //
 // // CREATE VOLUNTEERS
 // setTimeout(async () => {
+//   const countries = interestConfig.exampleCountries;
+//   const contentType = () => {
+//     const types = [
+//       {
+//         topic: 'comic artists',
+//         interest: 'animation and comics',
+//         value: Math.floor(Math.random() * 10),
+//       },
+//       {
+//         topic: 'camping',
+//         interest: 'outdoors',
+//         value: Math.floor(Math.random() * 10),
+//       },
+//       {
+//         topic: 'astronomy',
+//         interest: 'science',
+//         value: Math.floor(Math.random() * 10),
+//       },
+//       {
+//         topic: 'movies',
+//         interest: 'entertainment',
+//         value: Math.floor(Math.random() * 10),
+//       },
+//       {
+//         topic: 'software',
+//         interest: 'technology',
+//         value: Math.floor(Math.random() * 10),
+//       },
+//     ];
+//     const selected = [];
+//     types.forEach((content) =>
+//       Math.round(Math.random()) ? selected.push(content) : ''
+//     );
+//     return selected;
+//   };
 //   const dummy = {
-//     number: 15,
+//     number: 200,
 //     name: 'volunteer',
 //     frontEndUsername: 'VolunteeR',
 //     dateOfBirth: '2003-07-06',
 //     password: '#1234567eR',
 //     dummyEmailExtension: '@wm.com',
 //   };
+
 //   for (let i = 0; i < dummy.number; i++) {
 //     const currentDummy = `${dummy.frontEndUsername}${i + 1}`;
 //     const created = await User.create({
@@ -117,9 +154,12 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //       password: dummy.password,
 //       passwordConfirm: dummy.password,
 //       dateOfBirth: dummy.dateOfBirth,
+//       contentType: contentType(),
+//       IPGeoLocation:
+//         countries[Math.round(Math.random() * (countries.length - 1))],
 //     });
-//     console.log('created: ', created);
 //   }
+//   console.log(`CREATED ${dummy.number} Volunteers`);
 // }, 10000);
 
 // // CREATE FOLLOWS
@@ -143,19 +183,18 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //       { $inc: { numberOfFollowers: 1 } }
 //     );
 //   });
-
 //   await Promise.all(promises);
-//   console.log('FOLLOWED');
-// }, 30000);
+//   console.log(`FOLLOWED ${allUsers.length} Volunteers`);
+// }, 10000);
 
 // // DELETE ALL FOLLOWS
 // setTimeout(async () => {
 //   const deleted = await Follow.deleteMany();
-//   console.log('deleted', deleted);
+//   console.log(`Deleted: ${deleted.deletedCount} Follows`);
 // }, 10000);
 
 // // DELETE ALL USERS
 // setTimeout(async () => {
 //   const deleted = await User.deleteMany();
-//   console.log('deleted', deleted);
+//   console.log(`Deleted: ${deleted.deletedCount} Volunteers`);
 // }, 10000);

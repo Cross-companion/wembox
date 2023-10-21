@@ -12,21 +12,20 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
   //   },
   // ]);
 
+  console.log(req.user.IPGeoLocation.country, ' :Country!');
   const users = await User.find({
-    interests: { $elemMatch: { topic: topic } },
-  });
-  // console.log(Object.keys(users.interests.interests).includes(topic));
+    contentType: { $elemMatch: { topic: topic } },
+    'IPGeoLocation.country': req.user.IPGeoLocation.country,
+  })
+    .sort('-numberOfFollowers')
+    .select(
+      'profileImg accountType wems numberOfFollowers IPGeoLocation name frontEndUsername frontEndUsername'
+    );
+
   res.status(200).json({
     status: 'success',
     results: users.length,
     users,
   });
-  // const findBy = {
-  //   $where: function () {
-  //     // Use JavaScript code to check if the desiredValue is part of the keys
-  //     const keys = Object.keys(this.contentType.topics);
-  //     return keys.includes(topic);
-  //   },
-  // };
   // factory.findAll(User, findBy)(req, res, next);
 });

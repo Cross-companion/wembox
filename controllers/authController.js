@@ -151,11 +151,11 @@ exports.signup = catchAsync(async (req, res, next) => {
 
   const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
 
-  await sendEmail({
-    email: req.body.email,
-    subject: 'Welcome to WEMBOX!!',
-    message,
-  });
+  // await sendEmail({
+  //   email: req.body.email,
+  //   subject: 'Welcome to WEMBOX!!',
+  //   message,
+  // });
 
   createSendToken(res, newUser, 200);
 });

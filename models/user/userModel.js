@@ -177,15 +177,22 @@ const userSchema = new mongoose.Schema(
     contentType: {
       type: [
         {
-          interests: {
+          interest: {
             type: String,
-            enum: {
-              values: userConfig.INTEREST_TYPES,
+            validate: {
+              validator: async function (value) {
+                const isValid = userConfig.INTEREST_TYPES.includes(value);
+                return isValid;
+              },
               message:
                 'Invalid interest type specified. Check your spellings and try again.',
             },
           },
-          topics: String,
+          topic: String,
+          value: {
+            type: Number,
+            default: 0,
+          },
         },
       ],
       default: [],
@@ -195,14 +202,17 @@ const userSchema = new mongoose.Schema(
         country: {
           type: String,
           default: 'global',
+          lowercase: true,
         },
         city: {
           type: String,
           default: 'global',
+          lowercase: true,
         },
         continent: {
           type: String,
           default: 'global',
+          lowercase: true,
         },
       },
       default: {
