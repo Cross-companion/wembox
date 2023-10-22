@@ -106,27 +106,27 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //       {
 //         topic: 'comic artists',
 //         interest: 'animation and comics',
-//         value: Math.floor(Math.random() * 10),
+//         engagements: Math.floor(Math.random() * 10),
 //       },
 //       {
 //         topic: 'camping',
 //         interest: 'outdoors',
-//         value: Math.floor(Math.random() * 10),
+//         engagements: Math.floor(Math.random() * 10),
 //       },
 //       {
 //         topic: 'astronomy',
 //         interest: 'science',
-//         value: Math.floor(Math.random() * 10),
+//         engagements: Math.floor(Math.random() * 10),
 //       },
 //       {
 //         topic: 'movies',
 //         interest: 'entertainment',
-//         value: Math.floor(Math.random() * 10),
+//         engagements: Math.floor(Math.random() * 10),
 //       },
 //       {
 //         topic: 'software',
 //         interest: 'technology',
-//         value: Math.floor(Math.random() * 10),
+//         engagements: Math.floor(Math.random() * 10),
 //       },
 //     ];
 //     const selected = [];
@@ -136,7 +136,7 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //     return selected;
 //   };
 //   const dummy = {
-//     number: 200,
+//     number: 10,
 //     name: 'volunteer',
 //     frontEndUsername: 'VolunteeR',
 //     dateOfBirth: '2003-07-06',
@@ -185,7 +185,7 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 //   });
 //   await Promise.all(promises);
 //   console.log(`FOLLOWED ${allUsers.length} Volunteers`);
-// }, 10000);
+// }, 20000);
 
 // // DELETE ALL FOLLOWS
 // setTimeout(async () => {

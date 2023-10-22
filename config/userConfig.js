@@ -47,7 +47,7 @@ class UserConfig {
           return {
             topic: item.topic,
             interest: item.interest,
-            value: 0,
+            engagements: 0,
           };
         });
 
@@ -85,12 +85,12 @@ class UserConfig {
       {
         topic: 'comic artists',
         interest: 'animation and comics',
-        value: 0,
+        engagements: 0,
       },
-      { topic: 'camping', interest: 'outdoors', value: 0 },
-      { topic: 'astronomy', interest: 'science', value: 0 },
-      { topic: 'movies', interest: 'entertainment', value: 0 },
-      { topic: 'software', interest: 'technology', value: 0 },
+      { topic: 'camping', interest: 'outdoors', engagements: 0 },
+      { topic: 'astronomy', interest: 'science', engagements: 0 },
+      { topic: 'movies', interest: 'entertainment', engagements: 0 },
+      { topic: 'software', interest: 'technology', engagements: 0 },
     ];
     console.log('DEV INIT');
   }

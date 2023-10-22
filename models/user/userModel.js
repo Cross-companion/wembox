@@ -165,7 +165,7 @@ const userSchema = new mongoose.Schema(
             },
           },
           topic: String,
-          value: {
+          engagements: {
             type: Number,
             default: 0,
           },
@@ -189,7 +189,7 @@ const userSchema = new mongoose.Schema(
             },
           },
           topic: String,
-          value: {
+          engagements: {
             type: Number,
             default: 0,
           },
