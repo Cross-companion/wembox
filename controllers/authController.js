@@ -1,9 +1,11 @@
+const fs = require('fs');
 const { promisify } = require('util');
+
 const jwt = require('jsonwebtoken');
 const request = require('request');
 const crypto = require('crypto');
-const ip = require('ip');
 const Redis = require('ioredis');
+const Reader = require('@maxmind/geoip2-node').Reader;
 
 const User = require('../models/user/userModel');
 const catchAsync = require('../utilities/catchAsync');
@@ -46,6 +48,11 @@ const createSendToken = (res, user, statusCode) => {
 };
 
 exports.dataExists = catchAsync(async (req, res, next) => {
+  Reader.open('./geolite-db/GeoLite2-City.mmdb').then((reader) => {
+    const response = reader.city('105.113.80.161');
+
+    console.log(response);
+  });
   let emailExists, usernameExists;
 
   const { email, username } = req.body;
@@ -337,3 +344,29 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   createSendToken(res, user, 201);
 });
+
+// USED TO POPULATE COUNTRYREGIONS.JSON remove if no longer useful.
+// const url = 'https://restcountries.com/v3.1/all';
+// request(url, (err, response, body) => {
+//   body = JSON.parse(body);
+
+//   console.log(body[0]);
+//   const data = JSON.stringify(
+//     body.map((country) => {
+//       const name = country.name.common?.toLowerCase();
+//       const region = country.subregion?.toLowerCase();
+//       return {
+//         name,
+//         region,
+//       };
+//     })
+//   );
+//   // Write the data to the file
+//   fs.writeFile('./config/countryRegions.json', data, (err) => {
+//     if (err) {
+//       console.error('Error writing to the file:', err);
+//     } else {
+//       return;
+//     }
+//   });
+// });
