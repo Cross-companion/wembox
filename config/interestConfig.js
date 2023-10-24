@@ -1,5 +1,32 @@
 class InterestConfig {
   constructor() {
+    this.DEFAULT_REGIONS_ARRAY = [
+      'central asia',
+      'central europe',
+      'western africa',
+      'australia and new zealand',
+      'western asia',
+      'eastern europe',
+      'melanesia',
+      'southeast europe',
+      'middle africa',
+      'caribbean',
+      'micronesia',
+      'northern africa',
+      'south-eastern asia',
+      'western europe',
+      'south america',
+      'southern europe',
+      'eastern africa',
+      'southern africa',
+      'northern europe',
+      'polynesia',
+      'north america',
+      'eastern asia',
+      'central america',
+      'southern asia',
+    ];
+    this.DEFAULT_REGIONS = this._generateDefaultRegions();
     this.exampleCountries = [
       {
         country: 'Nigeria',
@@ -304,6 +331,16 @@ class InterestConfig {
     //     continent: 'South America',
     //   },
     // ];
+  }
+
+  _generateDefaultRegions() {
+    const regions = this.DEFAULT_REGIONS_ARRAY.map((region) => {
+      return {
+        region,
+        engagement: 0,
+      };
+    });
+    return regions;
   }
 }
 

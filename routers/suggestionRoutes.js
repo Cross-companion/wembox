@@ -6,6 +6,7 @@ const suggestionController = require('../controllers/suggestionController');
 const interestController = require('../controllers/userInterest/interestController');
 
 router.use(authController.protect);
+router.route('/test').get(suggestionController.getSuggestions);
 
 router
   .route('/interests')

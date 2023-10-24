@@ -4,7 +4,6 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const request = require('request');
 const crypto = require('crypto');
-const Redis = require('ioredis');
 const Reader = require('@maxmind/geoip2-node').Reader;
 
 const User = require('../models/user/userModel');
@@ -12,6 +11,7 @@ const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
 const sendEmail = require('../utilities/email');
 const helpers = require('../utilities/helpers');
+const redis = require('../utilities/redisInit');
 const userConfig = require('../config/userConfig');
 
 // ---?? Redis disabled for testing
@@ -48,11 +48,12 @@ const createSendToken = (res, user, statusCode) => {
 };
 
 exports.dataExists = catchAsync(async (req, res, next) => {
-  Reader.open('./geolite-db/GeoLite2-City.mmdb').then((reader) => {
-    const response = reader.city('105.113.80.161');
+  // TEST, CAN BE REMOVED
+  // Reader.open('./geolite-db/GeoLite2-City.mmdb').then((reader) => {
+  //   const response = reader.city('105.113.80.161');
 
-    console.log(response);
-  });
+  //   console.log(response);
+  // });
   let emailExists, usernameExists;
 
   const { email, username } = req.body;

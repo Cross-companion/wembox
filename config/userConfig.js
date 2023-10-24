@@ -16,10 +16,9 @@ class UserConfig {
     this.ADMIN_TYPES = { normalAdmin: 'admin', seniorAdmin: 'senior-admin' };
     this.INTEREST_TYPES = [];
     this.DEFAULT_INTEREST_ARRAY = [];
-    // process.env.NODE_ENV === 'development'
-    //   ? this._testInitialise()
-    // :
-    this._initialise();
+    process.env.NODE_ENV === 'development'
+      ? this._testInitialise()
+      : this._initialise();
   }
 
   // INTEREST_TYPES: Array containing all the possible interest that a user can chose from.

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const interestConfig = require('../../config/interestConfig');
 const validateColor = require('validate-color').default;
 
 const interestSchema = new mongoose.Schema({
@@ -12,6 +13,18 @@ const interestSchema = new mongoose.Schema({
     type: String,
     lowercase: true,
     required: [true, 'No topic was specified for this interest.'],
+  },
+  regions: {
+    type: [
+      {
+        region: {
+          type: String,
+        },
+        engagement: Number,
+      },
+    ],
+    required: [true, 'Please specify a region for this interest'],
+    default: interestConfig.DEFAULT_REGIONS,
   },
   themeColor: {
     type: String,
@@ -29,6 +42,8 @@ const interestSchema = new mongoose.Schema({
     default: 0,
   },
 });
+
+interestSchema.index({ topic: 1 });
 
 const Interest = mongoose.model('Interest', interestSchema);
 
