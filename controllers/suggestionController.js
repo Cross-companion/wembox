@@ -10,6 +10,7 @@ exports.getSuggestions = catchAsync(async (req, res, next) => {
   const cachedInterests = await redis
     .get(interestKey)
     .then((data) => JSON.parse(data));
+
   const interests = cachedInterests || (await Interest.find());
   if (!cachedInterests)
     await redis.set(
@@ -18,20 +19,57 @@ exports.getSuggestions = catchAsync(async (req, res, next) => {
       'ex',
       process.env.REDIS_VERIFICATION_EXP
     );
-  res.status(200).json({
-    status: 'success',
-    interests,
-  });
+
+  req.suggestions = interests;
+  next();
 });
 
 exports.suggestCreator = catchAsync(async (req, res, next) => {
-  const topic = req.body.topic || '';
+  let topics = req.body.topics || '';
+  const userCountry = req.user.IPGeoLocation.country;
+  const numberOfSuggestions = +req.body.numberOfSuggestions || 5;
+  let countryWeight = +req.body.countryWeight || 3;
+  countryWeight =
+    numberOfSuggestions > countryWeight ? countryWeight : numberOfSuggestions;
+  const page = +req.body.page || 1;
+  const maxSuggestions = 50;
+  const minSuggestions = 2;
+
+  if (
+    numberOfSuggestions > maxSuggestions ||
+    numberOfSuggestions < minSuggestions
+  )
+    return next(
+      new AppError(
+        `Number of suggestions should not be greater than ${maxSuggestions} or less than ${minSuggestions}`,
+        403
+      )
+    );
+
+  if (!Array.isArray(topics)) {
+    topics = [topics]; // Convert to an array if it's not already
+  }
+
+  console.log(
+    'Page:',
+    page,
+    'numberOfSuggestions:',
+    numberOfSuggestions,
+    'countryWeight:',
+    countryWeight
+  );
+  console.log('Skips:', (page - 1) * (numberOfSuggestions - countryWeight));
+  console.log('Country Skips:', (page - 1) * countryWeight);
+  console.log('Normal Limit:', numberOfSuggestions - countryWeight || 1);
+  console.log('Country Limit:', (page - 1) * countryWeight);
 
   const users = await User.aggregate([
     {
       $match: {
         contentType: {
-          $elemMatch: { topic: topic },
+          $elemMatch: {
+            topic: { $in: topics },
+          },
         },
       },
     },
@@ -43,7 +81,7 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
               $filter: {
                 input: '$contentType',
                 as: 'content',
-                cond: { $eq: ['$$content.topic', topic] },
+                cond: { $in: ['$$content.topic', topics] },
               },
             },
             0,
@@ -57,11 +95,60 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
       },
     },
     {
+      $facet: {
+        differentCountry: [
+          {
+            $match: {
+              'IPGeoLocation.country': { $ne: userCountry },
+            },
+          },
+          {
+            $skip: (page - 1) * (numberOfSuggestions - countryWeight || 1),
+          },
+          {
+            $limit: numberOfSuggestions - countryWeight || 1,
+          },
+        ],
+        sameCountry: [
+          {
+            $match: {
+              'IPGeoLocation.country': userCountry,
+            },
+          },
+          {
+            $skip: (page - 1) * countryWeight || 1,
+          },
+          {
+            $limit: countryWeight || 1,
+          },
+        ],
+      },
+    },
+    {
       $project: {
-        // profileImg: 1,
-        // accountType: 1,
-        // wems: 1,
-        // name: 1,
+        users: {
+          $concatArrays: ['$sameCountry', '$differentCountry'],
+        },
+      },
+    },
+    {
+      $unwind: '$users',
+    },
+    {
+      $replaceRoot: { newRoot: '$users' },
+    },
+    {
+      $sort: {
+        'contentTypeMatched.engagements': -1,
+      },
+    },
+    {
+      $project: {
+        profileImg: 1,
+        accountType: 1,
+        'IPGeoLocation.country': 1,
+        wems: 1,
+        name: 1,
         frontEndUsername: 1,
         contentTypeMatched: 1,
       },
@@ -78,9 +165,13 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
 });
 
 // WHAT TO DO NEXT: 22-10-23
-// Instead of finding documents by their contentType and location, I would find them by their contentType and a factor of the user engagement rate (Either by the percentage of users that engage with their wems when viewed (by 100%) or by the rate of user engagements by a monthly rate (using dates) is yet to be decided).
-// Switch to an Aggregation for better access to documents.
 // To create a balance in the location of accounts that we suggest to a user, we would create a factor that watches the rate of user engagement on a topic in a particular geograpghical area and we can then use this factor to decide evenly on which creator to show a user
-// To detect if a creator selected that he wants to be creating a particular content type, We can create a new property of the `contentType` called `userSpecified` that would be a boolean.
-//
-//
+
+// WHAT TO DO NEXT: 22-10-23
+// Add skips and limits to aggregation so that we can respond to a next button
+// Prepare the aggregation to be able to handle an array of topics.
+// Research on how I can possibly curb the value of the interest engagement to avoid it increasing to a BIG integer.
+// Add total engagements to interest to be able to calculate the countryWeights dynamically.
+
+// WHAT TO DO NEXT: 22-10-23
+// The `contentTypeMatched` variable should be filtered and only select the highes engagements
