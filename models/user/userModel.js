@@ -202,18 +202,23 @@ const userSchema = new mongoose.Schema(
       type: {
         country: {
           type: String,
-          default: 'global',
           lowercase: true,
+          default: 'global',
         },
         city: {
           type: String,
-          default: 'global',
           lowercase: true,
+          default: 'global',
         },
         continent: {
           type: String,
-          default: 'global',
           lowercase: true,
+          default: 'global',
+        },
+        region: {
+          type: String,
+          lowercase: true,
+          default: 'global',
         },
       },
       default: {

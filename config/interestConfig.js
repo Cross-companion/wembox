@@ -26,7 +26,6 @@ class InterestConfig {
       'central america',
       'southern asia',
     ];
-    this.DEFAULT_REGIONS = this._generateDefaultRegions();
     this.exampleCountries = [
       {
         country: 'Nigeria',
@@ -333,11 +332,11 @@ class InterestConfig {
     // ];
   }
 
-  _generateDefaultRegions() {
+  DEFAULT_REGIONS() {
     const regions = this.DEFAULT_REGIONS_ARRAY.map((region) => {
       return {
         region,
-        engagement: 0,
+        engagements: Math.floor(Math.random() * 10), // Math.Random is for test. PROD = 0
       };
     });
     return regions;

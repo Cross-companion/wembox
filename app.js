@@ -9,6 +9,7 @@ const cookieParser = require('cookie-parser');
 const userRouter = require('./routers/userRoutes');
 const suggestionRouter = require('./routers/suggestionRoutes');
 const globalErrorHandler = require('./controllers/globalErrorHandler');
+const TRAP = require('./utilities/trap'); // For testing purpose only
 
 const app = express();
 
