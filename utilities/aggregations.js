@@ -69,7 +69,7 @@ exports.AGG_SUGGEST_CREATOR = (
             },
           },
           {
-            $skip: (page - 1) * (numberOfSuggestions - countryWeight || 1),
+            $skip: (page - 1) * (numberOfSuggestions - countryWeight),
           },
           {
             $limit: numberOfSuggestions - countryWeight || 1,
@@ -82,7 +82,7 @@ exports.AGG_SUGGEST_CREATOR = (
             },
           },
           {
-            $skip: (page - 1) * countryWeight || 1,
+            $skip: (page - 1) * countryWeight,
           },
           {
             $limit: countryWeight || 1,
