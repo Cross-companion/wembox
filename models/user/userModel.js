@@ -257,6 +257,11 @@ userSchema.pre('save', async function (next) {
   const defaultArray = userConfig.DEFAULT_INTEREST_ARRAY;
   const minInterestNum = 2;
 
+  this.IPGeoLocation.country = this.IPGeoLocation?.country?.toLowerCase();
+  this.IPGeoLocation.city = this.IPGeoLocation?.city?.toLowerCase();
+  this.IPGeoLocation.continent = this.IPGeoLocation?.continent?.toLowerCase();
+  this.IPGeoLocation.region = this.IPGeoLocation?.region?.toLowerCase();
+
   if (this.interests.length < minInterestNum) {
     defaultArray.forEach((el) => {
       const elExits = this.interests.some(

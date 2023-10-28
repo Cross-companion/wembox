@@ -1,5 +1,6 @@
 const Reader = require('@maxmind/geoip2-node').Reader;
 const request = require('request');
+const { engagementTimeSpans } = require('../config/interestConfig');
 //
 const catchAsync = require('./catchAsync');
 //
@@ -71,4 +72,43 @@ exports.getLocationByIP = async (ip) => {
     city = stringForGlobal;
   }
   return { continent, country, city };
+};
+
+const calculatePercentage = (part, whole) => {
+  if (part > whole)
+    throw new Error(
+      'When calculating percentages, the `part` must be less than the `whole`'
+    );
+  const percentage = (part / whole) * 100;
+  const reversePercentage = 100 - percentage;
+  return { percentage, reversePercentage };
+};
+
+exports.getCountryWeight = (userInterest, timeSpan = 'monthly') => {
+  if (!engagementTimeSpans.includes(timeSpan)) return 0;
+
+  // This .reduce calculate the totals with the secified timeSpan for all the interests specified (single or multi).
+  const { countryEngagements, globalEngagements } = userInterest.reduce(
+    (accumulator, interest) => {
+      if (interest.regions[0] === 'global' || !interest.regions[0])
+        return accumulator;
+      accumulator.globalEngagements += interest.engagements[timeSpan];
+      accumulator.countryEngagements +=
+        interest.regions[0].engagements[timeSpan];
+      return accumulator;
+    },
+    { countryEngagements: 0, globalEngagements: 0 }
+  );
+
+  // Gets the percentage of a regions engagement inrelation to the global engagements on the specified topics.
+  const countryPercentage = Math.ceil(
+    calculatePercentage(countryEngagements, globalEngagements).percentage / 10
+  );
+
+  // Sets appriopriate countryWeights
+  if (!countryPercentage) return false;
+  console.log(countryPercentage);
+  if (countryPercentage <= 2) return countryPercentage + 2;
+  if (countryPercentage <= 4) return 5;
+  else return 6;
 };

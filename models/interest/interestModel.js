@@ -4,6 +4,21 @@ const validateColor = require('validate-color').default;
 
 const interestSchema = new mongoose.Schema(
   {
+    themeColor: {
+      type: String,
+      lowercase: true,
+      validate: {
+        validator: function (value) {
+          // Validate that the string recieved is a valid color.
+          return validateColor(value);
+        },
+      },
+      default: '#ffffff',
+    },
+    chosenAtSignUp: {
+      type: Number,
+      default: 0,
+    },
     topic: {
       type: String,
       lowercase: true,
@@ -20,26 +35,52 @@ const interestSchema = new mongoose.Schema(
           region: {
             type: String,
           },
-          engagements: Number,
+          engagements: {
+            type: {
+              daily: {
+                type: Number,
+                default: 0,
+              },
+              weekly: {
+                type: Number,
+                default: 0,
+              },
+              monthly: {
+                type: Number,
+                default: 0,
+              },
+            },
+            default: {
+              daily: 0,
+              weekly: 0,
+              monthly: 0,
+            },
+          },
         },
       ],
       required: [true, 'Please specify a region for this interest'],
       default: interestConfig.DEFAULT_REGIONS(),
     },
-    themeColor: {
-      type: String,
-      lowercase: true,
-      validate: {
-        validator: function (value) {
-          // Validate that the string recieved is a valid color.
-          return validateColor(value);
+    engagements: {
+      type: {
+        daily: {
+          type: Number,
+          default: 0,
+        },
+        weekly: {
+          type: Number,
+          default: 0,
+        },
+        monthly: {
+          type: Number,
+          default: 0,
         },
       },
-      default: '#ffffff',
-    },
-    chosenAtSignUp: {
-      type: Number,
-      default: 0,
+      default: {
+        daily: 0,
+        weekly: 0,
+        monthly: 0,
+      },
     },
   },
   {
@@ -51,13 +92,30 @@ const interestSchema = new mongoose.Schema(
 interestSchema.index({ interest: 1, topic: 1 }, { unique: true });
 
 // Virtual totalEngagments property
-interestSchema.virtual('engagements').get(function () {
-  const engagements = this.regions.reduce(
-    (accumulator, region) => accumulator + region.engagements,
+// interestSchema.virtual('engagements').get(function () {
+//   const engagements = this.regions.reduce(
+//     (accumulator, region) => accumulator + region.engagements,
+//     0
+//   );
+
+//   return engagements;
+// });
+
+interestSchema.pre('save', function (next) {
+  // This manual assignment of engagements if for testing before Wems are designed. This should be done automatically on the begining of every day by querying all follow /public wems and setting the appropriate values
+  this.engagements.daily = this.regions.reduce(
+    (accumulator, region) => accumulator + region.engagements.daily,
     0
   );
-
-  return engagements;
+  this.engagements.weekly = this.regions.reduce(
+    (accumulator, region) => accumulator + region.engagements.weekly,
+    0
+  );
+  this.engagements.monthly = this.regions.reduce(
+    (accumulator, region) => accumulator + region.engagements.monthly,
+    0
+  );
+  next();
 });
 
 const Interest = mongoose.model('Interest', interestSchema);

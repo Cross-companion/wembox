@@ -8,23 +8,24 @@ class ReUse {
   constructor() {
     // TAKE EXTRA CARE BEFORE CALLING A METHOD
     this.delayTime = 1000 * 10;
-    this.CREATE_USERS(20000);
-    // this.DELETE_USERS(20000);
-    // this.DELETE_FOLLOWS(20000);
+    // this.CREATE_USERS(10000, 10);
+    // this.CREATE_FOLLOWS(30000);
+    // this.CREATE_INTERESTS();
+    // this.DELETE_USERS();
+    // this.DELETE_FOLLOWS();
+    // this.DELETE_INTERESTS();
   }
 
-  CREATE_USERS(delay) {
+  CREATE_USERS(delay, numberOfDummies) {
     setTimeout(async () => {
       const countries = interestConfig.exampleCountries;
       countries.forEach((country) => {
-        const region =
-          countryRegions.find((country) => country.name == 'country').region ||
-          global;
-        country.region = region;
+        const region = countryRegions.find((region) => {
+          return region.country === country.country.toLowerCase();
+        });
+        country.region = region?.region || 'global';
       });
-      console.log(countries[0]);
-      console.log(countries[1]);
-      console.log(countries[2]);
+
       const contentType = () => {
         const types = [
           {
@@ -60,7 +61,7 @@ class ReUse {
         return selected;
       };
       const dummy = {
-        number: 10,
+        number: numberOfDummies || 10,
         name: 'volunteer',
         frontEndUsername: 'VolunteeR',
         dateOfBirth: '2003-07-06',
@@ -69,20 +70,18 @@ class ReUse {
       };
       for (let i = 0; i < dummy.number; i++) {
         const currentDummy = `${dummy.frontEndUsername}${i + 1}`;
-        const created =
-          0 &&
-          (await User.create({
-            name: dummy.name,
-            frontEndUsername: currentDummy,
-            username: currentDummy,
-            email: currentDummy + dummy.dummyEmailExtension,
-            password: dummy.password,
-            passwordConfirm: dummy.password,
-            dateOfBirth: dummy.dateOfBirth,
-            contentType: contentType(),
-            IPGeoLocation:
-              countries[Math.round(Math.random() * (countries.length - 1))],
-          }));
+        const created = await User.create({
+          name: dummy.name,
+          frontEndUsername: currentDummy,
+          username: currentDummy,
+          email: currentDummy + dummy.dummyEmailExtension,
+          password: dummy.password,
+          passwordConfirm: dummy.password,
+          dateOfBirth: dummy.dateOfBirth,
+          contentType: contentType(),
+          IPGeoLocation:
+            countries[Math.round(Math.random() * (countries.length - 1))],
+        });
       }
       console.log(`CREATED ${dummy.number} Volunteers`);
     }, delay || this.delayTime);

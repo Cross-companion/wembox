@@ -3,7 +3,7 @@ const router = express.Router();
 
 const authController = require('../controllers/authController');
 const suggestionController = require('../controllers/suggestionController');
-const interestController = require('../controllers/userInterest/interestController');
+const interestController = require('../controllers/interest/interestController');
 
 router.use(authController.protect);
 
@@ -16,7 +16,7 @@ router
   );
 
 router
-  .route('/creator/:topic?')
+  .route('/creator/:timeSpan?')
   .get(
     suggestionController.getSuggestions,
     suggestionController.suggestCreator

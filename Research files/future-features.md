@@ -27,6 +27,13 @@
 - 18/10/2023
   - When creating a new interest topic, I have to adjust the implementation so that if the process is running and a new interest / interest topic is created, it reflects on the userConfig file and in all the already created users. I will do this by adding the newly created item to the userConfig.INTEREST / .DEFAULT variables so that any new user created automatically recieves this new item. And also, add the newly created item to all the users in the users collection.
 
+#### TIE BRANDED HASHTAG TO SERIES
+
+- 28/10/2023
+  - When the series and hashtag features are rolled out, One important idea that should be considered is that:
+    A hashtage can be branded (paid), and if the branded hashtag is related to a series, any time the hastag as called, beneath the post containing the hashtag would be a dialogue box that contains details of the series and a button for following the series.
+    For example, a business, let's say Apple inc, can create a series for their yearly apple event and they can then get a branded hashtag eg #AppleEvent and when any body post this hastag, a dialogue as proposed appears. The size and number of occurence (if a user can choose to not make it occur) can be discussed in the future.
+
 ### Frontend
 
 ### Backend

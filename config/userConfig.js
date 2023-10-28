@@ -2,6 +2,7 @@ const Interest = require('../models/interest/interestModel');
 
 class UserConfig {
   constructor() {
+    this.DEFAULT_LOCATION = 'global';
     this.ACCOUNT_TYPES = [
       'user',
       'organization',

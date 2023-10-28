@@ -330,13 +330,18 @@ class InterestConfig {
     //     continent: 'South America',
     //   },
     // ];
+    this.engagementTimeSpans = ['monthly', 'weekly', 'daily'];
   }
 
   DEFAULT_REGIONS() {
     const regions = this.DEFAULT_REGIONS_ARRAY.map((region) => {
       return {
         region,
-        engagements: Math.floor(Math.random() * 10), // Math.Random is for test. PROD = 0
+        engagements: {
+          daily: Math.floor(Math.random() * 100),
+          weekly: Math.floor(Math.random() * 700),
+          monthly: Math.floor(Math.random() * 3000),
+        }, // Math.Random is for test. PROD = 0
       };
     });
     return regions;
