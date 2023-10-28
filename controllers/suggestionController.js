@@ -81,6 +81,3 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
     users,
   });
 });
-
-// WHAT TO DO NEXT: 26-10-23
-// Add IPGeoLocation on signUp controller and also adding the region.

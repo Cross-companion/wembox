@@ -10,15 +10,13 @@ const User = require('../models/user/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
 const sendEmail = require('../utilities/email');
-const helpers = require('../utilities/helpers');
+const {
+  generateRandomToken,
+  getIPAddress,
+  getLocationByIP,
+} = require('../utilities/helpers');
 const redis = require('../utilities/redisInit');
 const userConfig = require('../config/userConfig');
-
-// ---?? Redis disabled for testing
-// const redis = new Redis({
-//   host: process.env.REDIS_HOST,
-//   port: process.env.REDIS_PORT,
-// });
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -48,12 +46,6 @@ const createSendToken = (res, user, statusCode) => {
 };
 
 exports.dataExists = catchAsync(async (req, res, next) => {
-  // TEST, CAN BE REMOVED
-  // Reader.open('./geolite-db/GeoLite2-City.mmdb').then((reader) => {
-  //   const response = reader.city('105.113.80.161');
-
-  //   console.log(response);
-  // });
   let emailExists, usernameExists;
 
   const { email, username } = req.body;
@@ -101,8 +93,9 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
         'Please provide your email address to get a verification email.',
         400
       )
-    ); // Contemplating. this is the only email because because it would still undergo token and DB verification
-  const token = helpers.generateRandomToken();
+    );
+
+  const token = generateRandomToken();
   const emailKey = process.env.EMAIL_CACHE_KEY + email;
   redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
   const message = `Hello ${req.body.name}, \nYour email verification token is: ${token}.\n Please do not share this with anyone. Thanks.\nNwodoh Daniel\nLead-member`;
@@ -143,6 +136,9 @@ exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
+  const userIP = getIPAddress(req);
+  const userLocation = await getLocationByIP(userIP);
+
   const newUser = await User.create({
     name: req.body.name,
     frontEndUsername: req.body.username,
@@ -153,8 +149,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
     following: req.body.following,
-    contentType: req.body.contentType,
-    interests: req.body.interests,
+    IPGeoLocation: userLocation,
   });
 
   const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;

@@ -225,6 +225,7 @@ const userSchema = new mongoose.Schema(
         country: 'global',
         city: 'global',
         continent: 'global',
+        region: 'global',
       },
     },
   },
@@ -257,6 +258,7 @@ userSchema.pre('save', async function (next) {
   const defaultArray = userConfig.DEFAULT_INTEREST_ARRAY;
   const minInterestNum = 2;
 
+  console.log('/////', this.IPGeoLocation.region, '/////');
   this.IPGeoLocation.country = this.IPGeoLocation?.country?.toLowerCase();
   this.IPGeoLocation.city = this.IPGeoLocation?.city?.toLowerCase();
   this.IPGeoLocation.continent = this.IPGeoLocation?.continent?.toLowerCase();

@@ -1,6 +1,7 @@
 const Reader = require('@maxmind/geoip2-node').Reader;
 const request = require('request');
 const { engagementTimeSpans } = require('../config/interestConfig');
+const countryRegions = require('../config/countryRegions.json');
 //
 const catchAsync = require('./catchAsync');
 //
@@ -57,21 +58,27 @@ exports.getIPAddress = (request) => {
 };
 
 exports.getLocationByIP = async (ip) => {
-  let continent, country, city;
+  let continent, country, city, region;
   try {
     await Reader.open('./geolite-db/GeoLite2-city.mmdb').then((reader) => {
       const response = reader.city(ip);
       continent = response.continent.names.en;
       country = response.country.names.en;
       city = response.city.names.en;
+      region = countryRegions.find(
+        (region) =>
+          region.country.toLowerCase() ==
+          response.country.names.en.toLowerCase()
+      ).region;
     });
   } catch (err) {
     const stringForGlobal = 'global';
     continent = stringForGlobal;
     country = stringForGlobal;
+    region = stringForGlobal;
     city = stringForGlobal;
   }
-  return { continent, country, city };
+  return { continent, country, city, region };
 };
 
 const calculatePercentage = (part, whole) => {
@@ -107,7 +114,6 @@ exports.getCountryWeight = (userInterest, timeSpan = 'monthly') => {
 
   // Sets appriopriate countryWeights
   if (!countryPercentage) return false;
-  console.log(countryPercentage);
   if (countryPercentage <= 2) return countryPercentage + 2;
   if (countryPercentage <= 4) return 5;
   else return 6;
