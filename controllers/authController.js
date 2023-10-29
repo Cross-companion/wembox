@@ -18,13 +18,14 @@ const {
 const redis = require('../utilities/redisInit');
 const userConfig = require('../config/userConfig');
 
-const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (claims) => {
+  return jwt.sign(claims, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
+};
 
 const createSendToken = (res, user, statusCode) => {
-  const token = signToken(user._id);
+  const token = signToken({ id: user._id, username: user.username });
 
   const cookieOptions = {
     expires: new Date(
@@ -132,6 +133,8 @@ exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
   if (emailOtp !== originalToken)
     return next(new AppError('Incorrect token. Try again.'));
 
+  req.userWasVerified = emailOtp === originalToken;
+
   next();
 });
 
@@ -146,9 +149,8 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     dateOfBirth: req.body.dateOfBirth,
     password: req.body.password,
+    isHuman: req.userWasVerified, // from verifyEmailOtp
     passwordConfirm: req.body.passwordConfirm,
-    passwordChangedAt: req.body.passwordChangedAt,
-    following: req.body.following,
     IPGeoLocation: userLocation,
   });
 
@@ -177,8 +179,8 @@ exports.login = catchAsync(async (req, res, next) => {
     );
 
   const user = email
-    ? await User.findOne({ email }).select('password')
-    : await User.findOne({ username }).select('password');
+    ? await User.findOne({ email }).select('password username')
+    : await User.findOne({ username }).select('password username');
 
   if (!user || !(await user?.isCorrectPassword(password, user?.password)))
     return next(
@@ -231,7 +233,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (!decoded) return next(new AppError('Invalid JWT', 401));
 
   // Checks if user still exists (using the ID because it is used to create the jwt)
-  const user = await User.findById(decoded.id);
+  const userKey = `${process.env.USER_CACHE_KEY}${decoded.username}`;
+  const cachedUser = 0 && (await redis.get(userKey));
+  const user = cachedUser || (await User.findById(decoded.id));
   if (!user) {
     return next(new AppError('Sorry, this User no longer exits.', 404));
   }
@@ -242,6 +246,16 @@ exports.protect = catchAsync(async (req, res, next) => {
       )
     );
   }
+
+  // If User hasn't been cached
+  // if (!cachedUser) {
+  //   await redis.set(
+  //     userKey,
+  //     JSON.stringify(user),
+  //     'ex',
+  //     process.env.REDIS_USER_EXP
+  //   );
+  // }
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = user;

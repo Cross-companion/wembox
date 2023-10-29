@@ -22,7 +22,6 @@ router.route('/forgot_password').post(authController.forgotPassword);
 router.route('/reset_password/:token').post(authController.resetPassword);
 
 router.use(authController.protect);
-router.route('/logout').get(authController.logout); // the logout route is protected
 router
   .route('/')
   .get(
@@ -39,6 +38,9 @@ router
 router.route('/unfollow').delete(usersController.unfollow);
 router.route('/followers/:user_id?').get(usersController.getFollowers);
 router.route('/followings/:user_id?').get(usersController.getFollowings);
+
+router.route('/sign_up_flow').post(usersController.updateAtSignup);
+router.route('/logout').get(authController.logout); // the logout route is protected
 
 //-- <> -- //
 module.exports = router;

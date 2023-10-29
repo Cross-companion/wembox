@@ -96,3 +96,37 @@ exports.unfollow = catchAsync(async (req, res, next) => {
     status: 'success',
   });
 });
+
+exports.updateAtSignup = catchAsync(async (req, res, next) => {
+  const {
+    interests,
+    contentType,
+    profileImg,
+    profileBackgroungImg,
+    geoLocation,
+  } = req.body;
+  const conditionToContinue =
+    interests?.length ||
+    contentType?.length ||
+    profileImg ||
+    profileBackgroungImg ||
+    geoLocation;
+
+  if (!conditionToContinue)
+    return next(new AppError('No data to update was specified.', 401));
+
+  const userID = req.user._id;
+  const update = {
+    interests,
+    contentType: contentType || interests,
+    profileImg,
+    profileBackgroungImg,
+    geoLocation,
+  };
+
+  await User.findOneAndUpdate({ _id: userID }, update, { runValidators: true });
+
+  req.status(200).json({
+    status: 'success',
+  });
+});

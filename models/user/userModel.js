@@ -228,6 +228,12 @@ const userSchema = new mongoose.Schema(
         region: 'global',
       },
     },
+    geoLocation: {
+      type: {
+        lat: Number,
+        lng: Number,
+      },
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -264,7 +270,7 @@ userSchema.pre('save', async function (next) {
   this.IPGeoLocation.continent = this.IPGeoLocation?.continent?.toLowerCase();
   this.IPGeoLocation.region = this.IPGeoLocation?.region?.toLowerCase();
 
-  if (this.interests.length < minInterestNum) {
+  if (this?.interests?.length < minInterestNum) {
     defaultArray.forEach((el) => {
       const elExits = this.interests.some(
         (item) => item.interest === el.interest && item.topic === el.topic
@@ -303,6 +309,7 @@ userSchema.methods.isPasswordChanged = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     changedAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
 
+    console.log(changedAt, JWTTimestamp);
     return changedAt > JWTTimestamp;
   }
   return false;
