@@ -91,8 +91,13 @@ const calculatePercentage = (part, whole) => {
   return { percentage, reversePercentage };
 };
 
-exports.getCountryWeight = (userInterest, timeSpan = 'monthly') => {
-  if (!engagementTimeSpans.includes(timeSpan)) return 0;
+exports.getCountryWeight = (
+  userInterest,
+  timeSpan = 'monthly',
+  numberOfSuggestions
+) => {
+  const defaultCountryWeight = 3;
+  if (!engagementTimeSpans.includes(timeSpan)) return defaultCountryWeight;
 
   const { countryEngagements, globalEngagements } = userInterest.reduce(
     (accumulator, interest) => {
@@ -112,8 +117,11 @@ exports.getCountryWeight = (userInterest, timeSpan = 'monthly') => {
   );
 
   // Sets appriopriate countryWeights
-  if (!countryPercentage) return false;
-  if (countryPercentage <= 2) return countryPercentage + 2;
-  if (countryPercentage <= 4) return 5;
-  else return 6;
+  let weight;
+  if (!countryPercentage) return defaultCountryWeight;
+  else if (countryPercentage <= 2) weight = countryPercentage + 2;
+  else if (countryPercentage > 2 && countryPercentage <= 4) weight = 5;
+  else weight = 6;
+
+  return Math.ceil((weight / 10) * numberOfSuggestions);
 };

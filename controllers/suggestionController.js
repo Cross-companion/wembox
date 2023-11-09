@@ -50,14 +50,10 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
   const userCountry = req.user.IPGeoLocation.country; // userRegion can be added later
   const numberOfSuggestions = +req.body.numberOfSuggestions || 10;
   let countryWeight =
-    +req.body.countryWeight || getCountryWeight(interests, timeSpan) || 3;
-  const countryPerNumberOfSuggestions = Math.ceil(
-    (countryWeight / 10) * numberOfSuggestions
-  );
+    +req.body.countryWeight ||
+    getCountryWeight(interests, timeSpan, numberOfSuggestions);
   countryWeight =
-    numberOfSuggestions > countryWeight
-      ? countryPerNumberOfSuggestions
-      : numberOfSuggestions;
+    numberOfSuggestions > countryWeight ? countryWeight : numberOfSuggestions;
   const page = +req.body.page || 1;
   const maxSuggestions = 150;
   const minSuggestions = 2; // minsuggestions (!userCountry: 1, userCountry: 1)
