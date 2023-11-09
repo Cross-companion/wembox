@@ -94,7 +94,6 @@ const calculatePercentage = (part, whole) => {
 exports.getCountryWeight = (userInterest, timeSpan = 'monthly') => {
   if (!engagementTimeSpans.includes(timeSpan)) return 0;
 
-  // This .reduce calculate the totals with the secified timeSpan for all the interests specified (single or multi).
   const { countryEngagements, globalEngagements } = userInterest.reduce(
     (accumulator, interest) => {
       if (interest.regions[0] === 'global' || !interest.regions[0])

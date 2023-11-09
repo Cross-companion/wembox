@@ -16,7 +16,7 @@ const {
   getLocationByIP,
 } = require('../utilities/helpers');
 const redis = require('../utilities/redisInit');
-const userConfig = require('../config/userConfig');
+const DocumentMethods = require('../utilities/DocumentMethods');
 
 const signToken = (claims) => {
   return jwt.sign(claims, process.env.JWT_SECRET, {
@@ -216,6 +216,9 @@ exports.restrictTo = (...roles) => {
   };
 };
 
+/**
+ * Since this user is cached, it looses all it document methods, any document method used after here must be defined in and called from the DocumentMethods class.
+ */
 exports.protect = catchAsync(async (req, res, next) => {
   const jwtPasedByHeader = req.headers?.authorization?.startsWith('Bearer')
     ? req.headers?.authorization?.split(' ')[1]
@@ -232,14 +235,14 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   if (!decoded) return next(new AppError('Invalid JWT', 401));
 
-  // Checks if user still exists (using the ID because it is used to create the jwt)
   const userKey = `${process.env.USER_CACHE_KEY}${decoded.username}`;
-  const cachedUser = 0 && (await redis.get(userKey));
+  const cachedUser = JSON.parse(await redis.get(userKey));
+
   const user = cachedUser || (await User.findById(decoded.id));
   if (!user) {
     return next(new AppError('Sorry, this User no longer exits.', 404));
   }
-  if (user.isPasswordChanged(decoded.iat)) {
+  if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
     return next(
       new AppError(
         'Looks like you have changed your password. Please login with your new password'
@@ -247,19 +250,18 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // If User hasn't been cached
-  // if (!cachedUser) {
-  //   await redis.set(
-  //     userKey,
-  //     JSON.stringify(user),
-  //     'ex',
-  //     process.env.REDIS_USER_EXP
-  //   );
-  // }
+  if (!cachedUser) {
+    await redis.set(
+      userKey,
+      JSON.stringify(user),
+      'ex',
+      process.env.REDIS_USER_EXP
+    );
+  }
 
-  // GRANT ACCESS TO PROTECTED ROUTE
   req.user = user;
   res.locals.user = user; // Store in response locals for possible rendering
+  console.log(req.user.IPGeoLocation.country, req.user.IPGeoLocation.city);
   return next();
 });
 

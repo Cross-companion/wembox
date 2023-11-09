@@ -6,6 +6,9 @@ const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
 const redis = require('../utilities/redisInit');
 
+/**
+ * Since this user interest is cached, it looses all it document methods, any document method used after here must be defined in and called from the DocumentMethods class.
+ */
 exports.getSuggestions = catchAsync(async (req, res, next) => {
   const userRegion = req.user.IPGeoLocation.region;
   const interestKey = process.env.INTEREST_CACHE_KEY + req.user.email;
@@ -48,10 +51,15 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
   const numberOfSuggestions = +req.body.numberOfSuggestions || 10;
   let countryWeight =
     +req.body.countryWeight || getCountryWeight(interests, timeSpan) || 3;
+  const countryPerNumberOfSuggestions = Math.ceil(
+    (countryWeight / 10) * numberOfSuggestions
+  );
   countryWeight =
-    numberOfSuggestions > countryWeight ? countryWeight : numberOfSuggestions;
+    numberOfSuggestions > countryWeight
+      ? countryPerNumberOfSuggestions
+      : numberOfSuggestions;
   const page = +req.body.page || 1;
-  const maxSuggestions = 50;
+  const maxSuggestions = 150;
   const minSuggestions = 2; // minsuggestions (!userCountry: 1, userCountry: 1)
 
   if (
@@ -65,6 +73,7 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
       )
     );
 
+  console.log(countryWeight);
   const users = await User.aggregate(
     AGG_SUGGEST_CREATOR(
       topics,

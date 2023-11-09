@@ -197,7 +197,6 @@ const userSchema = new mongoose.Schema(
       ],
       default: [],
     },
-    // Region locating is possible by reverse geocoding the lat / long of the city. Might the helpful for future
     IPGeoLocation: {
       type: {
         country: {
@@ -308,8 +307,6 @@ userSchema.methods.createPasswordResetToken = function () {
 userSchema.methods.isPasswordChanged = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     changedAt = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
-
-    console.log(changedAt, JWTTimestamp);
     return changedAt > JWTTimestamp;
   }
   return false;
