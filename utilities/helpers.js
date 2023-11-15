@@ -1,5 +1,7 @@
 const Reader = require('@maxmind/geoip2-node').Reader;
 const request = require('request');
+const redis = require('./redisInit');
+
 const { engagementTimeSpans } = require('../config/interestConfig');
 const countryRegions = require('../config/countryRegions.json');
 //
@@ -52,6 +54,7 @@ exports.getIPAddress = (request) => {
   }
 
   const defaultLocalTestingIP = '::ffff:127.0.0.1';
+  console.log(ip === defaultLocalTestingIP, ip, defaultLocalTestingIP);
   if (ip === defaultLocalTestingIP) ip = process.env.TEST_IP_ADDRESS;
 
   return ip;
@@ -124,4 +127,18 @@ exports.getCountryWeight = (
   else weight = 6;
 
   return Math.ceil((weight / 10) * numberOfSuggestions);
+};
+
+exports.clearUserFromCache = async (user) => {
+  const userKey = `${process.env.USER_CACHE_KEY}${user._id}`;
+  const interestKey = `${process.env.INTEREST_CACHE_KEY}${user._id}`;
+  redis
+    .del(userKey)
+    .then((result) => console.log(result))
+    .catch((err) => {
+      throw new Error(`Error deleting key ${userKey}: ${err.message}`);
+    });
+  redis.del(interestKey).catch((err) => {
+    throw new Error(`Error deleting key ${interestKey}: ${err.message}`);
+  });
 };

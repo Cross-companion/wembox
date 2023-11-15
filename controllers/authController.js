@@ -140,8 +140,9 @@ exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   const userIP = getIPAddress(req);
+  console.log(userIP);
   const userLocation = await getLocationByIP(userIP);
-
+  console.log(userLocation);
   const newUser = await User.create({
     name: req.body.name,
     frontEndUsername: req.body.username,
@@ -235,8 +236,9 @@ exports.protect = catchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   if (!decoded) return next(new AppError('Invalid JWT', 401));
 
-  const userKey = `${process.env.USER_CACHE_KEY}${decoded.username}`;
+  const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
   const cachedUser = JSON.parse(await redis.get(userKey));
+  console.log(cachedUser, userKey);
 
   const user = cachedUser || (await User.findById(decoded.id));
   if (!user) {
@@ -261,7 +263,9 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   req.user = user;
   res.locals.user = user; // Store in response locals for possible rendering
-  console.log(req.user.IPGeoLocation.country, req.user.IPGeoLocation.city);
+  console.log(
+    `${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`
+  );
   return next();
 });
 

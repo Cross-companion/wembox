@@ -3,7 +3,7 @@ const User = require('../models/user/userModel');
 const factory = require('./handlerFactory');
 const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
-const helper = require('../utilities/helpers');
+const { clearUserFromCache } = require('../utilities/helpers');
 const interestConfig = require('../config/interestConfig');
 
 const populateFollowItems = [
@@ -125,8 +125,9 @@ exports.updateAtSignup = catchAsync(async (req, res, next) => {
   };
 
   await User.findOneAndUpdate({ _id: userID }, update, { runValidators: true });
+  clearUserFromCache(req.user);
 
-  req.status(200).json({
+  res.status(200).json({
     status: 'success',
   });
 });

@@ -2,6 +2,9 @@ const path = require('path');
 
 // IMPORTING 3rd party MODULES
 const express = require('express');
+const session = require('express-session');
+const RedisStore = require('connect-redis').default;
+const redisClient = require('./utilities/redisInit');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
@@ -12,6 +15,12 @@ const globalErrorHandler = require('./controllers/globalErrorHandler');
 const TRAP = require('./utilities/trap'); // For testing purpose only
 
 const app = express();
+
+// Initialize store.
+const redisStore = new RedisStore({
+  client: redisClient,
+  prefix: process.env.APP_NAME + ':',
+});
 
 // Serving static files
 app.set('trust proxy', true);
@@ -25,6 +34,16 @@ app.use(express.json()); // Limits to datacan be added
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
+
+// Initialize sesssion storage.
+app.use(
+  session({
+    store: redisStore,
+    resave: false, // required: force lightweight session keep alive (touch)
+    saveUninitialized: false, // recommended: only save session when data exists
+    secret: process.env.SESSION_SECRET_KEY,
+  })
+);
 
 // Test middleware
 app.use((req, res, next) => {

@@ -34,6 +34,18 @@
     A hashtage can be branded (paid), and if the branded hashtag is related to a series, any time the hastag as called, beneath the post containing the hashtag would be a dialogue box that contains details of the series and a button for following the series.
     For example, a business, let's say Apple inc, can create a series for their yearly apple event and they can then get a branded hashtag eg #AppleEvent and when any body post this hastag, a dialogue as proposed appears. The size and number of occurence (if a user can choose to not make it occur) can be discussed in the future.
 
+#### SECURITY AND ACCOUNT CREATION LIMITS USING IP ADDRESS.
+
+- 13/11/2023
+
+  - To prevent a person from creating multiple accounts and running an impersonation schemem, It's best I place a limit on the number of users an IP address can create per year. Likely example:
+
+    - An IP address can only create a maximum of 10 accounts per year.
+    - An IP address can only create a maximum of 5 accouts per month.
+    - An IP address can only create a maximum of 4 accouts per week.
+
+  I should also take time to notice and analyse how `yahoo` schemes are ran and try to block it's possible entry points.
+
 ### Frontend
 
 ### Backend
