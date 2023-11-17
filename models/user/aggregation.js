@@ -9,24 +9,23 @@ class UserAggregations {
     page,
     countryWeight,
     interestTypes,
-    numberOfReturnedRelatedCreators
+    paginationKey,
+    paginationData
   ) {
     this.topics = topics;
     this.city = userLocation?.city || 'global';
     this.country = userLocation?.country || 'global';
     this.continent = userLocation?.continent || 'global';
-    this.geoAreaStrings = ['country', 'region', 'continent'];
+    this.geoAreaStrings = ['country', 'region', 'continent', DEFAULT_LOCATION];
     this.region = userLocation?.region || 'global';
     this.numberOfSuggestions = numberOfSuggestions;
     this.page = page;
     this.countryWeight = countryWeight;
     this.interestTypes = interestTypes;
-    this.skipsForRelatedCreators = numberOfReturnedRelatedCreators || {
-      country: 0,
-      region: 0,
-      continent: 0,
-      [DEFAULT_LOCATION]: 0,
-    };
+    this.paginationKey = paginationKey;
+    this.paginationData = paginationData || {};
+    this.isActivatedPage = false;
+    this.createdNewPaginationData = false;
     this.sortBy = {
       'contentTypeMatched.engagements': -1,
     };
@@ -47,6 +46,25 @@ class UserAggregations {
   _geoAreaIsUseful(geoArea = 'country') {
     return this[geoArea] && this[geoArea] !== DEFAULT_LOCATION;
   }
+
+  _createNewPaginationData(
+    geoArea = 'country',
+    pageActivated = this.page,
+    usersReturnedAtActivation = 0
+  ) {
+    const newPaginationData = { pageActivated, usersReturnedAtActivation };
+    this.paginationData[geoArea] = newPaginationData;
+
+    this.isActivatedPage = true;
+
+    this.createdNewPaginationData = true;
+  }
+
+  _updatePaginationData(geoArea, usersReturnedAtActivation) {
+    this.paginationData[geoArea].usersReturnedAtActivation =
+      usersReturnedAtActivation;
+  }
+
   _contentTypeMatched(contentArr, typeOfContent) {
     return {
       contentTypeMatched: {
@@ -174,8 +192,21 @@ class UserAggregations {
     ];
   };
 
-  SUGGEST_CREATOR_BY_GENERAL_INTEREST(geoArea = 'country', Options = {}) {
-    const findGlobal = Options.findGlobal === true || false;
+  SUGGEST_CREATOR_BY_GENERAL_INTEREST(
+    geoArea = 'country',
+    paginationData = this.paginationData,
+    options = {}
+  ) {
+    const { region, continent, global } = options;
+    const { isActivatedPage, remainingUsers } = this;
+    const { pageActivated, usersReturnedAtActivation } =
+      paginationData[geoArea];
+    const pagesToSkip = this.page - pageActivated;
+    const pageForCalculating = isActivatedPage ? pagesToSkip : pagesToSkip - 1;
+    const skipAlignment = isActivatedPage ? 0 : usersReturnedAtActivation;
+    // After the first page where a geoArea pagination is created, all the `this.remainingUsers` from thence would all be the same by design.
+    const skipBy = pageForCalculating * this.remainingUsers + skipAlignment;
+    console.log(skipBy, '/ skipBy /', geoArea, this.remainingUsers);
     const aggregation = [
       {
         $match: {
@@ -198,7 +229,21 @@ class UserAggregations {
                 : { $exists: false },
             },
           },
-      !findGlobal
+      !region
+        ? this.emptyAggregation
+        : {
+            $match: {
+              [`IPGeoLocation.country`]: { $ne: this.country },
+            },
+          },
+      !continent
+        ? this.emptyAggregation
+        : {
+            $match: {
+              [`IPGeoLocation.region`]: { $ne: this.region },
+            },
+          },
+      !global
         ? this.emptyAggregation
         : {
             $match: {
@@ -211,11 +256,14 @@ class UserAggregations {
       {
         $sort: this.sortBy,
       },
+      // {
+      //   $skip: (this.page - 1) * this.remainingUsers,
+      // },
       {
-        $skip: (this.page - 1) * this.remainingUsers,
+        $skip: skipBy,
       },
       {
-        $limit: this.remainingUsers || 1,
+        $limit: remainingUsers || 1,
       },
       {
         $project: this.defaultProject,
@@ -227,57 +275,46 @@ class UserAggregations {
 
   async SUGGEST_CREATOR_AGG() {
     const users = await User.aggregate(this.SUGGEST_CREATOR_BY_COUNTRY());
+    let enoughUsers = users.length >= this.numberOfSuggestions;
+
+    if (enoughUsers)
+      return {
+        users,
+        paginationData: this.createdNewPaginationData
+          ? this.paginationData
+          : undefined,
+      };
 
     for (const geoArea of this.geoAreaStrings) {
-      const enoughUsers = users.length >= this.numberOfSuggestions;
+      enoughUsers = users.length >= this.numberOfSuggestions;
       if (enoughUsers) break;
+
       this.remainingUsers = this.numberOfSuggestions - users.length;
+      const conditionToCreateNewPaginationData =
+        this.page <= this.paginationData[geoArea]?.pageActivated ||
+        !this.paginationData[geoArea];
+
+      if (conditionToCreateNewPaginationData)
+        this._createNewPaginationData(geoArea, this.page);
 
       let similarUsersByArea = await User.aggregate(
-        this.SUGGEST_CREATOR_BY_GENERAL_INTEREST(geoArea)
-      );
-      if (geoArea === 'continent') {
-        similarUsersByArea = similarUsersByArea.filter(
-          (user) => user.IPGeoLocation.region !== this.region
-        );
-      } else if (geoArea === 'region') {
-        similarUsersByArea = similarUsersByArea.filter(
-          (user) => user.IPGeoLocation.country !== this.country
-        );
-      }
-
-      users.push(...similarUsersByArea);
-      console.log(this.remainingUsers, `: Remaining users at ${geoArea}`);
-      const foundUsers = similarUsersByArea.length;
-      console.log(foundUsers, `: found users at ${geoArea}`);
-      console.log(
-        this.numberOfSuggestions - users.length,
-        `: Remaining users after ${geoArea}`
-      );
-    }
-
-    const enoughUsers = users.length >= this.numberOfSuggestions;
-    if (!enoughUsers) {
-      this.remainingUsers = this.numberOfSuggestions - users.length;
-      let similarUsersGlobally = await User.aggregate(
-        this.SUGGEST_CREATOR_BY_GENERAL_INTEREST(DEFAULT_LOCATION, {
-          findGlobal: true,
+        this.SUGGEST_CREATOR_BY_GENERAL_INTEREST(geoArea, this.paginationData, {
+          [geoArea]: true,
         })
       );
-      users.push(...similarUsersGlobally);
-      console.log(
-        this.remainingUsers,
-        `: Remaining users at ${DEFAULT_LOCATION}`
-      );
-      const foundUsers = similarUsersGlobally.length;
-      console.log(foundUsers, `: found users at ${DEFAULT_LOCATION}`);
-      console.log(
-        this.numberOfSuggestions - users.length,
-        `: Remaining users after ${DEFAULT_LOCATION}`
-      );
+
+      users.push(...similarUsersByArea);
+      if (this.isActivatedPage)
+        this._updatePaginationData(geoArea, similarUsersByArea.length);
+      console.log(similarUsersByArea.length, `/ FOUND ${geoArea} /`);
     }
 
-    return users;
+    return {
+      users,
+      newPaginationData: this.createdNewPaginationData
+        ? this.paginationData
+        : undefined,
+    };
   }
 }
 

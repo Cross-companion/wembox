@@ -140,9 +140,8 @@ exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   const userIP = getIPAddress(req);
-  console.log(userIP);
   const userLocation = await getLocationByIP(userIP);
-  console.log(userLocation);
+
   const newUser = await User.create({
     name: req.body.name,
     frontEndUsername: req.body.username,
@@ -238,7 +237,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
   const cachedUser = JSON.parse(await redis.get(userKey));
-  console.log(cachedUser, userKey);
 
   const user = cachedUser || (await User.findById(decoded.id));
   if (!user) {
