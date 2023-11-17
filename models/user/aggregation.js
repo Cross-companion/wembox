@@ -204,10 +204,9 @@ class UserAggregations {
     const pagesToSkip = this.page - pageActivated;
     const pageForCalculating = isActivatedPage ? pagesToSkip : pagesToSkip - 1;
     const skipAlignment = isActivatedPage ? 0 : usersReturnedAtActivation;
-    // After the first page where a geoArea pagination is created, all the `this.remainingUsers` from thence would all be the same by design.
+    // For seeking users using any particular `geoArea`, after the first `isActivatedPage`, all the required `this.remainingUsers` from thence would have the same amount.
     const skipBy = pageForCalculating * this.remainingUsers + skipAlignment;
-    console.log(skipBy, '/ skipBy /', geoArea, this.remainingUsers);
-    const aggregation = [
+    return [
       {
         $match: {
           contentType: {
@@ -256,9 +255,6 @@ class UserAggregations {
       {
         $sort: this.sortBy,
       },
-      // {
-      //   $skip: (this.page - 1) * this.remainingUsers,
-      // },
       {
         $skip: skipBy,
       },
@@ -269,8 +265,6 @@ class UserAggregations {
         $project: this.defaultProject,
       },
     ];
-
-    return aggregation;
   }
 
   async SUGGEST_CREATOR_AGG() {
@@ -306,7 +300,6 @@ class UserAggregations {
       users.push(...similarUsersByArea);
       if (this.isActivatedPage)
         this._updatePaginationData(geoArea, similarUsersByArea.length);
-      console.log(similarUsersByArea.length, `/ FOUND ${geoArea} /`);
     }
 
     return {
@@ -320,8 +313,8 @@ class UserAggregations {
 
 module.exports = UserAggregations;
 
-// Few Issues and Improvements for this aggregation
-// AGG_SUGGEST_CREATOR
+// --- Few  Improvements for this aggregation
+// For performance, I should adapt to use only on aggregation call in the AGG_SUGGEST_CREATOR function.
 //
 //
 //
