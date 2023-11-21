@@ -45,7 +45,10 @@ exports.findAll = (
     });
   });
 
-exports.findOne = (Model, { findBy = {}, select = [] } = {}) =>
+exports.findOne = (
+  Model,
+  { findBy = {}, select = [], returnDoc = false } = {}
+) =>
   catchAsync(async (req, res, next) => {
     if (!Model) return next(new AppError('Query Model not specified.', 500));
 
@@ -62,6 +65,8 @@ exports.findOne = (Model, { findBy = {}, select = [] } = {}) =>
     if (!data) {
       return next(new AppError('Document not found', 404));
     }
+
+    if (returnDoc === true) return data;
     res.status(200).json({ status: 'success', data });
   });
 

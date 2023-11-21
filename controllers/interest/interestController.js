@@ -18,12 +18,10 @@ exports.createInterests = catchAsync(async (req, res, next) => {
     userConfig.DEFAULT_INTEREST_ARRAY.push(newObject);
   });
 
-  res
-    .status(200)
-    .json({
-      status: 'success',
-      messaage: 'User interests created successfully.',
-    });
+  res.status(200).json({
+    status: 'success',
+    messaage: 'User interests created successfully.',
+  });
 });
 
 exports.getAllInterests = factory.findAll(

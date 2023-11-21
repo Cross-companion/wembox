@@ -18,7 +18,7 @@ exports.extractSuggestCreatorData = (req) => {
   countryWeight =
     numberOfSuggestions > countryWeight ? countryWeight : numberOfSuggestions;
   const page = +req.body.page || 1;
-  const maxSuggestions = 200;
+  const maxSuggestions = 50;
   const minSuggestions = 2; // minsuggestions (!userCountry: 1, userCountry: 1)
   console.log(interestTypes);
   console.log(interestTypes[0].length);

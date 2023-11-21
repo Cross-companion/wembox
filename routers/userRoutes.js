@@ -28,16 +28,6 @@ router
     authController.restrictTo('admin', 'senior-admin'),
     usersController.getAllUsers
   );
-router
-  .route('/follow')
-  .post(usersController.follow)
-  .get(
-    authController.restrictTo('admin', 'senior-admin'),
-    usersController.getAllFollows
-  );
-router.route('/unfollow').delete(usersController.unfollow);
-router.route('/followers/:user_id?').get(usersController.getFollowers);
-router.route('/followings/:user_id?').get(usersController.getFollowings);
 
 router.route('/sign_up_flow').post(usersController.updateAtSignup);
 router.route('/logout').get(authController.logout); // the logout route is protected
