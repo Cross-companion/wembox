@@ -6,10 +6,11 @@ const redis = require('../../utilities/redisInit');
 const { extractSuggestCreatorData } = require('./helper');
 /**
  * Since this user interest is cached, it looses all its document methods, any document method used after here must be defined in and called from the DocumentMethods class.
+ * The interestKey should be created using the userRegion.
  */
 exports.getSuggestions = catchAsync(async (req, res, next) => {
   const userRegion = req.user.IPGeoLocation.region;
-  const interestKey = process.env.INTEREST_CACHE_KEY + req.user._id;
+  const interestKey = process.env.INTEREST_CACHE_KEY + userRegion;
   const cachedInterests = await redis
     .get(interestKey)
     .then((data) => JSON.parse(data));

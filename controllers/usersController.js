@@ -4,7 +4,6 @@ const factory = require('./handlerFactory');
 const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
 const { clearUserFromCache } = require('../utilities/helpers');
-const interestConfig = require('../config/interestConfig');
 
 const populateFollowItems = [
   'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing',

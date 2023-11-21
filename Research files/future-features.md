@@ -13,8 +13,8 @@
 #### PRIVACY SETTINGS, DATA MANAGEMENT AND TERMS AND CONDITIOINS.
 
 - 26/9/2023
-  - There are some kinda important data management rules that wembee would have to follow. Most of them are unknown to me now, but some exaples that I might consider are: GDPR (General Data Protection Regulation) and CCPA (California Consumer Privacy Act).
-    These should be final included in final touches I would make when the final version of Wembee is a finished product.
+  - There are some kinda important data management rules that wembee would have to follow. Most of them are unknown to me now, but some examples that I might consider are: GDPR (General Data Protection Regulation) and CCPA (California Consumer Privacy Act).
+    These should be included in final touches I would make when the first version of Wembee is a finished product.
     I can also check the existing terms and conditions on othe social sites and try to adapt from theirs.
 
 #### GLOBAL VARIABLES
@@ -46,9 +46,28 @@
 
   I should also take time to notice and analyse how `yahoo` schemes are ran and try to block it's possible entry points.
 
+#### POTENTIAL PPC FEATURE (PEOPLE - PROJECTS - COMMUNICATION).
+
+- 19/11/2023
+
+  - A feature that show cases people or groups and the projects they are working on. Possibly with invites or sponsorship / donations option.
+
 ### Frontend
 
+#### ATMOSPHERE AND RESTRICTIONS AROUND SENDING A CONTACT REQUEST
+
+- 21/11/2023
+  - When creating the UI for sending a contact request, some guidelines should be followed to maximise the feeling of freedom of a user sending a request while at the same time the user knowing that he / she is protected and presented as relevant if someone else is sending a contact request to them.
+    Guidelines to follow might include:
+  1. Placing a limit to the number of characters that can be sent to a user. This limit should not be visible until a user exceeds it.
+  2. An Input placeholder or component that gives an idea / template of how a user can best send a good request message. e.g A placeholder: Hey! John, Daniel From Kafanchan, borno. It's been a while.
+  3. It should not yet be AI generated or recommended (e.g is a list of different approaches, freindy, curious, confused e.t.c) that it won't be nice because we want our user to know he / she is recieving a genuine message. AI generated messages could be watched in the future to determine if it would be useful.
+
 ### Backend
+
+#### OPERATIONS WITH USER GEOLOCATION DATA (from the geoLocation API).
+
+- 13/11/2023
 
 #### Global error handling
 

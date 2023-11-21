@@ -1,12 +1,9 @@
 const Reader = require('@maxmind/geoip2-node').Reader;
-const request = require('request');
 const redis = require('./redisInit');
 
 const { engagementTimeSpans } = require('../config/interestConfig');
 const countryRegions = require('../config/countryRegions.json');
-//
-const catchAsync = require('./catchAsync');
-//
+
 exports.getFollowsFilterBy = (req, type = 'following') => {
   let userFollowsToGet = req.user?.id;
   // If the is an user_id parameter userFollowsToGet is the value of the parameter
