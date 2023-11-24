@@ -6,7 +6,7 @@ const authController = require('../controllers/authController');
 
 router.use(authController.protect);
 
-router.route('/request/:recieverID').post(contactController.sendContactRequest);
+router.route('/request').post(contactController.sendContactRequest);
 
 //-- <> -- //
 module.exports = router;
