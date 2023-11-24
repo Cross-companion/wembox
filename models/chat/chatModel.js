@@ -5,11 +5,11 @@ const {
 } = require('../../config/contactConfig');
 
 const chatSchema = new mongoose.Schema({
-  senderID: {
+  sender: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  receiverID: {
+  receiver: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
@@ -36,24 +36,24 @@ const chatSchema = new mongoose.Schema({
   },
 });
 
-chatSchema.index({ senderID: 1, receiverID: 1 });
+chatSchema.index({ sender: 1, receiver: 1 });
 // Create a compound unique index on sender and receiver
 chatSchema.index(
-  { senderID: 1, receiverID: 1, 'contactRequest.isActivationChat': 1 },
+  { sender: 1, receiver: 1, 'contactRequest.isActivationChat': 1 },
   { unique: true }
 );
 
 // Virtuals
-chatSchema.virtual('sender', {
+chatSchema.virtual('populateSender', {
   ref: 'User',
-  localField: 'senderID',
+  localField: 'sender',
   foreignField: '_id',
   justOne: true,
 });
 
-chatSchema.virtual('receiver', {
+chatSchema.virtual('populateReceiver', {
   ref: 'User',
-  localField: 'receiverID',
+  localField: 'receiver',
   foreignField: '_id',
   justOne: true,
 });

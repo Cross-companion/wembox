@@ -9,7 +9,8 @@ router.use(authController.protect);
 router
   .route('/request')
   .get(contactController.getreceivedContactRequests)
-  .post(contactController.sendContactRequest);
+  .post(contactController.sendContactRequest)
+  .patch(contactController.processContactRequest);
 
 //-- <> -- //
 module.exports = router;
