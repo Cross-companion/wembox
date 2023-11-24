@@ -6,7 +6,10 @@ const authController = require('../controllers/authController');
 
 router.use(authController.protect);
 
-router.route('/request').post(contactController.sendContactRequest);
+router
+  .route('/request')
+  .get(contactController.getreceivedContactRequests)
+  .post(contactController.sendContactRequest);
 
 //-- <> -- //
 module.exports = router;

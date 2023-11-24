@@ -8,10 +8,10 @@ const contactRequestSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'No contact request sender was specified.'],
   },
-  reciever: {
+  receiver: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    required: [true, 'No contact request reciever was specified.'],
+    required: [true, 'No contact request receiver was specified.'],
   },
   status: {
     type: String,
@@ -31,8 +31,8 @@ const contactRequestSchema = new mongoose.Schema({
   },
 });
 
-// Create a compound unique index on sender and reciever
-contactRequestSchema.index({ sender: 1, reciever: 1 }, { unique: true });
+// Create a compound unique index on sender and receiver
+contactRequestSchema.index({ sender: 1, receiver: 1 }, { unique: true });
 
 // withInroMessage virtually poplated
 

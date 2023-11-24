@@ -25,7 +25,7 @@
 #### ADJUST THE PROCESS OF CREATING A NEW INTEREST TOPIC (SENIOR-ADMIN)
 
 - 18/10/2023
-  - When creating a new interest topic, I have to adjust the implementation so that if the process is running and a new interest / interest topic is created, it reflects on the userConfig file and in all the already created users. I will do this by adding the newly created item to the userConfig.INTEREST / .DEFAULT variables so that any new user created automatically recieves this new item. And also, add the newly created item to all the users in the users collection.
+  - When creating a new interest topic, I have to adjust the implementation so that if the process is running and a new interest / interest topic is created, it reflects on the userConfig file and in all the already created users. I will do this by adding the newly created item to the userConfig.INTEREST / .DEFAULT variables so that any new user created automatically receives this new item. And also, add the newly created item to all the users in the users collection.
 
 #### TIE BRANDED HASHTAG TO SERIES
 

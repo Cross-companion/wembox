@@ -9,7 +9,7 @@ const interestSchema = new mongoose.Schema(
       lowercase: true,
       validate: {
         validator: function (value) {
-          // Validate that the string recieved is a valid color.
+          // Validate that the string received is a valid color.
           return validateColor(value);
         },
       },

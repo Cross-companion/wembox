@@ -5,18 +5,18 @@ const AppError = require('../../utilities/AppError');
 
 exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const { username, _id: senderID } = req.user;
-  const { recieverID, message } = req.body;
-  let updateStatus;
+  const { receiverID, message } = req.body;
 
-  if (!recieverID || senderID == recieverID)
-    return next(new AppError('Invalid recieverID specified.', 401));
+  if (!receiverID || senderID == receiverID)
+    return next(new AppError('Invalid receiverID specified.', 401));
 
   const conRequestData = {
-    sender: senderID,
-    reciever: recieverID,
+    senderID,
+    receiverID,
     contactRequest: {
       isContactRequest: true,
       isActivationChat: true,
+      isLastChat: true,
       status: 'pending',
     },
   };
@@ -24,38 +24,56 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   if (message) conRequestData.message = message;
 
   const senderFilter = { _id: senderID };
-  const recieverFilter = { _id: recieverID };
+  const receiverFilter = { _id: receiverID };
 
   const senderUpdates = {
     $inc: { 'contactRequests.sent': 1 },
   };
-  const recieverUpdates = {
+  const receiverUpdates = {
     $inc: { 'contactRequests.unViewed': 1, 'contactRequests.received': 1 },
   };
 
-  try {
-    await Chat.create(conRequestData).catch((err) => {
-      throw new Error(err);
-    });
+  await Chat.create(conRequestData);
 
-    await User.findOneAndUpdate(senderFilter, senderUpdates, {
+  await User.findOneAndUpdate(senderFilter, senderUpdates, {
+    new: true,
+    runValidators: true,
+  });
+  const receiver = await User.findOneAndUpdate(
+    receiverFilter,
+    receiverUpdates,
+    {
       new: true,
       runValidators: true,
-    });
-    const reciever = await User.findOneAndUpdate(
-      recieverFilter,
-      recieverUpdates,
-      {
-        new: true,
-        runValidators: true,
-      }
-    );
+    }
+  );
 
-    res.status(200).json({
-      status: 'success',
-      message: `${username}, your contact request to ${reciever.frontEndUsername} has been sent`,
-    });
-  } catch (err) {
-    return next(new AppError(err), 401);
-  }
+  res.status(200).json({
+    status: 'success',
+    message: `${username}, your contact request to ${receiver.frontEndUsername} has been sent`,
+  });
+});
+
+exports.getreceivedContactRequests = catchAsync(async (req, res, next) => {
+  const receiverID = req.user._id;
+
+  const receivedContactRequests = await Chat.find({
+    receiverID,
+    'contactRequest.isContactRequest': true,
+    'contactRequest.isLastChat': true,
+  }).populate('senderID');
+
+  await User.findOneAndUpdate(
+    { _id: receiverID },
+    { 'contactRequests.unViewed': 0 },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  [
+    'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing',
+  ];
+  res.status(200).json({ status: 'success', data: receivedContactRequests });
 });
