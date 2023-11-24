@@ -8,12 +8,10 @@ class ReUse {
   constructor() {
     // TAKE EXTRA CARE BEFORE CALLING A METHOD
     this.delayTime = 1000 * 10;
-    // this.CREATE_USERS(10000, 200);
+    // this.CREATE_USERS(10000, 10);
     // this.CREATE_FOLLOWS(30000);
-    // this.CREATE_INTERESTS();
     // this.DELETE_USERS();
     // this.DELETE_FOLLOWS();
-    // this.DELETE_INTERESTS();
   }
 
   CREATE_USERS(delay, numberOfDummies) {

@@ -6,10 +6,12 @@ const contactRequestSchema = new mongoose.Schema({
   sender: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
+    required: [true, 'No contact request sender was specified.'],
   },
   reciever: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
+    required: [true, 'No contact request reciever was specified.'],
   },
   status: {
     type: String,
@@ -19,11 +21,20 @@ const contactRequestSchema = new mongoose.Schema({
     },
     default: 'pending',
   },
+  introMessage: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Chat',
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
   },
 });
+
+// Create a compound unique index on sender and reciever
+contactRequestSchema.index({ sender: 1, reciever: 1 }, { unique: true });
+
+// withInroMessage virtually poplated
 
 const ContactRequest = mongoose.model('ContactRequest', contactRequestSchema);
 

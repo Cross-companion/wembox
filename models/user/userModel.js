@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 
 const userConfig = require('../../config/userConfig');
+const { setCachedUser } = require('../../utilities/helpers');
 
 const userSchema = new mongoose.Schema(
   {
@@ -133,10 +134,44 @@ const userSchema = new mongoose.Schema(
         ref: 'Wem',
       },
     ],
-    numberOfConstacts: Number,
-    numberOfConstactRequests: Number,
-    numberOfFollowing: { type: Number, default: 0 },
-    numberOfFollowers: { type: Number, default: 0 },
+    contacts: {
+      type: {
+        length: {
+          type: Number,
+          min: 0,
+          default: 0,
+        },
+      },
+      default: {
+        length: 0,
+      },
+    },
+    contactRequests: {
+      type: {
+        unViewed: {
+          type: Number,
+          min: 0,
+          default: 0,
+        },
+        received: {
+          type: Number,
+          min: 0,
+          default: 0,
+        },
+        sent: {
+          type: Number,
+          min: 0,
+          default: 0,
+        },
+      },
+      default: {
+        unViewed: 0,
+        received: 0,
+        sent: 0,
+      },
+    },
+    numberOfFollowing: { type: Number, min: 0, default: 0 },
+    numberOfFollowers: { type: Number, min: 0, default: 0 },
     numberOfWems: Number,
     createdAt: {
       type: Date,
@@ -263,7 +298,6 @@ userSchema.pre('save', async function (next) {
   const defaultArray = userConfig.DEFAULT_INTEREST_ARRAY;
   const minInterestNum = 2;
 
-  console.log('/////', this.IPGeoLocation.region, '/////');
   this.IPGeoLocation.country = this.IPGeoLocation?.country?.toLowerCase();
   this.IPGeoLocation.city = this.IPGeoLocation?.city?.toLowerCase();
   this.IPGeoLocation.continent = this.IPGeoLocation?.continent?.toLowerCase();
@@ -283,6 +317,11 @@ userSchema.pre('save', async function (next) {
 
 userSchema.post('save', function (doc) {
   userConfig.setInterests();
+});
+
+userSchema.post('findOneAndUpdate', async function (doc, next) {
+  const status = await setCachedUser(doc);
+  next();
 });
 
 userSchema.methods.isCorrectPassword = async (

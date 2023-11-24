@@ -20,7 +20,7 @@
 #### GLOBAL VARIABLES
 
 - 26/9/2023
-  - Global variables are a feature that would grant users the ability to store data which they can easily re-use through the app or in a chat environment. They are the predessecors for more intimate variable features like AI memes that are generate using images a user stores and made accessible to it's usable scope.
+  - Global variables are a feature that would grant users the ability to store data which they can easily re-use through the app or in a chat environment. They are the predessecors for more intimate variable features like AI memes that are generated using images a user stores and made accessible to it's usable scope variable.
 
 #### ADJUST THE PROCESS OF CREATING A NEW INTEREST TOPIC (SENIOR-ADMIN)
 
@@ -51,6 +51,16 @@
 - 19/11/2023
 
   - A feature that show cases people or groups and the projects they are working on. Possibly with invites or sponsorship / donations option.
+
+#### INBOX AND DMs FEATURE
+
+- 21/11/2023
+  - DMs: Wembox as a platform promotes meeting new people in a secure way, this is visible inform of contactRequests. But not all conversations would and should require a contact request and acceptance. So therefore, the DMs. The DM environment would be volatile, a place where creativity can be shared by passerbys. Easier to access than a contact access and more secure in the sense that a DM doesn't give access to a users private wems.
+  - Inbox: The Wembox environment is being designed to be a place professional conversations and talks on creativity would happen effieciently. In the world many times the highest level of creativity, patonising and Interest is often sent through a more formal Email than chat. An idea I have for Wembee attending to this need is by creating an email outlet e.g `@wem.com` or `@wm.com` and adding an ultra-mordern inbox feature to be amongst the DMs and ContactRequest Menu. In this way, Creativity can be shared across the platform and maximum collaboration and hence transation for our users is promoted.
+
+#### WEMBEE PRO (or BOX PRO)
+
+- 21/11/2023
 
 ### Frontend
 

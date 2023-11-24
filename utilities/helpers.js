@@ -1,11 +1,12 @@
 const Reader = require('@maxmind/geoip2-node').Reader;
+const User = require('../models/user/userModel');
 const redis = require('./redisInit');
 
 const { engagementTimeSpans } = require('../config/interestConfig');
 const countryRegions = require('../config/countryRegions.json');
 
 exports.getFollowsFilterBy = (req, type = 'following') => {
-  let userFollowsToGet = req.user?.id;
+  let userFollowsToGet = req.user?._id;
   // If the is an user_id parameter userFollowsToGet is the value of the parameter
   if (req.params.user_id) userFollowsToGet = req.params.user_id;
   if (req.user?.isAdmin && !req.params.user_id) userFollowsToGet = false;
@@ -51,7 +52,6 @@ exports.getIPAddress = (request) => {
   }
 
   const defaultLocalTestingIP = '::ffff:127.0.0.1';
-  console.log(ip === defaultLocalTestingIP, ip, defaultLocalTestingIP);
   if (ip === defaultLocalTestingIP) ip = process.env.TEST_IP_ADDRESS;
 
   return ip;
@@ -126,16 +126,22 @@ exports.getCountryWeight = (
   return Math.ceil((weight / 10) * numberOfSuggestions);
 };
 
-exports.clearUserFromCache = async (user) => {
+exports.getCachedUser = async (id) => {
+  const userKey = `${process.env.USER_CACHE_KEY}${id}`;
+  const cachedUser = JSON.parse(await redis.get(userKey));
+  const user = cachedUser || (await User.findById(id));
+
+  return { user, userWasCached: cachedUser ? true : false };
+};
+
+exports.setCachedUser = async (user) => {
   const userKey = `${process.env.USER_CACHE_KEY}${user._id}`;
-  const interestKey = `${process.env.INTEREST_CACHE_KEY}${user._id}`;
-  redis
-    .del(userKey)
-    .then((result) => console.log(result))
-    .catch((err) => {
-      throw new Error(`Error deleting key ${userKey}: ${err.message}`);
-    });
-  redis.del(interestKey).catch((err) => {
-    throw new Error(`Error deleting key ${interestKey}: ${err.message}`);
-  });
+  const status = await redis.set(
+    userKey,
+    JSON.stringify(user),
+    'ex',
+    process.env.REDIS_USER_EXP
+  );
+
+  return status;
 };
