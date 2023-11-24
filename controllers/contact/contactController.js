@@ -42,16 +42,20 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
       new: true,
       runValidators: true,
     });
-    await User.findOneAndUpdate(recieverFilter, recieverUpdates, {
-      new: true,
-      runValidators: true,
+    const reciever = await User.findOneAndUpdate(
+      recieverFilter,
+      recieverUpdates,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      message: `${username}, your contact request to ${reciever.frontEndUsername} has been sent`,
     });
   } catch (err) {
     return next(new AppError(err), 401);
   }
-
-  res.status(200).json({
-    status: 'success',
-    message: `${username}, your contact request to ${recieverID} has been sent`,
-  });
 });
