@@ -146,7 +146,7 @@ const userSchema = new mongoose.Schema(
         length: 0,
       },
     },
-    contactRequests: {
+    contactRequest: {
       type: {
         unViewed: {
           type: Number,

@@ -33,13 +33,39 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const receiverFilter = { _id: receiverID };
 
   const senderUpdates = {
-    $inc: { 'contactRequests.sent': 1 },
+    $inc: { 'contactRequest.sent': 1 },
   };
   const receiverUpdates = {
-    $inc: { 'contactRequests.unViewed': 1, 'contactRequests.received': 1 },
+    $inc: { 'contactRequest.unViewed': 1, 'contactRequest.received': 1 },
   };
 
-  await Chat.create(conRequestData);
+  try {
+    await Chat.create(conRequestData);
+  } catch (err) {
+    if (err?.code === 11000) {
+      // If isActivationChat is still `true` and there was a duplicate error on creation, This means that there had being this contact request before but it had been declined. Our application makes room for a user to send another request if the first was declined.
+      if (!message) conRequestData.message = undefined;
+      const { nModified } = await Chat.updateOne(
+        {
+          sender: senderID,
+          receiver: receiverID,
+          'contactRequest.isActivationChat': true,
+          'contactRequest.status': { $eq: declinedStatus },
+        },
+        conRequestData
+      );
+
+      console.log(senderID, receiverID);
+      console.log(nModified);
+      if (nModified < 1)
+        return next(
+          new AppError(
+            'Contact request has already been sent and is pending or has been accepted.',
+            404
+          )
+        );
+    }
+  }
 
   await User.findOneAndUpdate(senderFilter, senderUpdates, {
     new: true,
@@ -68,12 +94,13 @@ exports.getreceivedContactRequests = catchAsync(async (req, res, next) => {
   const receivedContactRequests = await Chat.find({
     receiver: receiverID,
     'contactRequest.isContactRequest': true,
+    'contactRequest.status': defaultRequestStatus,
     'contactRequest.isLastChat': true,
   }).populate('sender', populationData);
 
   await User.findOneAndUpdate(
     { _id: receiverID },
-    { 'contactRequests.unViewed': 0 },
+    { 'contactRequest.unViewed': 0 },
     {
       new: true,
       runValidators: true,
@@ -99,13 +126,18 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
     );
 
   try {
-    const updated = await Chat.updateMany(
-      { sender: senderID, receiver: ID },
-      { 'contactRequests.status': status }
+    const { nModified } = await Chat.updateOne(
+      {
+        sender: senderID,
+        receiver: ID,
+        'contactRequest.isActivationChat': true,
+      },
+      {
+        'contactRequest.status': status,
+      }
     );
-    console.log(senderID, ID);
-    console.log(updated);
-    if (updated.nModified < 1)
+
+    if (nModified < 1)
       return next(new AppError('No contact request had been created.', 404));
 
     res.status(200).json({
