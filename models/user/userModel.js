@@ -153,6 +153,11 @@ const userSchema = new mongoose.Schema(
           min: 0,
           default: 0,
         },
+        accepted: {
+          type: Number,
+          min: 0,
+          default: 0,
+        },
         received: {
           type: Number,
           min: 0,
@@ -165,6 +170,7 @@ const userSchema = new mongoose.Schema(
         },
       },
       default: {
+        accepted: 0,
         unViewed: 0,
         received: 0,
         sent: 0,

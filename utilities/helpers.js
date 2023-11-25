@@ -135,6 +135,7 @@ exports.getCachedUser = async (id) => {
 };
 
 exports.setCachedUser = async (user) => {
+  if (!user?._id) throw new Error('user._id not specified.');
   const userKey = `${process.env.USER_CACHE_KEY}${user._id}`;
   const status = await redis.set(
     userKey,

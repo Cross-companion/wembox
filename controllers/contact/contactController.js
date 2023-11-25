@@ -40,6 +40,8 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   };
 
   try {
+    const confirmReciever = await User.findById({ _id: receiverID });
+    if (!confirmReciever) return next(new AppError('Reciever not found', 404));
     await Chat.create(conRequestData);
   } catch (err) {
     if (err?.code === 11000) {
@@ -55,8 +57,6 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
         conRequestData
       );
 
-      console.log(senderID, receiverID);
-      console.log(nModified);
       if (nModified < 1)
         return next(
           new AppError(
@@ -67,10 +67,6 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
     }
   }
 
-  await User.findOneAndUpdate(senderFilter, senderUpdates, {
-    new: true,
-    runValidators: true,
-  });
   const receiver = await User.findOneAndUpdate(
     receiverFilter,
     receiverUpdates,
@@ -79,6 +75,11 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
       runValidators: true,
     }
   );
+
+  await User.findOneAndUpdate(senderFilter, senderUpdates, {
+    new: true,
+    runValidators: true,
+  });
 
   res.status(200).json({
     status: 'success',
@@ -118,6 +119,11 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
   const { _id: ID } = req.user;
   const { status, senderID } = req.body;
 
+  if (!ID) return next(new AppError('Invalid user._id, please log in'));
+  if (!ID == senderID)
+    return next(
+      new AppError('You cannot send a contact request to your account.')
+    );
   if (!requestStatusEnum.includes(status) || !senderID)
     return next(new AppError('Invalid status or senderID', 401));
   if (status === defaultRequestStatus)
@@ -139,6 +145,19 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
 
     if (nModified < 1)
       return next(new AppError('No contact request had been created.', 404));
+
+    const wasAccepted = status === acceptedStatus;
+    if (wasAccepted)
+      await User.findOneAndUpdate(
+        { _id: ID },
+        {
+          $inc: { 'contactRequest.accepted': 1 },
+        },
+        {
+          new: true,
+          runValidators: true,
+        }
+      );
 
     res.status(200).json({
       status: 'success',
