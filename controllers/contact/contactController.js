@@ -175,13 +175,21 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
 });
 
 exports.getContacts = catchAsync(async (req, res, next) => {
-  const contacts = await Contact.find({ users: req.user._id })
+  const userID = req.user._id;
+  const contacts = await Contact.find({ users: userID })
     .populate({
       path: 'otherUser',
-      match: { _id: { $ne: req.user._id } },
+      match: { _id: { $ne: userID } },
       select: 'username',
     })
-    .populate('lastMessage', 'sender receiver message createdAt');
+    .populate('lastMessage', 'sender receiver message createdAt')
+    .sort({ createdAt: -1 });
+
+  // req.session.yahoozeeeeeeeeee = contacts;
+
+  const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
+
+  req.session[contactSessionKey] = contacts;
 
   res.status(200).json({
     status: 'success',

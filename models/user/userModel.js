@@ -181,7 +181,7 @@ const userSchema = new mongoose.Schema(
     numberOfWems: Number,
     createdAt: {
       type: Date,
-      default: Date.now(),
+      default: Date.now,
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
@@ -280,6 +280,13 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+// Define the schema options to exclude the 'id' field while transforming to JSON
+userSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    delete ret.id;
+  },
+});
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
