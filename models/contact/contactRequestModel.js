@@ -38,4 +38,5 @@ contactRequestSchema.index({ sender: 1, receiver: 1 }, { unique: true });
 
 const ContactRequest = mongoose.model('ContactRequest', contactRequestSchema);
 
-module.exports = ContactRequest;
+// Deprecated and not in Use
+// module.exports = ContactRequest;

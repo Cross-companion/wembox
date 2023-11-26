@@ -1,15 +1,44 @@
 const mongoose = require('mongoose');
 
-const contactSchema = new mongoose.Schema({
-  user: [
-    {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
+const contactSchema = new mongoose.Schema(
+  {
+    users: {
+      type: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: 'User',
+        },
+      ],
+      validate: {
+        validator: function (array) {
+          return array.length === 2;
+        },
+        message: 'Only 2 users should be on a contact.',
+      },
     },
-  ],
-  createdAt: [Date],
+    lastMessage: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Chat',
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now(),
+    },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+// Virtuals
+contactSchema.virtual('otherUser', {
+  ref: 'User',
+  localField: 'users',
+  foreignField: '_id',
+  justOne: false,
 });
 
-const Contacts = mongoose.model('Contact', contactSchema);
+const Contact = mongoose.model('Contact', contactSchema);
 
-module.exports = Contacts;
+module.exports = Contact;

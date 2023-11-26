@@ -1,5 +1,7 @@
 const User = require('../../models/user/userModel');
 const Chat = require('../../models/chat/chatModel');
+const Contact = require('../../models/contact/contactsModel');
+const { createContact } = require('./helper');
 const {
   requestStatusEnum,
   defaultRequestStatus,
@@ -132,22 +134,23 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
     );
 
   try {
-    const { nModified } = await Chat.updateOne(
+    const activationChat = await Chat.findOneAndUpdate(
       {
         sender: senderID,
         receiver: ID,
         'contactRequest.isActivationChat': true,
+        'contactRequest.status': { $ne: acceptedStatus },
       },
       {
         'contactRequest.status': status,
       }
     );
 
-    if (nModified < 1)
+    if (!activationChat)
       return next(new AppError('No contact request had been created.', 404));
 
     const wasAccepted = status === acceptedStatus;
-    if (wasAccepted)
+    if (wasAccepted) {
       await User.findOneAndUpdate(
         { _id: ID },
         {
@@ -159,6 +162,9 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
         }
       );
 
+      await createContact([ID, senderID], activationChat._id);
+    }
+
     res.status(200).json({
       status: 'success',
       message: `${status} request successfully`,
@@ -166,4 +172,20 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
   } catch (err) {
     return next(new AppError(err.message, 404));
   }
+});
+
+exports.getContacts = catchAsync(async (req, res, next) => {
+  const contacts = await Contact.find({ users: req.user._id })
+    .populate({
+      path: 'otherUser',
+      match: { _id: { $ne: req.user._id } },
+      select: 'username',
+    })
+    .populate('lastMessage', 'sender receiver message createdAt');
+
+  res.status(200).json({
+    status: 'success',
+    results: contacts.length,
+    contacts,
+  });
 });

@@ -6,6 +6,8 @@ const authController = require('../controllers/authController');
 
 router.use(authController.protect);
 
+router.route('/').get(contactController.getContacts);
+
 router
   .route('/request')
   .get(contactController.getreceivedContactRequests)
