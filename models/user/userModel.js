@@ -281,15 +281,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Chats would be virtually Populated
-
-// Define the schema options to exclude the 'id' field while transforming to JSON
-userSchema.set('toJSON', {
-  transform: function (doc, ret) {
-    delete ret.id;
-  },
-});
-
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
 

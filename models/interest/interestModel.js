@@ -92,14 +92,20 @@ const interestSchema = new mongoose.Schema(
 interestSchema.index({ interest: 1, topic: 1 }, { unique: true });
 
 // Virtual totalEngagments property
-// interestSchema.virtual('engagements').get(function () {
-//   const engagements = this.regions.reduce(
-//     (accumulator, region) => accumulator + region.engagements,
-//     0
-//   );
+interestSchema.virtual('totalEngagements').get(function () {
+  const engagements = this.regions.reduce(
+    (accumulator, region) => {
+      accumulator.daily += region.engagements.daily;
+      accumulator.weekly += region.engagements.weekly;
+      accumulator.monthly += region.engagements.monthly;
 
-//   return engagements;
-// });
+      return accumulator;
+    },
+    { daily: 0, weekly: 0, monthly: 0 }
+  );
+
+  return engagements;
+});
 
 interestSchema.pre('save', function (next) {
   // This manual assignment of engagements if for testing before Wems are designed. This should be done automatically on the begining of every day by querying all follow /public wems and setting the appropriate values

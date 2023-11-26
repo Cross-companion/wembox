@@ -25,36 +25,6 @@ const followSchema = new mongoose.Schema(
 // Create a compound unique index on follower and following
 followSchema.index({ follower: 1, following: 1 }, { unique: true });
 
-// Define the schema options to exclude the 'id' field while transforming to JSON
-followSchema.set('toJSON', {
-  transform: function (doc, ret) {
-    delete ret._id;
-  },
-});
-
-followSchema.virtual('populateFollowing', {
-  ref: 'User',
-  localField: 'following',
-  foreignField: '_id',
-  justOne: true,
-});
-
-followSchema.virtual('populateFollower', {
-  ref: 'User',
-  localField: 'follower',
-  foreignField: '_id',
-  justOne: true,
-});
-
-// followSchema.pre(/^find/, function (next) {
-//   this.populate({
-//     path: 'following',
-//     select: 'frontEndUsername profileImg accountType',
-//   });
-
-//   next();
-// });
-
 followSchema.post('save', function (error, doc, next) {
   if (error.name === 'MongoError' && error.code === 11000) {
     console.log(error);

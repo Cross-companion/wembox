@@ -31,6 +31,9 @@ const contactSchema = new mongoose.Schema(
   }
 );
 
+// Create a compound unique index on follower and following
+contactSchema.index({ users: 1 }, { unique: true });
+
 // Virtuals
 contactSchema.virtual('otherUser', {
   ref: 'User',
