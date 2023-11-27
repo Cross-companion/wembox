@@ -10,10 +10,19 @@ const contactSchema = new mongoose.Schema(
         },
       ],
       validate: {
-        validator: function (array) {
-          return array.length === 2;
+        validator: function (value) {
+          // Custom validator function to check uniqueness
+          return (
+            new Promise(async (resolve, reject) => {
+              const count = await mongoose.models.Contact.countDocuments({
+                users: value,
+              });
+              resolve(count === 0);
+            }) && value.length === 2
+          );
         },
-        message: 'Only 2 users should be on a contact.',
+        message:
+          'Duplicate users in the contact schema or Users on the contact are less than 2.',
       },
     },
     lastMessage: {
@@ -31,8 +40,7 @@ const contactSchema = new mongoose.Schema(
   }
 );
 
-// Create a compound unique index on follower and following
-contactSchema.index({ users: 1 }, { unique: true });
+contactSchema.index({ users: 1, 'lastMessage.createdAt': 1 });
 
 // Virtuals
 contactSchema.virtual('otherUser', {

@@ -83,12 +83,9 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
     paginationData
   );
 
-  // console.log(paginationKey, '// paginationKey //');
-  // console.log(paginationData, '// paginationData //');
   const { users, newPaginationData } = await USER_AGG.SUGGEST_CREATOR_AGG();
 
   if (newPaginationData) req.session[paginationKey] = newPaginationData;
-  // console.log(req.session[paginationKey], '// session-pagination //');
 
   res.status(200).json({
     status: 'success',

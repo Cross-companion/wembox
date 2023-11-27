@@ -15,8 +15,12 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const { username, _id: senderID } = req.user;
   const { receiverID, message } = req.body;
 
-  if (!receiverID || senderID == receiverID)
+  if (!receiverID)
     return next(new AppError('Invalid receiverID specified.', 401));
+  if (senderID == receiverID)
+    return next(
+      new AppError('You cannot send a contact request to your account.')
+    );
 
   const conRequestData = {
     sender: senderID,
@@ -44,6 +48,20 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   try {
     const confirmReciever = await User.findById({ _id: receiverID });
     if (!confirmReciever) return next(new AppError('Reciever not found', 404));
+    const receiverHasRequested = await Chat.find({
+      sender: receiverID,
+      receiver: senderID,
+      'contactRequest.status': { $ne: declinedStatus },
+    });
+
+    console.log(receiverHasRequested);
+    if (receiverHasRequested.length > 0)
+      return next(
+        new AppError(
+          'This reciever has already sent a contact request. Please accept it instead.',
+          401
+        )
+      );
     await Chat.create(conRequestData);
   } catch (err) {
     if (err?.code === 11000) {
@@ -122,10 +140,7 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
   const { status, senderID } = req.body;
 
   if (!ID) return next(new AppError('Invalid user._id, please log in'));
-  if (!ID == senderID)
-    return next(
-      new AppError('You cannot send a contact request to your account.')
-    );
+  if (ID === senderID) return next(new AppError('Invalid senderID'));
   if (!requestStatusEnum.includes(status) || !senderID)
     return next(new AppError('Invalid status or senderID', 401));
   if (status === defaultRequestStatus)
@@ -182,8 +197,23 @@ exports.getContacts = catchAsync(async (req, res, next) => {
       match: { _id: { $ne: userID } },
       select: 'username',
     })
-    .populate('lastMessage', 'sender receiver message createdAt')
-    .sort({ createdAt: -1 });
+    .populate('lastMessage', 'sender receiver message createdAt');
+  // .exec((err, results) => {
+  //   if (err) {
+  //     console.error(err);
+  //     return;
+  //   }
+  //   // console.log('Before Sort:', results);
+  //   // results.sort((a, b) => a.fieldB.propertyToSort - b.fieldB.propertyToSort);
+  //   // console.log('After Sort:', results);
+  //   // console.log(results);
+  //   // console.log('After Sort:', results?.lastMessage?.createdAt);
+  //   // results.sort(
+  //   //   (a, b) => a?.lastMessage?.createdAt - b?.lastMessage?.createdAt
+  //   // );
+  //   console.log(results);
+  // });
+  // .sort({ 'lastMessage.message': 1 });
 
   // req.session.yahoozeeeeeeeeee = contacts;
 
@@ -191,6 +221,7 @@ exports.getContacts = catchAsync(async (req, res, next) => {
 
   req.session[contactSessionKey] = contacts;
 
+  console.log(contacts, 'CONTACTS //////');
   res.status(200).json({
     status: 'success',
     results: contacts.length,
