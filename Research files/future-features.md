@@ -76,7 +76,7 @@
     Guidelines to follow might include:
   1. Placing a limit to the number of characters that can be sent to a user. This limit should not be visible until a user exceeds it.
   2. An Input placeholder or component that gives an idea / template of how a user can best send a good request message. e.g A placeholder: Hey! John, Daniel From Kafanchan, borno. It's been a while.
-  3. It should not yet be AI generated or recommended (e.g is a list of different approaches, freindy, curious, confused e.t.c) that it won't be nice because we want our user to know he / she is recieving a genuine message. AI generated messages could be watched in the future to determine if it would be useful.
+  3. It should not yet be AI generated or recommended (e.g is a list of different approaches, freindy, curious, confused e.t.c) that it won't be nice because we want our user to know he / she is receiving a genuine message. AI generated messages could be watched in the future to determine if it would be useful.
   4. To combat impersonation and phising, limits can be considered to be added on the number of contact request a user can send or have pending.
 
 ### Backend

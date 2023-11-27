@@ -1,7 +1,7 @@
 const User = require('../../models/user/userModel');
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { createContact } = require('./helper');
+const { createContact, updateContactSession } = require('./helper');
 const {
   requestStatusEnum,
   defaultRequestStatus,
@@ -107,7 +107,7 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getreceivedContactRequests = catchAsync(async (req, res, next) => {
+exports.getReceivedContactRequests = catchAsync(async (req, res, next) => {
   const receiverID = req.user._id;
 
   const populationData =
@@ -139,7 +139,7 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
   const { _id: ID } = req.user;
   const { status, senderID } = req.body;
 
-  if (!ID) return next(new AppError('Invalid user._id, please log in'));
+  if (!ID) return next(new AppError('Invalid user, please log in again.'));
   if (ID === senderID) return next(new AppError('Invalid senderID'));
   if (!requestStatusEnum.includes(status) || !senderID)
     return next(new AppError('Invalid status or senderID', 401));
@@ -169,6 +169,7 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
       await User.findOneAndUpdate(
         { _id: ID },
         {
+          $inc: { 'contacts.length': 1 },
           $inc: { 'contactRequest.accepted': 1 },
         },
         {
@@ -177,7 +178,12 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
         }
       );
 
-      await createContact([ID, senderID], activationChat._id);
+      const newContact = await createContact(
+        [ID, senderID],
+        activationChat._id
+      );
+
+      updateContactSession(senderID, ID, newContact, req);
     }
 
     res.status(200).json({
@@ -194,22 +200,52 @@ exports.getContacts = catchAsync(async (req, res, next) => {
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
   const sessionedContactList = req.session[contactSessionKey];
 
-  const contactList =
-    sessionedContactList ||
-    (await Contact.find({ users: userID })
-      .populate({
-        path: 'otherUser',
-        match: { _id: { $ne: userID } },
-        select: 'username',
-      })
-      .populate('lastMessage', 'sender receiver message createdAt')
-      .sort({ 'lastMessage.createdAt': -1 }));
+  const contactList = sessionedContactList?.length
+    ? sessionedContactList
+    : await Contact.find({ users: userID })
+        .populate({
+          path: 'otherUser',
+          match: { _id: { $ne: userID } },
+          select: 'username',
+        })
+        .limit(Number(process.env.CONTACTLIST_LIMIT))
+        .populate('lastMessage', 'sender receiver message createdAt')
+        .sort({ 'lastMessage.createdAt': -1 });
 
-  if (!sessionedContactList) req.session[contactSessionKey] = contactList;
+  if (!sessionedContactList?.length) {
+    req.session[contactSessionKey] = contactList;
+  }
 
   res.status(200).json({
     status: 'success',
     results: contactList.length,
     contactList,
   });
+});
+
+exports.protect = catchAsync(async (req, res, next) => {
+  const { _id: senderID } = req.user;
+  const { receiverID } = req.body;
+  let contactList;
+
+  if (!receiverID || senderID === receiverID)
+    return next(new AppError('Invalid receiverID.', 401));
+
+  const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${senderID}`;
+
+  contactList = req.session[contactSessionKey]?.some((contact) =>
+    contact.users.includes(receiverID)
+  );
+
+  if (!contactList)
+    contactList = await Contact.findOne({
+      users: { $all: [senderID, receiverID] },
+    });
+
+  const hasAccess = contactList !== null;
+
+  if (!hasAccess)
+    return next(new AppError('Access to send chat was denied.', 401));
+
+  next();
 });

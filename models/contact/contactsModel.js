@@ -40,7 +40,7 @@ const contactSchema = new mongoose.Schema(
   }
 );
 
-contactSchema.index({ users: 1, 'lastMessage.createdAt': 1 });
+contactSchema.index({ users: 1, lastMessage: 1, 'lastMessage.createdAt': 1 });
 
 // Virtuals
 contactSchema.virtual('otherUser', {

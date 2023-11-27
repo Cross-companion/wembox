@@ -3,6 +3,10 @@ const {
   requestStatusEnum,
   defaultRequestStatus,
 } = require('../../config/contactConfig');
+const {
+  chatStatusEnum,
+  defaultChatStatus,
+} = require('../../config/chatConfig');
 
 const chatSchema = new mongoose.Schema(
   {
@@ -17,6 +21,14 @@ const chatSchema = new mongoose.Schema(
     message: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: {
+        values: chatStatusEnum,
+        message: 'Invalid chat status.',
+      },
+      default: defaultChatStatus,
+    },
     contactRequest: {
       type: {
         isContactRequest: Boolean,
@@ -25,7 +37,7 @@ const chatSchema = new mongoose.Schema(
         status: {
           type: String,
           enum: {
-            values: ['pending', 'accepted', 'declined'],
+            values: requestStatusEnum,
             message: 'Invalid contact request status.',
           },
         },
@@ -48,6 +60,7 @@ chatSchema.index({
   createdAt: 1,
   'contactRequest.status': 1,
 });
+
 // Create a compound unique index on sender and receiver
 chatSchema.index(
   { sender: 1, receiver: 1, 'contactRequest.isActivationChat': 1 },

@@ -1,6 +1,8 @@
 const User = require('../models/user/userModel');
 const Interest = require('../models/interest/interestModel');
 const Follow = require('../models/follow/followModel');
+// const Contact = require('../models/contact/contactsModel');
+// const Chat = require('../models/chat/chatModel');
 const interestConfig = require('../config/interestConfig');
 const countryRegions = require('../config/countryRegions.json');
 
@@ -12,6 +14,7 @@ class ReUse {
     // this.CREATE_FOLLOWS(30000);
     // this.DELETE_USERS();
     // this.DELETE_FOLLOWS();
+    // this.DELETE_AND_PREPARE_FOR_CONTACT();
   }
 
   CREATE_USERS(delay, numberOfDummies) {
@@ -124,6 +127,28 @@ class ReUse {
       console.log(`Deleted: ${deleted.deletedCount} Follows`);
     }, delay || this.delayTime);
   }
+
+  // ⚠⚠ USE WITH CAUTION.
+  // DELETE_AND_PREPARE_FOR_CONTACT(delay = 5000) {
+  //   setTimeout(async () => {
+  //     const deletedContacts = await Contact.deleteMany();
+  //     const deletedChats = await Chat.deleteMany();
+  //     const { nModified } = await User.updateMany(
+  //       {},
+  //       {
+  //         contactRequest: {
+  //           accepted: 0,
+  //           unViewed: 0,
+  //           received: 0,
+  //           sent: 0,
+  //         },
+  //       }
+  //     );
+  //     console.log(
+  //       `Deleted: ${deletedContacts.deletedCount} contacts, ${deletedChats.deletedCount} chats and updated ${nModified} users`
+  //     );
+  //   }, delay || this.delayTime);
+  // }
 
   CREATE_INTERESTS(delay) {
     setTimeout(async () => {
