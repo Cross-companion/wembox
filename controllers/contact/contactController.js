@@ -46,26 +46,26 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   };
 
   try {
-    const confirmReciever = await User.findById({ _id: receiverID });
-    if (!confirmReciever) return next(new AppError('Reciever not found', 404));
+    const confirmReceiver = await User.findById({ _id: receiverID });
     const receiverHasRequested = await Chat.find({
       sender: receiverID,
       receiver: senderID,
       'contactRequest.status': { $ne: declinedStatus },
     });
 
-    console.log(receiverHasRequested);
+    if (!confirmReceiver) return next(new AppError('Receiver not found', 404));
     if (receiverHasRequested.length > 0)
       return next(
         new AppError(
-          'This reciever has already sent a contact request. Please accept it instead.',
+          'This receiver has already sent a contact request. Please accept it instead.',
           401
         )
       );
+
     await Chat.create(conRequestData);
   } catch (err) {
     if (err?.code === 11000) {
-      // If isActivationChat is still `true` and there was a duplicate error on creation, This means that there had being this contact request before but it had been declined. Our application makes room for a user to send another request if the first was declined.
+      // If isActivationChat is still `true` and there was a duplicate error on creation, This means that there had been this contact request before but it had been declined. Our application makes room for a user to send another request if the first was declined.
       if (!message) conRequestData.message = undefined;
       const { nModified } = await Chat.updateOne(
         {
@@ -191,40 +191,25 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
 
 exports.getContacts = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
-  const contacts = await Contact.find({ users: userID })
-    .populate({
-      path: 'otherUser',
-      match: { _id: { $ne: userID } },
-      select: 'username',
-    })
-    .populate('lastMessage', 'sender receiver message createdAt');
-  // .exec((err, results) => {
-  //   if (err) {
-  //     console.error(err);
-  //     return;
-  //   }
-  //   // console.log('Before Sort:', results);
-  //   // results.sort((a, b) => a.fieldB.propertyToSort - b.fieldB.propertyToSort);
-  //   // console.log('After Sort:', results);
-  //   // console.log(results);
-  //   // console.log('After Sort:', results?.lastMessage?.createdAt);
-  //   // results.sort(
-  //   //   (a, b) => a?.lastMessage?.createdAt - b?.lastMessage?.createdAt
-  //   // );
-  //   console.log(results);
-  // });
-  // .sort({ 'lastMessage.message': 1 });
-
-  // req.session.yahoozeeeeeeeeee = contacts;
-
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
+  const sessionedContactList = req.session[contactSessionKey];
 
-  req.session[contactSessionKey] = contacts;
+  const contactList =
+    sessionedContactList ||
+    (await Contact.find({ users: userID })
+      .populate({
+        path: 'otherUser',
+        match: { _id: { $ne: userID } },
+        select: 'username',
+      })
+      .populate('lastMessage', 'sender receiver message createdAt')
+      .sort({ 'lastMessage.createdAt': -1 }));
 
-  console.log(contacts, 'CONTACTS //////');
+  if (!sessionedContactList) req.session[contactSessionKey] = contactList;
+
   res.status(200).json({
     status: 'success',
-    results: contacts.length,
-    contacts,
+    results: contactList.length,
+    contactList,
   });
 });

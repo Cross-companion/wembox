@@ -65,7 +65,7 @@
 #### STOPPING ANY FURTHER CHAT ON CONTACT REQUESTS UNTILL RECEIVER REPLIES
 
 - 24/11/2023
-  - Having a sender send non-stop messages to a receiver would demote the environment around sharing and accepted contact request, to curb this it is best idea to allow a sender to send a follow up message after the contatc request only after the reciever has delivered a reply. This may not be implement on the MVP but is a really good idea and should be implemented when needed.
+  - Having a sender send non-stop messages to a receiver would demote the environment around sharing and accepted contact request, to curb this it is best idea to allow a sender to send a follow up message after the contact request only after the receiver has delivered a reply. This may not be implement on the MVP but is a really good idea and should be implemented when needed.
 
 ### Frontend
 
