@@ -2,7 +2,7 @@ const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
-const { updateContactSession } = require('../contact/helper');
+const { updateContactSession } = require('../../utilities/helpers');
 
 exports.sendChat = catchAsync(async (req, res, next) => {
   // contactID was set at contact protect.

@@ -1,7 +1,7 @@
 const User = require('../../models/user/userModel');
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { createContact, updateContactSession } = require('./helper');
+const { createContact } = require('./helper');
 const {
   requestStatusEnum,
   defaultRequestStatus,
@@ -10,6 +10,7 @@ const {
 } = require('../../config/contactConfig');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
+const { updateContactSession } = require('../../utilities/helpers');
 
 exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const { username, _id: senderID } = req.user;
@@ -206,8 +207,6 @@ exports.getContacts = catchAsync(async (req, res, next) => {
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
 
   const sessionedContactList = req.session[contactSessionKey];
-
-  // console.log(req.session[contactSessionKey], '////<<-- Session');
 
   const contactList = sessionedContactList?.length
     ? sessionedContactList
