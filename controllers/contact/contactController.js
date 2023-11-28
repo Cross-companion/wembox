@@ -184,9 +184,13 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
         activationChat._id
       );
 
-      newContact.lastMessage = activationChat;
-
-      updateContactSession(senderID, ID, newContact, req);
+      updateContactSession(req, {
+        senderID,
+        receiverID: ID,
+        updatedContact: newContact,
+        lastMessage: activationChat,
+        otherUser: req.user,
+      });
     }
 
     res.status(200).json({
@@ -194,7 +198,7 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
       message: `${status} request successfully`,
     });
   } catch (err) {
-    return next(new AppError(err.message, 404));
+    return next(new AppError(err, 404));
   }
 });
 
@@ -204,7 +208,7 @@ exports.getContacts = catchAsync(async (req, res, next) => {
   const sessionedContactList = req.session[contactSessionKey];
 
   // For testing only - DELETE
-  // req.session[contactSessionKey] = undefined;
+  req.session[contactSessionKey] = undefined;
 
   const contactList = sessionedContactList?.length
     ? sessionedContactList

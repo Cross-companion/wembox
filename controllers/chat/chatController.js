@@ -26,10 +26,13 @@ exports.sendChat = catchAsync(async (req, res, next) => {
     { lastMessage: newChat._id }
   );
 
-  // manually set lastMessage so it'll be available at session.
-  updatedContact.lastMessage = newChat;
-
-  updateContactSession(senderID, receiverID, updatedContact, req);
+  updateContactSession(req, {
+    senderID,
+    receiverID,
+    updatedContact,
+    lastMessage: newChat,
+    otherUser: req.user,
+  });
 
   res.status(200).json({
     status: 'success',

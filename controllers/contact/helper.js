@@ -5,6 +5,8 @@ exports.createContact = async (users, lastMessageID) => {
     users,
     lastMessage: lastMessageID,
   };
-  const [contact] = await Contact.create(contactData);
+  const contact = await Contact.create(contactData);
+  console.log(contact);
+  console.log(contact[0]);
   return contact;
 };

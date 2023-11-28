@@ -30,7 +30,7 @@ exports.follow = catchAsync(async (req, res, next) => {
     );
   }
 
-  const [createFollow] = await Follow.create({ follower, following });
+  const createFollow = await Follow.create({ follower, following });
 
   // 2. add an increment to the appropriate fields of both the follower and the following
   await User.findByIdAndUpdate(

@@ -142,7 +142,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const userIP = getIPAddress(req);
   const userLocation = await getLocationByIP(userIP);
 
-  const [newUser] = await User.create({
+  const newUser = await User.create({
     name: req.body.name,
     frontEndUsername: req.body.username,
     username: req.body.username,

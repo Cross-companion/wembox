@@ -147,7 +147,27 @@ exports.setCachedUser = async (user) => {
   return status;
 };
 
-exports.updateContactSession = (senderID, receiverID, updateData, req) => {
+exports.updateContactSession = (
+  req,
+  { senderID, receiverID, updatedContact, lastMessage, otherUser }
+) => {
+  if (
+    !(
+      req ||
+      senderID ||
+      receiverID ||
+      updatedContact ||
+      lastMessage ||
+      otherUser
+    )
+  )
+    throw new Error('Invalid arguments at updateContactSession.');
+
+  // manually set populated fields so it'll be available at session.
+  const { _id, username } = otherUser;
+  updatedContact.otherUser = [{ _id, username }];
+  updatedContact.lastMessage = lastMessage;
+
   const receiverContactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${receiverID}`;
   const senderContactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${senderID}`;
 
@@ -168,7 +188,7 @@ exports.updateContactSession = (senderID, receiverID, updateData, req) => {
     );
 
     // Sets the new value of the contact as the first element i.e [0] using unshift.
-    contactList?.unshift(updateData);
+    contactList?.unshift(updatedContact);
     if (contactList?.length > process.env.CONTACTLIST_LIMIT) contactList?.pop();
 
     if (i === receiversIndex)
