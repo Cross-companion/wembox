@@ -6,6 +6,7 @@ const {
 const {
   chatStatusEnum,
   defaultChatStatus,
+  deliveredStatus,
 } = require('../../config/chatConfig');
 
 const chatSchema = new mongoose.Schema(
@@ -62,19 +63,10 @@ chatSchema.index({
   'contactRequest.status': 1,
 });
 
-// Virtuals
-chatSchema.virtual('populateSender', {
-  ref: 'User',
-  localField: 'sender',
-  foreignField: '_id',
-  justOne: true,
-});
+chatSchema.pre('save', async function (next) {
+  this.status = deliveredStatus;
 
-chatSchema.virtual('populateReceiver', {
-  ref: 'User',
-  localField: 'receiver',
-  foreignField: '_id',
-  justOne: true,
+  next();
 });
 
 const Chat = mongoose.model('Chat', chatSchema);

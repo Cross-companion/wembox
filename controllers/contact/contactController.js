@@ -1,8 +1,7 @@
 const User = require('../../models/user/userModel');
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { createContact } = require('./helper');
-const { updateContactSession } = require('../../utilities/helpers');
+const { createContact, updateContactSession } = require('./helper');
 const {
   requestStatusEnum,
   defaultRequestStatus,
@@ -15,6 +14,7 @@ const AppError = require('../../utilities/AppError');
 exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const { username, _id: senderID } = req.user;
   const { receiverID, message } = req.body;
+  const duplicateErrorCode = 11000;
 
   if (!receiverID)
     return next(new AppError('Invalid receiverID specified.', 401));
@@ -47,45 +47,46 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
   };
 
   try {
-    const confirmReceiver = await User.findById({ _id: receiverID });
-    const receiverHasRequested = await Chat.findOne({
+    const receiverExists = await User.findById({ _id: receiverID });
+    if (!receiverExists) return next(new AppError('Receiver not found', 404));
+
+    const requestAlreadyExits = await Chat.findOne({
       sender: { $in: [receiverID, senderID] },
       receiver: { $in: [receiverID, senderID] },
-      'contactRequest.status': { $ne: declinedStatus },
+      'contactRequest.isActivationChat': true,
     });
 
-    if (!confirmReceiver) return next(new AppError('Receiver not found', 404));
-    if (receiverHasRequested)
-      return next(
-        new AppError(
+    // A new error is thrown and not returned because it could mean that the previous CR was declined. If previous was declined, a new CR can be sent. check catch function.
+    if (requestAlreadyExits)
+      throw {
+        message:
           'A contact request has already been sent and has been accepted or is pending.',
-          401
-        )
-      );
+        code: duplicateErrorCode,
+      };
 
     await Chat.create(conRequestData);
   } catch (err) {
-    if (err?.code === 11000) {
-      // If isActivationChat is still `true` and there was a duplicate error on creation, This means that there had been this contact request before but it had been declined. Our application makes room for a user to send another request if the first was declined.
-      if (!message) conRequestData.message = undefined;
-      const { nModified } = await Chat.updateOne(
-        {
-          sender: senderID,
-          receiver: receiverID,
-          'contactRequest.isActivationChat': true,
-          'contactRequest.status': { $eq: declinedStatus },
-        },
-        conRequestData
-      );
+    if (err?.code !== duplicateErrorCode)
+      return next(new AppError(err.message, 404));
 
-      if (nModified < 1)
-        return next(
-          new AppError(
-            'Contact request has already been sent and is pending or has been accepted.',
-            404
-          )
-        );
-    }
+    if (!message) conRequestData.message = undefined;
+    const { nModified } = await Chat.updateOne(
+      {
+        sender: senderID,
+        receiver: receiverID,
+        'contactRequest.isActivationChat': true,
+        'contactRequest.status': declinedStatus,
+      },
+      conRequestData
+    );
+
+    if (!nModified)
+      return next(
+        new AppError(
+          'Contact request has already been sent and is pending or has been accepted.',
+          404
+        )
+      );
   }
 
   const receiver = await User.findOneAndUpdate(
@@ -187,9 +188,7 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
       updateContactSession(req, {
         senderID,
         receiverID: ID,
-        updatedContact: newContact,
         lastMessage: activationChat,
-        otherUser: req.user,
       });
     }
 
@@ -205,10 +204,10 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
 exports.getContacts = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
+
   const sessionedContactList = req.session[contactSessionKey];
 
-  // For testing only - DELETE
-  req.session[contactSessionKey] = undefined;
+  // console.log(req.session[contactSessionKey], '////<<-- Session');
 
   const contactList = sessionedContactList?.length
     ? sessionedContactList

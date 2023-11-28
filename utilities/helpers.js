@@ -1,5 +1,5 @@
 const Reader = require('@maxmind/geoip2-node').Reader;
-const User = require('../models/user/userModel');
+// const User = require('../models/user/userModel');
 const redis = require('./redisInit');
 
 const { engagementTimeSpans } = require('../config/interestConfig');
@@ -126,14 +126,6 @@ exports.getCountryWeight = (
   return Math.ceil((weight / 10) * numberOfSuggestions);
 };
 
-exports.getCachedUser = async (id) => {
-  const userKey = `${process.env.USER_CACHE_KEY}${id}`;
-  const cachedUser = JSON.parse(await redis.get(userKey));
-  const user = cachedUser || (await User.findById(id));
-
-  return { user, userWasCached: cachedUser ? true : false };
-};
-
 exports.setCachedUser = async (user) => {
   if (!user?._id) throw new Error('user._id not specified.');
   const userKey = `${process.env.USER_CACHE_KEY}${user._id}`;
@@ -145,60 +137,4 @@ exports.setCachedUser = async (user) => {
   );
 
   return status;
-};
-
-exports.updateContactSession = (
-  req,
-  { senderID, receiverID, updatedContact, lastMessage, otherUser }
-) => {
-  if (
-    !(
-      req ||
-      senderID ||
-      receiverID ||
-      updatedContact ||
-      lastMessage ||
-      otherUser
-    )
-  )
-    throw new Error('Invalid arguments at updateContactSession.');
-
-  // manually set populated fields so it'll be available at session.
-  const { _id, username } = otherUser;
-  updatedContact.otherUser = [{ _id, username }];
-  updatedContact.lastMessage = lastMessage;
-
-  const receiverContactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${receiverID}`;
-  const senderContactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${senderID}`;
-
-  const receiverContactList = req.session[receiverContactSessionKey];
-  const senderContactList = req.session[senderContactSessionKey];
-  const contactListsArr = [receiverContactList, senderContactList];
-  const [receiversIndex, sendersIndex] = [0, 1];
-
-  [...contactListsArr].forEach((contactList, i) => {
-    if (!Array.isArray(contactList)) contactList = [];
-
-    // Remove duplicate contacts
-    contactList = contactList.filter(
-      (contact) =>
-        !(
-          contact.users.includes(receiverID) && contact.users.includes(senderID)
-        )
-    );
-
-    // Sets the new value of the contact as the first element i.e [0] using unshift.
-    contactList?.unshift(updatedContact);
-    if (contactList?.length > process.env.CONTACTLIST_LIMIT) contactList?.pop();
-
-    if (i === receiversIndex)
-      req.session[receiverContactSessionKey] = contactList;
-
-    if (i === sendersIndex) {
-      const sendersSessionIsAlive = senderContactList?.length;
-      if (!sendersSessionIsAlive) return;
-
-      req.session[senderContactSessionKey] = contactList;
-    }
-  });
 };

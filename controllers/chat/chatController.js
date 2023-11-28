@@ -2,7 +2,7 @@ const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
-const { updateContactSession } = require('../../utilities/helpers');
+const { updateContactSession } = require('../contact/helper');
 
 exports.sendChat = catchAsync(async (req, res, next) => {
   // contactID was set at contact protect.
@@ -13,11 +13,13 @@ exports.sendChat = catchAsync(async (req, res, next) => {
     return next(new AppError('Invalid receiverID specified.', 401));
 
   const [newChat] = await Chat.create(
-    {
-      sender: senderID,
-      receiver: receiverID,
-      message,
-    },
+    [
+      {
+        sender: senderID,
+        receiver: receiverID,
+        message,
+      },
+    ],
     { select: 'sender receiver status message createdAt' }
   );
 
@@ -29,9 +31,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
   updateContactSession(req, {
     senderID,
     receiverID,
-    updatedContact,
     lastMessage: newChat,
-    otherUser: req.user,
   });
 
   res.status(200).json({
