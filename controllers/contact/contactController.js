@@ -204,7 +204,13 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
 
 exports.getContacts = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
+  const { page = 1 } = req.body;
+  const contactsLimit = Number(process.env.CONTACTLIST_LIMIT) || 50;
+  const skipBy = (page || 1 - 1) * contactsLimit;
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
+
+  if (page < 1)
+    return next(new AppError('Invalid page number specified.', 401));
 
   const sessionedContactList = req.session[contactSessionKey];
 
@@ -216,7 +222,8 @@ exports.getContacts = catchAsync(async (req, res, next) => {
           match: { _id: { $ne: userID } },
           select: 'username',
         })
-        .limit(Number(process.env.CONTACTLIST_LIMIT))
+        .limit(contactsLimit)
+        .skip(skipBy)
         .populate('lastMessage', 'sender receiver message createdAt')
         .sort({ 'lastMessage.createdAt': -1 });
 

@@ -147,12 +147,13 @@ exports.updateContactSession = (req, { senderID, receiverID, lastMessage }) => {
 
     if (!contactList || contactList?.length < 1) return;
 
+    // For Optimization, on Array.reduce can be used here instead.
     contactList.forEach((contact) => {
       const isContact =
         contact.users.includes(receiverID) && contact.users.includes(senderID);
       if (isContact) contact.lastMessage = lastMessage;
     });
-
+    contactList?.splice(process.env.CONTACTLIST_LIMIT);
     contactList.sort(
       (a, b) => a.lastMessage.createdAt + a.lastMessage.createdAt
     );

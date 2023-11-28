@@ -14,10 +14,12 @@ const chatSchema = new mongoose.Schema(
     sender: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
+      required: [true, 'A chat must have a sender'],
     },
     receiver: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
+      required: [true, 'A chat must have a receiver'],
     },
     message: {
       type: String,
@@ -63,8 +65,10 @@ chatSchema.index({
   'contactRequest.status': 1,
 });
 
-chatSchema.post('save', function (doc) {
-  doc.status = deliveredStatus;
+chatSchema.pre('save', async function (next) {
+  this.status = deliveredStatus;
+
+  next();
 });
 
 const Chat = mongoose.model('Chat', chatSchema);

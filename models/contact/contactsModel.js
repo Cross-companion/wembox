@@ -28,6 +28,7 @@ const contactSchema = new mongoose.Schema(
     lastMessage: {
       type: mongoose.Schema.ObjectId,
       ref: 'Chat',
+      required: [true, 'No last message has be assigned to this contact.'],
     },
     createdAt: {
       type: Date,
