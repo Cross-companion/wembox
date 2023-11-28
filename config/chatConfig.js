@@ -9,7 +9,7 @@ const chatConfig = {
   defaultChatStatus: 'sent',
   deliveredStatus: 'delivered',
   seenStatus: 'seen',
-  deletedStatus: 'declined',
+  deletedStatus: 'deleted',
   deletedForSenderStatus: 'deleted for sender',
 };
 
