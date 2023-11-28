@@ -1,7 +1,8 @@
 const User = require('../../models/user/userModel');
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { createContact, updateContactSession } = require('./helper');
+const { createContact } = require('./helper');
+const { updateContactSession } = require('../../utilities/helpers');
 const {
   requestStatusEnum,
   defaultRequestStatus,
@@ -47,17 +48,17 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
 
   try {
     const confirmReceiver = await User.findById({ _id: receiverID });
-    const receiverHasRequested = await Chat.find({
-      sender: receiverID,
-      receiver: senderID,
+    const receiverHasRequested = await Chat.findOne({
+      sender: { $in: [receiverID, senderID] },
+      receiver: { $in: [receiverID, senderID] },
       'contactRequest.status': { $ne: declinedStatus },
     });
 
     if (!confirmReceiver) return next(new AppError('Receiver not found', 404));
-    if (receiverHasRequested.length > 0)
+    if (receiverHasRequested)
       return next(
         new AppError(
-          'This receiver has already sent a contact request. Please accept it instead.',
+          'A contact request has already been sent and has been accepted or is pending.',
           401
         )
       );
@@ -159,7 +160,7 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
       {
         'contactRequest.status': status,
       }
-    );
+    ).select('sender receiver message createdAt');
 
     if (!activationChat)
       return next(new AppError('No contact request had been created.', 404));
@@ -183,6 +184,8 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
         activationChat._id
       );
 
+      newContact.lastMessage = activationChat;
+
       updateContactSession(senderID, ID, newContact, req);
     }
 
@@ -199,6 +202,9 @@ exports.getContacts = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
   const sessionedContactList = req.session[contactSessionKey];
+
+  // For testing only - DELETE
+  // req.session[contactSessionKey] = undefined;
 
   const contactList = sessionedContactList?.length
     ? sessionedContactList
@@ -226,26 +232,28 @@ exports.getContacts = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   const { _id: senderID } = req.user;
   const { receiverID } = req.body;
-  let contactList;
+  let contact;
 
   if (!receiverID || senderID === receiverID)
     return next(new AppError('Invalid receiverID.', 401));
 
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${senderID}`;
 
-  contactList = req.session[contactSessionKey]?.some((contact) =>
+  contact = req.session[contactSessionKey]?.find((contact) =>
     contact.users.includes(receiverID)
   );
 
-  if (!contactList)
-    contactList = await Contact.findOne({
+  if (!contact)
+    contact = await Contact.findOne({
       users: { $all: [senderID, receiverID] },
     });
 
-  const hasAccess = contactList !== null;
+  const hasAccess = contact !== null;
 
   if (!hasAccess)
     return next(new AppError('Access to send chat was denied.', 401));
+
+  req.user.contactID = contact._id;
 
   next();
 });

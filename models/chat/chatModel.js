@@ -58,14 +58,9 @@ chatSchema.index({
   sender: 1,
   receiver: 1,
   createdAt: 1,
+  'contactRequest.isActivationChat': 1,
   'contactRequest.status': 1,
 });
-
-// Create a compound unique index on sender and receiver
-chatSchema.index(
-  { sender: 1, receiver: 1, 'contactRequest.isActivationChat': 1 },
-  { unique: true }
-);
 
 // Virtuals
 chatSchema.virtual('populateSender', {
