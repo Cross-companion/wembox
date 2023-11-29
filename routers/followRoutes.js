@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const followController = require('../controllers/follow/followController');
+const chatController = require('../controllers/chat/chatController');
 
 router.use(authController.protect);
+router.use(chatController.deliverChats);
 
 router
   .route('/')

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const authController = require('../controllers/authController');
 const usersController = require('../controllers/user/usersController');
+const chatController = require('../controllers/chat/chatController');
 
 router.route('/data-exists').get(authController.dataExists);
 
@@ -22,6 +23,8 @@ router.route('/forgot_password').post(authController.forgotPassword);
 router.route('/reset_password/:token').post(authController.resetPassword);
 
 router.use(authController.protect);
+router.use(chatController.deliverChats);
+
 router
   .route('/')
   .get(
