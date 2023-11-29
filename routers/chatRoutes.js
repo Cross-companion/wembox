@@ -7,11 +7,11 @@ const chatController = require('../controllers/chat/chatController');
 
 router.use(authController.protect);
 
-router.route('/').get(chatController.viewReceivedChats);
-
-router.use(contactController.protect);
-
-router.route('/').post(chatController.sendChat);
+router
+  .route('/')
+  .get(chatController.getRecentChats)
+  .post(contactController.protect, chatController.sendChat)
+  .delete(chatController.deleteChat);
 
 //-- <> -- //
 module.exports = router;

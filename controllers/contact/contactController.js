@@ -11,6 +11,7 @@ const {
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
 const { updateContactSession } = require('../../utilities/helpers');
+const { seenStatus } = require('../../config/chatConfig');
 
 exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const { username, _id: senderID } = req.user;
@@ -143,9 +144,10 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
   const { status, senderID } = req.body;
 
   if (!ID) return next(new AppError('Invalid user, please log in again.'));
+  if (!senderID) return next(new AppError('Contact request is invalid.'));
   if (ID === senderID) return next(new AppError('Invalid senderID'));
-  if (!requestStatusEnum.includes(status) || !senderID)
-    return next(new AppError('Invalid status or senderID', 401));
+  if (!requestStatusEnum.includes(status))
+    return next(new AppError('Invalid contact request status.', 401));
   if (status === defaultRequestStatus)
     return next(
       new AppError('Status of contact request must be modified.', 401)
@@ -160,6 +162,7 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
         'contactRequest.status': { $ne: acceptedStatus },
       },
       {
+        status: seenStatus,
         'contactRequest.status': status,
       }
     ).select('sender receiver message createdAt');
@@ -206,12 +209,13 @@ exports.getContacts = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
   const { page = 1 } = req.body;
   const contactsLimit = Number(process.env.CONTACTLIST_LIMIT) || 50;
-  const skipBy = (page || 1 - 1) * contactsLimit;
+  const skipBy = (page - 1) * contactsLimit;
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
 
   if (page < 1)
     return next(new AppError('Invalid page number specified.', 401));
 
+  req.session[contactSessionKey] = undefined;
   const sessionedContactList = req.session[contactSessionKey];
 
   const contactList = sessionedContactList?.length
@@ -224,7 +228,7 @@ exports.getContacts = catchAsync(async (req, res, next) => {
         })
         .limit(contactsLimit)
         .skip(skipBy)
-        .populate('lastMessage', 'sender receiver message createdAt')
+        .populate('lastMessage', 'status sender receiver message createdAt')
         .sort({ 'lastMessage.createdAt': -1 });
 
   if (!sessionedContactList?.length) {

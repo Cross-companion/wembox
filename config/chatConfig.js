@@ -5,12 +5,15 @@ const chatConfig = {
     'seen',
     'deleted',
     'deleted for sender',
+    'deleted for receiver',
   ],
   defaultChatStatus: 'sent',
   deliveredStatus: 'delivered',
   seenStatus: 'seen',
   deletedStatus: 'deleted',
+  deletedForReceiverStatus: 'deleted for receiver',
   deletedForSenderStatus: 'deleted for sender',
+  deletedMessageString: 'Deleted',
 };
 
 module.exports = chatConfig;

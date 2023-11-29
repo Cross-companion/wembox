@@ -1,6 +1,11 @@
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { seenStatus, deliveredStatus } = require('../../config/chatConfig');
+const {
+  seenStatus,
+  deliveredStatus,
+  deletedStatus,
+  deletedMessageString,
+} = require('../../config/chatConfig');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
 const { updateContactSession } = require('../../utilities/helpers');
@@ -12,7 +17,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
   const { receiverID, message } = req.body;
 
   if (!receiverID || senderID == receiverID)
-    return next(new AppError('Invalid receiverID specified.', 401));
+    return next(new AppError('Invalid users specified.', 401));
 
   const [newChat] = await Chat.create(
     [
@@ -42,7 +47,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.viewReceivedChats = catchAsync(async (req, res, next) => {
+exports.getRecentChats = catchAsync(async (req, res, next) => {
   const { _id: userID } = req.user;
   const { otherUserID, page = 1 } = req.body;
   const usersArr = [userID, otherUserID];
@@ -50,7 +55,7 @@ exports.viewReceivedChats = catchAsync(async (req, res, next) => {
   const skipBy = (page - 1) * chatsLimit;
 
   if (!otherUserID || userID == otherUserID)
-    return next(new AppError('Invalid id for other user specified.', 401));
+    return next(new AppError('Invalid users specified.', 401));
   if (page < 1)
     return next(new AppError('Invalid page number specified.', 401));
 
@@ -77,4 +82,40 @@ exports.viewReceivedChats = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deleteChat = catchAsync(async (req, res, next) => {});
+exports.deleteChat = catchAsync(async (req, res, next) => {
+  const { _id: userID } = req.user;
+  const { otherUserID, chatID } = req.body;
+  const usersArr = [userID, otherUserID];
+
+  if (!otherUserID || userID == otherUserID)
+    return next(new AppError('Invalid users specified.', 401));
+  if (!chatID)
+    return next(new AppError('No chat to be deleted was specified.', 401));
+
+  const deletedChat = await Chat.findOneAndUpdate(
+    {
+      _id: chatID,
+      receiver: { $in: usersArr },
+      sender: { $in: usersArr },
+      'contactRequest.isActivationChat': { $in: [false, undefined] },
+    },
+    { status: deletedStatus, message: deletedMessageString },
+    {
+      new: true,
+      runValidators: true,
+    }
+  ).select('-contactRequest');
+
+  deletedChat &&
+    updateContactSession(req, {
+      senderID: userID,
+      receiverID: otherUserID,
+      lastMessage: deletedChat,
+      isDeleted: true,
+    });
+
+  res.status(200).json({
+    status: 'success',
+    deletedChat,
+  });
+});

@@ -138,8 +138,12 @@ exports.setCachedUser = async (user) => {
   return status;
 };
 
-exports.updateContactSession = (req, { senderID, receiverID, lastMessage }) => {
+exports.updateContactSession = (
+  req,
+  { senderID, receiverID, lastMessage, isDeleted = false }
+) => {
   const userIDArray = [senderID, receiverID];
+
   for (let i = 0; i < userIDArray.length; i++) {
     const userID = userIDArray[i];
     const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
@@ -151,7 +155,18 @@ exports.updateContactSession = (req, { senderID, receiverID, lastMessage }) => {
     contactList.forEach((contact) => {
       const isContact =
         contact.users.includes(receiverID) && contact.users.includes(senderID);
-      if (isContact) contact.lastMessage = lastMessage;
+
+      if (isContact && !isDeleted) contact.lastMessage = lastMessage;
+      if (isContact && isDeleted) {
+        // check if deleted message was last chat.
+        const newLastMessageID = lastMessage._id;
+        const currentLastMessageID = contact.lastMessage._id;
+        const isCurrentLastMessage = newLastMessageID == currentLastMessageID;
+
+        contact.lastMessage = isCurrentLastMessage
+          ? lastMessage
+          : contact.lastMessage;
+      }
     });
     contactList?.splice(process.env.CONTACTLIST_LIMIT);
     contactList.sort(
