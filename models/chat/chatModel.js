@@ -65,12 +65,6 @@ chatSchema.index({
   'contactRequest.status': 1,
 });
 
-chatSchema.pre('save', async function (next) {
-  this.status = deliveredStatus;
-
-  next();
-});
-
 const Chat = mongoose.model('Chat', chatSchema);
 
 module.exports = Chat;
