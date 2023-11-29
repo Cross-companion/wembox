@@ -1,7 +1,7 @@
-const User = require('../models/user/userModel');
-const factory = require('./handlerFactory');
-const AppError = require('../utilities/AppError');
-const catchAsync = require('../utilities/catchAsync');
+const User = require('../../models/user/userModel');
+const factory = require('../handlerFactory');
+const AppError = require('../../utilities/AppError');
+const catchAsync = require('../../utilities/catchAsync');
 
 exports.getAllUsers = factory.findAll(User);
 

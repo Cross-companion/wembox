@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const authController = require('../controllers/authController');
-const usersController = require('../controllers/usersController');
+const usersController = require('../controllers/user/usersController');
 
 router.route('/data-exists').get(authController.dataExists);
 
