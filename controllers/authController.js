@@ -17,6 +17,7 @@ const {
 } = require('../utilities/helpers');
 const redis = require('../utilities/redisInit');
 const DocumentMethods = require('../utilities/DocumentMethods');
+const { getContactsQuery } = require('./contact/helper');
 
 const signToken = (claims) => {
   return jwt.sign(claims, process.env.JWT_SECRET, {
@@ -257,6 +258,16 @@ exports.protect = catchAsync(async (req, res, next) => {
       'ex',
       process.env.REDIS_USER_EXP
     );
+  }
+
+  const { _id: userID } = user;
+  const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
+  let sessionedContactList = req.session[contactSessionKey];
+
+  if (!sessionedContactList?.length) {
+    const contactList = await getContactsQuery({ users: userID }, { userID });
+    req.session[contactSessionKey] = contactList;
+    sessionedContactList = contactList;
   }
 
   req.user = user;

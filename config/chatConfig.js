@@ -14,6 +14,7 @@ const chatConfig = {
   deletedForReceiverStatus: 'deleted for receiver',
   deletedForSenderStatus: 'deleted for sender',
   deletedMessageString: 'Deleted',
+  chatsPerRequest: 20,
 };
 
 module.exports = chatConfig;

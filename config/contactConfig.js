@@ -3,6 +3,7 @@ const contactConfig = {
   defaultRequestStatus: 'pending',
   acceptedStatus: 'accepted',
   declinedStatus: 'declined',
+  contactsPerRequest: 50,
 };
 
 module.exports = contactConfig;

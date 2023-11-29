@@ -1,12 +1,13 @@
 const User = require('../../models/user/userModel');
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { createContact } = require('./helper');
+const { createContact, getContactsQuery } = require('./helper');
 const {
   requestStatusEnum,
   defaultRequestStatus,
   acceptedStatus,
   declinedStatus,
+  contactsPerRequest,
 } = require('../../config/contactConfig');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
@@ -208,32 +209,21 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
 exports.getContacts = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
   const { page = 1 } = req.body;
-  const contactsLimit = Number(process.env.CONTACTLIST_LIMIT) || 50;
+  const contactsLimit = contactsPerRequest || 50;
   const skipBy = (page - 1) * contactsLimit;
   const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
 
   if (page < 1)
     return next(new AppError('Invalid page number specified.', 401));
 
-  req.session[contactSessionKey] = undefined;
-  const sessionedContactList = req.session[contactSessionKey];
+  const sessionedContactList = page === 1 && req.session[contactSessionKey];
 
   const contactList = sessionedContactList?.length
     ? sessionedContactList
-    : await Contact.find({ users: userID })
-        .populate({
-          path: 'otherUser',
-          match: { _id: { $ne: userID } },
-          select: 'username',
-        })
-        .limit(contactsLimit)
-        .skip(skipBy)
-        .populate('lastMessage', 'status sender receiver message createdAt')
-        .sort({ 'lastMessage.createdAt': -1 });
-
-  if (!sessionedContactList?.length) {
-    req.session[contactSessionKey] = contactList;
-  }
+    : await getContactsQuery(
+        { users: userID },
+        { userID, contactsLimit, skipBy }
+      );
 
   res.status(200).json({
     status: 'success',

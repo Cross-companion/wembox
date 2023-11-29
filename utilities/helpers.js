@@ -3,6 +3,7 @@ const redis = require('./redisInit');
 
 const { engagementTimeSpans } = require('../config/interestConfig');
 const countryRegions = require('../config/countryRegions.json');
+const { contactsPerRequest } = require('../config/contactConfig');
 
 exports.getFollowsFilterBy = (req, type = 'following') => {
   let userFollowsToGet = req.user?._id;
@@ -168,7 +169,7 @@ exports.updateContactSession = (
           : contact.lastMessage;
       }
     });
-    contactList?.splice(process.env.CONTACTLIST_LIMIT);
+    contactList?.splice(contactsPerRequest);
     contactList.sort(
       (a, b) => a.lastMessage.createdAt + a.lastMessage.createdAt
     );
