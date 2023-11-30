@@ -171,7 +171,7 @@ exports.updateContactSession = (
     });
     contactList?.splice(contactsPerRequest);
     contactList.sort(
-      (a, b) => a.lastMessage.createdAt + a.lastMessage.createdAt
+      (a, b) => a.lastMessage.createdAt + b.lastMessage.createdAt
     );
 
     req.session[contactSessionKey] = contactList;

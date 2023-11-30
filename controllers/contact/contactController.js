@@ -225,6 +225,10 @@ exports.getContacts = catchAsync(async (req, res, next) => {
         { userID, contactsLimit, skipBy }
       );
 
+  if (!sessionedContactList?.length) {
+    req.session[contactSessionKey] = contactList;
+  }
+
   res.status(200).json({
     status: 'success',
     results: contactList.length,

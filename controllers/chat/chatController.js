@@ -1,6 +1,12 @@
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
 const {
+  getSessionedChats,
+  getChatsFromDB,
+  getSessionKey,
+  deleteSessionedChat,
+} = require('./helpers');
+const {
   defaultChatStatus,
   seenStatus,
   deliveredStatus,
@@ -11,15 +17,20 @@ const {
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
 const { updateContactSession } = require('../../utilities/helpers');
-const APIFeature = require('../../utilities/APIFeatures');
 
 exports.sendChat = catchAsync(async (req, res, next) => {
   // contactID was set at contact protect.
   const { _id: senderID, contactID } = req.user;
   const { receiverID, message } = req.body;
+  const usersArr = [senderID, receiverID];
+  const chatSessionKey = getSessionKey(usersArr);
 
   if (!receiverID || senderID == receiverID)
     return next(new AppError('Invalid users specified.', 401));
+
+  await getSessionedChats(req, {
+    usersArr,
+  });
 
   const [newChat] = await Chat.create(
     [
@@ -43,6 +54,10 @@ exports.sendChat = catchAsync(async (req, res, next) => {
     lastMessage: newChat,
   });
 
+  req.session[chatSessionKey].unshift(newChat);
+  req.session[chatSessionKey].length > chatsPerRequest &&
+    req.session[chatSessionKey].splice(chatsPerRequest || 20);
+
   res.status(200).json({
     status: 'success',
     message,
@@ -55,6 +70,7 @@ exports.getRecentChats = catchAsync(async (req, res, next) => {
   const usersArr = [userID, otherUserID];
   const chatsLimit = chatsPerRequest || 20;
   const skipBy = (page - 1) * chatsLimit;
+  const chatSessionKey = getSessionKey(usersArr);
 
   if (!otherUserID || userID == otherUserID)
     return next(new AppError('Invalid users specified.', 401));
@@ -70,14 +86,16 @@ exports.getRecentChats = catchAsync(async (req, res, next) => {
     { status: seenStatus }
   );
 
-  const recentChats = await Chat.find({
-    receiver: { $in: usersArr },
-    sender: { $in: usersArr },
-  })
-    .sort({ createdAt: -1 })
-    .select('-contactRequest')
-    .limit(chatsLimit)
-    .skip(skipBy);
+  const seenChats = nModified ? true : false;
+  const sessionedChats = await getSessionedChats(req, {
+    usersArr,
+    seenChats,
+    receiver: userID,
+  });
+  const recentChats =
+    page === 1
+      ? sessionedChats
+      : await getChatsFromDB(usersArr, skipBy, chatsLimit);
 
   nModified &&
     updateContactSession(req, {
@@ -85,6 +103,12 @@ exports.getRecentChats = catchAsync(async (req, res, next) => {
       receiverID: otherUserID,
       lastMessage: recentChats[0],
     });
+
+  if (!sessionedChats?.length) req.session[chatSessionKey] = recentChats;
+
+  console.log(
+    `${req.session[chatSessionKey].length}: Number of sessioned chats`
+  );
 
   res.status(200).json({
     status: 'success',
@@ -97,6 +121,7 @@ exports.deleteChat = catchAsync(async (req, res, next) => {
   const { _id: userID } = req.user;
   const { otherUserID, chatID } = req.body;
   const usersArr = [userID, otherUserID];
+  const chatSessionKey = getSessionKey(usersArr);
 
   if (!otherUserID || userID == otherUserID)
     return next(new AppError('Invalid users specified.', 401));
@@ -125,6 +150,13 @@ exports.deleteChat = catchAsync(async (req, res, next) => {
       isDeleted: true,
     });
 
+  deletedChat &&
+    deleteSessionedChat(req, {
+      chatSessionKey,
+      chatID,
+      deletedStatus,
+    });
+
   res.status(200).json({
     status: 'success',
     deletedChat,
@@ -150,11 +182,19 @@ exports.deliverChats = catchAsync(async (req, res, next) => {
 
   for (let i = 0; i < contactList.length; i++) {
     const contact = contactList[i];
-    const otherUserID = contact.otherUser[0]._id;
     const stopLoop = contact.lastMessage?.status !== defaultChatStatus;
 
     // Breaks if it encounters a delivered / accepted lastMessage. This would mean that there are no more undelivered chats.
     if (stopLoop) break;
+    const otherUserID = contact.otherUser[0]._id;
+    const usersArr = [userID, otherUserID];
+    const chatSessionKey = getSessionKey(usersArr);
+
+    req.session[chatSessionKey].forEach((chat, i, chatArr) => {
+      if (chat.status !== defaultChatStatus) return;
+      chatArr[i].status = deliveredStatus;
+    });
+
     contactList[i].lastMessage.status = deliveredStatus;
 
     // Update other users request session.
