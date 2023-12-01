@@ -5,7 +5,7 @@ const AppError = require('../../utilities/AppError');
 const catchAsync = require('../../utilities/catchAsync');
 
 const populateFollowItems = [
-  'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing',
+  'name frontEndUsername profileImage accountType numberOfFollowers numberOfFollowing',
 ];
 
 exports.follow = catchAsync(async (req, res, next) => {

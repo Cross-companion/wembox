@@ -116,7 +116,7 @@ exports.getReceivedContactRequests = catchAsync(async (req, res, next) => {
   const receiverID = req.user._id;
 
   const populationData =
-    'name frontEndUsername profileImg accountType numberOfFollowers numberOfFollowing IPGeoLocation';
+    'name frontEndUsername profileImage accountType numberOfFollowers numberOfFollowing IPGeoLocation';
   const receivedContactRequests = await Chat.find({
     receiver: receiverID,
     'contactRequest.isContactRequest': true,

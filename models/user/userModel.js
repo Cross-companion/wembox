@@ -68,11 +68,11 @@ const userSchema = new mongoose.Schema(
       default: false,
       select: false,
     },
-    profileImg: {
+    profileImage: {
       type: String,
       default: 'default-user.jpg',
     },
-    profileBackgroungImg: {
+    profileCoverImage: {
       type: String,
       default: 'default-user-bkg.jpg',
     },

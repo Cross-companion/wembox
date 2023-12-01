@@ -26,13 +26,20 @@ router.use(authController.protect);
 router.use(chatController.deliverChats);
 
 router
+  .route('/signup')
+  .patch(
+    usersController.uploadProfileImages,
+    usersController.resizeUserPhoto,
+    usersController.updateAtSignup
+  );
+
+router
   .route('/')
   .get(
     authController.restrictTo('admin', 'senior-admin'),
     usersController.getAllUsers
   );
 
-router.route('/sign_up_flow').post(usersController.updateAtSignup);
 router.route('/logout').get(authController.logout); // the logout route is protected
 
 //-- <> -- //

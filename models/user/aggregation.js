@@ -30,7 +30,7 @@ class UserAggregations {
       'contentTypeMatched.engagements': -1,
     };
     this.defaultProject = {
-      profileImg: 1,
+      profileImage: 1,
       accountType: 1,
       IPGeoLocation: 1,
       wems: 1,
