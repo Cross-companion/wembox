@@ -36,12 +36,13 @@ class ImageFile {
     this.imageName = `${prefix}-${uniqueID}-${Date.now()}.jpeg`;
   }
 
-  async sharpify() {
+  async sharpify(fit = 'contain') {
     try {
       const sharpenedToBuffer = await sharp(this.image.buffer)
         .resize(this.resize[0], this.resize[1])
         .toFormat('jpeg')
         .jpeg({ quality: this.quality })
+        .fit(fit)
         .toBuffer()
         .catch((err) => new Error(err.message));
 
@@ -51,8 +52,8 @@ class ImageFile {
     }
   }
 
-  async uploadToAWS() {
-    const imageBuffer = await this.sharpify();
+  async uploadToAWS({ useSharp = true }) {
+    const imageBuffer = useSharp ? await this.sharpify() : this.image.buffer;
 
     const params = {
       Bucket: AWS_BUCKET_NAME,
