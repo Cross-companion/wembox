@@ -51,7 +51,7 @@ class ImageFile {
     }
   }
 
-  async uploadMultipleToAWS() {
+  async uploadToAWS() {
     const imageBuffer = await this.sharpify();
 
     const params = {

@@ -31,8 +31,8 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   );
 
   await Promise.all([
-    profileImage.uploadMultipleToAWS(),
-    profileCoverImage.uploadMultipleToAWS(),
+    profileImage.uploadToAWS(),
+    profileCoverImage.uploadToAWS(),
   ]);
 
   req.body.profileImage = profileImage.imageName;
