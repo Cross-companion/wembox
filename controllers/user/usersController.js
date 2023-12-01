@@ -1,10 +1,11 @@
 const multer = require('multer');
-const sharp = require('sharp');
 const User = require('../../models/user/userModel');
 const { multerStorage, multerFilter } = require('./helpers');
 const factory = require('../handlerFactory');
+const ImageFile = require('../../utilities/imageFileManager');
 const AppError = require('../../utilities/AppError');
 const catchAsync = require('../../utilities/catchAsync');
+const { PROFILE_IMAGE_PREFIX, PROFILE_COVER_IMAGE_PREFIX } = process.env;
 
 const upload = multer({
   storage: multerStorage,
@@ -17,31 +18,25 @@ exports.uploadProfileImages = upload.fields([
 ]);
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
-  const { profileImage, profileCoverImage } = req.files;
+  let { profileImage, profileCoverImage } = req.files;
   if (!profileImage && !profileCoverImage) return next();
 
-  if (profileImage) {
-    req.body.profileImage = `${process.env.PROFILE_IMAGE_PREFIX}-${
-      req.user._id
-    }-${Date.now()}.jpeg`;
-    sharp(req.files.profileImage[0].buffer)
-      .resize(500, 500)
-      .toFormat('jpeg')
-      .jpeg({ quality: 90 })
-      .toFile(`public/imgs/users/${req.body.profileImage}`);
-  }
+  const userID = req.user._id;
+  profileImage = new ImageFile(profileImage[0], userID, PROFILE_IMAGE_PREFIX);
+  profileCoverImage = new ImageFile(
+    profileCoverImage[0],
+    userID,
+    PROFILE_COVER_IMAGE_PREFIX,
+    [2000, 1333]
+  );
 
-  if (profileCoverImage) {
-    req.body.profileCoverImage = `${process.env.PROFILE_COVER_IMAGE_PREFIX}-${
-      req.user._id
-    }-${Date.now()}.jpeg`;
-    sharp(req.files.profileCoverImage[0].buffer)
-      .resize(2000, 1333)
-      .toFormat('jpeg')
-      .jpeg({ quality: 90 })
-      .toFile(`public/imgs/users/${req.body.profileCoverImage}`);
-  }
+  await Promise.all([
+    profileImage.uploadMultipleToAWS(),
+    profileCoverImage.uploadMultipleToAWS(),
+  ]);
 
+  req.body.profileImage = profileImage.imageName;
+  req.body.profileCoverImage = profileCoverImage.imageName;
   next();
 });
 
@@ -49,18 +44,13 @@ exports.getAllUsers = factory.findAll(User);
 
 // IMG Handling with AWS or its like would be done before initial organic Advertising.
 exports.updateAtSignup = catchAsync(async (req, res, next) => {
-  let {
-    interests,
-    contentType,
-    profileImg,
-    profileBackgroungImg,
-    geoLocation,
-  } = req.body;
+  let { interests, contentType, profileImage, profileCoverImage, geoLocation } =
+    req.body;
   const conditionToContinue =
     interests?.length ||
     contentType?.length ||
-    profileImg ||
-    profileBackgroungImg ||
+    profileImage ||
+    profileCoverImage ||
     geoLocation;
 
   if (!conditionToContinue)
@@ -72,8 +62,8 @@ exports.updateAtSignup = catchAsync(async (req, res, next) => {
   const fieldsToUpdate = [
     { name: 'interests', value: interests },
     { name: 'contentType', value: contentType },
-    { name: 'profileImg', value: profileImg },
-    { name: 'profileBackgroungImg', value: profileBackgroungImg },
+    { name: 'profileImage', value: profileImage },
+    { name: 'profileCoverImage', value: profileCoverImage },
     { name: 'geoLocation', value: geoLocation },
   ];
   const update = {};
