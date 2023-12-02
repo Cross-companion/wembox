@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 
 //Importing Custom modules
 const userRouter = require('./routers/userRoutes');
+const imageRouter = require('./routers/imageRoutes');
 const suggestionRouter = require('./routers/suggestionRoutes');
 const followRouter = require('./routers/followRoutes');
 const contactRouter = require('./routers/contactRoutes');
@@ -56,6 +57,7 @@ app.use((req, res, next) => {
 
 // MOUNTING ROUTERS
 app.use('/api/v1/users', userRouter);
+app.use('/images', imageRouter);
 app.use('/api/v1/suggest', suggestionRouter);
 app.use('/api/v1/follow', followRouter);
 app.use('/api/v1/contacts', contactRouter);

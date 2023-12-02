@@ -1,4 +1,9 @@
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require('@aws-sdk/client-s3');
+const sharp = require('sharp');
 const {
   AWS_ACCESS_KEY,
   AWS_BUCKET_NAME,
@@ -6,7 +11,6 @@ const {
   AWS_REGION,
   AWS_USER_IMAGES_FOLDER,
 } = process.env;
-const sharp = require('sharp');
 
 const awsClient = new S3Client({
   region: AWS_REGION,
@@ -17,32 +21,30 @@ const awsClient = new S3Client({
 });
 
 class ImageFile {
-  constructor(
+  constructor({
     image,
     uniqueID,
     prefix = 'not-prefixed',
     resize = [500, 500],
     quality = 90,
-    folderName
-  ) {
-    if (!image || !uniqueID)
-      throw new Error('No Image buffer or unique id  Specified');
+    folderName = AWS_USER_IMAGES_FOLDER,
+  } = {}) {
     this.image = image;
     this.prefix = prefix;
     this.resize = resize;
     this.quality = quality;
     this.uniqueID = uniqueID;
-    this.folderName = folderName;
-    this.imageName = `${prefix}-${uniqueID}-${Date.now()}.jpeg`;
+    this.imageName = `${folderName}${prefix}-${uniqueID}-${Date.now()}.jpeg`;
   }
 
   async sharpify(fit = 'contain') {
     try {
+      if (!this.image || !this.uniqueID)
+        throw new Error('No Image buffer or unique id  Specified');
       const sharpenedToBuffer = await sharp(this.image.buffer)
-        .resize(this.resize[0], this.resize[1])
+        .resize(this.resize[0], this.resize[1], { fit: 'cover' })
         .toFormat('jpeg')
         .jpeg({ quality: this.quality })
-        .fit(fit)
         .toBuffer()
         .catch((err) => new Error(err.message));
 
@@ -52,17 +54,35 @@ class ImageFile {
     }
   }
 
-  async uploadToAWS({ useSharp = true }) {
+  async uploadToAWS(useSharp = true) {
+    if (!this.image || !this.uniqueID)
+      throw new Error('No Image buffer or unique id  Specified');
     const imageBuffer = useSharp ? await this.sharpify() : this.image.buffer;
 
     const params = {
       Bucket: AWS_BUCKET_NAME,
-      Key: `${this.folderName || AWS_USER_IMAGES_FOLDER}${this.imageName}`,
+      Key: this.imageName,
       Body: imageBuffer,
       ContentType: this.image.mimetype,
     };
     const command = new PutObjectCommand(params);
-    await awsClient.send(command).catch((err) => new Error(err.message));
+    const esq = await awsClient
+      .send(command)
+      .catch((err) => new Error(err.message));
+    // console.log(esq);
+  }
+
+  async getFromAWS(imageUrl) {
+    if (!imageUrl) throw new Error('No image path was specified @getFromAWS');
+    const params = {
+      Bucket: AWS_BUCKET_NAME,
+      Key: imageUrl,
+    };
+    const command = new GetObjectCommand(params);
+    console.log('FIRE FIRE FIRE FIRE');
+    const { Body, ContentType } = await awsClient.send(command);
+
+    return { Body, ContentType };
   }
 }
 

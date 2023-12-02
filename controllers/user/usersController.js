@@ -22,13 +22,17 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   if (!profileImage && !profileCoverImage) return next();
 
   const userID = req.user._id;
-  profileImage = new ImageFile(profileImage[0], userID, PROFILE_IMAGE_PREFIX);
-  profileCoverImage = new ImageFile(
-    profileCoverImage[0],
-    userID,
-    PROFILE_COVER_IMAGE_PREFIX,
-    [2000, 1333]
-  );
+  profileImage = new ImageFile({
+    image: profileImage[0],
+    uniqueID: userID,
+    prefix: PROFILE_IMAGE_PREFIX,
+  });
+  profileCoverImage = new ImageFile({
+    image: profileCoverImage[0],
+    uniqueID: userID,
+    prefix: PROFILE_COVER_IMAGE_PREFIX,
+    resize: [2000, 1333],
+  });
 
   await Promise.all([
     profileImage.uploadToAWS(),
