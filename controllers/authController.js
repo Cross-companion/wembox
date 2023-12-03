@@ -221,7 +221,6 @@ exports.restrictTo = (...roles) => {
  * Since this user is cached, it looses all it document methods, any document method used after here must be defined in and called from the DocumentMethods class.
  */
 exports.protect = catchAsync(async (req, res, next) => {
-  // req.session.destroy();
   const jwtPasedByHeader = req.headers?.authorization?.startsWith('Bearer')
     ? req.headers?.authorization?.split(' ')[1]
     : '';
@@ -261,18 +260,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  // const { _id: userID } = user;
-  // const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
-  // let sessionedContactList = false && req.session[contactSessionKey];
-
-  // if (!sessionedContactList?.length) {
-  //   const contactList = await getContactsQuery({ users: userID }, { userID });
-  //   req.session[contactSessionKey] = contactList;
-  //   sessionedContactList = contactList;
-  // }
-
   req.user = user;
-  req.session.user = user;
   res.locals.user = user; // Store in response locals for possible rendering
   console.log(
     `${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`

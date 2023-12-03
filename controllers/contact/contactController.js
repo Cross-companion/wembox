@@ -39,16 +39,6 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
 
   if (message) conRequestData.message = message;
 
-  const senderFilter = { _id: senderID };
-  const receiverFilter = { _id: receiverID };
-
-  const senderUpdates = {
-    $inc: { 'contactRequest.sent': 1 },
-  };
-  const receiverUpdates = {
-    $inc: { 'contactRequest.unViewed': 1, 'contactRequest.received': 1 },
-  };
-
   try {
     const receiverExists = await User.findById({ _id: receiverID });
     if (!receiverExists) return next(new AppError('Receiver not found', 404));
@@ -92,23 +82,35 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
       );
   }
 
-  const receiver = await User.findOneAndUpdate(
-    receiverFilter,
-    receiverUpdates,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const senderFilter = { _id: senderID };
+  const receiverFilter = { _id: receiverID };
 
-  await User.findOneAndUpdate(senderFilter, senderUpdates, {
-    new: true,
-    runValidators: true,
+  const senderUpdates = {
+    $inc: { 'contactRequest.sent': 1 },
+  };
+  const receiverUpdates = {
+    $inc: { 'contactRequest.unViewed': 1, 'contactRequest.received': 1 },
+  };
+  await User.bulkWrite([
+    {
+      updateOne: {
+        filter: senderFilter,
+        update: senderUpdates,
+      },
+    },
+    {
+      updateOne: {
+        filter: receiverFilter,
+        update: receiverUpdates,
+      },
+    },
+  ]).catch((error) => {
+    return next(new AppError(error.message));
   });
 
   res.status(200).json({
     status: 'success',
-    message: `${username}, your contact request to ${receiver.frontEndUsername} has been sent`,
+    message: `${username}, your contact request to ${receiverID} has been sent`,
   });
 });
 
@@ -189,12 +191,6 @@ exports.processContactRequest = catchAsync(async (req, res, next) => {
         [ID, senderID],
         activationChat._id
       );
-
-      updateContactSession(req, {
-        senderID,
-        receiverID: ID,
-        lastMessage: activationChat,
-      });
     }
 
     res.status(200).json({
@@ -211,23 +207,14 @@ exports.getContacts = catchAsync(async (req, res, next) => {
   const { page = 1 } = req.body;
   const contactsLimit = contactsPerRequest || 50;
   const skipBy = (page - 1) * contactsLimit;
-  const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
 
   if (page < 1)
     return next(new AppError('Invalid page number specified.', 401));
 
-  const sessionedContactList = page === 1 && req.session[contactSessionKey];
-
-  const contactList = sessionedContactList?.length
-    ? sessionedContactList
-    : await getContactsQuery(
-        { users: userID },
-        { userID, contactsLimit, skipBy }
-      );
-
-  if (!sessionedContactList?.length) {
-    req.session[contactSessionKey] = contactList;
-  }
+  const contactList = await getContactsQuery(
+    { users: userID },
+    { userID, contactsLimit, skipBy }
+  );
 
   res.status(200).json({
     status: 'success',
@@ -239,21 +226,13 @@ exports.getContacts = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   const { _id: senderID } = req.user;
   const { receiverID } = req.body;
-  let contact;
 
   if (!receiverID || senderID === receiverID)
     return next(new AppError('Invalid receiverID.', 401));
 
-  const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${senderID}`;
-
-  contact = req.session[contactSessionKey]?.find((contact) =>
-    contact.users.includes(receiverID)
-  );
-
-  if (!contact)
-    contact = await Contact.findOne({
-      users: { $all: [senderID, receiverID] },
-    });
+  const contact = await Contact.findOne({
+    users: { $all: [senderID, receiverID] },
+  });
 
   const hasAccess = contact !== null;
 
