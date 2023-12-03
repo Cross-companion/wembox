@@ -66,10 +66,7 @@ class ImageFile {
       ContentType: this.image.mimetype,
     };
     const command = new PutObjectCommand(params);
-    const esq = await awsClient
-      .send(command)
-      .catch((err) => new Error(err.message));
-    // console.log(esq);
+    await awsClient.send(command).catch((err) => new Error(err.message));
   }
 
   async getFromAWS(imageUrl) {
@@ -79,7 +76,6 @@ class ImageFile {
       Key: imageUrl,
     };
     const command = new GetObjectCommand(params);
-    console.log('FIRE FIRE FIRE FIRE');
     const { Body, ContentType } = await awsClient.send(command);
 
     return { Body, ContentType };

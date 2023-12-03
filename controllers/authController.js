@@ -261,17 +261,18 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  const { _id: userID } = user;
-  const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
-  let sessionedContactList = false && req.session[contactSessionKey];
+  // const { _id: userID } = user;
+  // const contactSessionKey = `${process.env.USER_RECENT_50_CONTACTS_SESSION_KEY}${userID}`;
+  // let sessionedContactList = false && req.session[contactSessionKey];
 
-  if (!sessionedContactList?.length) {
-    const contactList = await getContactsQuery({ users: userID }, { userID });
-    req.session[contactSessionKey] = contactList;
-    sessionedContactList = contactList;
-  }
+  // if (!sessionedContactList?.length) {
+  //   const contactList = await getContactsQuery({ users: userID }, { userID });
+  //   req.session[contactSessionKey] = contactList;
+  //   sessionedContactList = contactList;
+  // }
 
   req.user = user;
+  req.session.user = user;
   res.locals.user = user; // Store in response locals for possible rendering
   console.log(
     `${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`
