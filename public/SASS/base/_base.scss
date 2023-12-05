@@ -1,0 +1,50 @@
+:root {
+  // CSS SPECIFIC VARS
+  --color-primary: #ffffff;
+  --color-primary-rgb: rgb(11, 13, 23);
+  //
+  --color-secondary: #d0d6f9;
+  --color-secondary-rgb: rgb(208, 214, 249);
+  //
+  --color-tertiary: #ffffff;
+  --color-tertiary-rgb: rgb(255, 255, 255);
+  --color-tertiary-super-light: rgba(255, 255, 255, 0.05);
+  --color-tertiary-medium-light: rgba(255, 255, 255, 0.09);
+  --color-tertiary-custom-light: rgba(255, 255, 255, 0.25);
+  --color-tertiary-light: rgba(255, 255, 255, 0.5);
+
+  --lowest-z-index: -10;
+}
+
+::selection {
+  color: var(--color-primary);
+  background-color: var(--color-tertiary);
+}
+
+*,
+*:link,
+*::after,
+*::before,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  //   Aligning the rem size to 10px makes for a more easy calculation and implementation thereofs (font-size of 1rem = 10px)
+  font-size: 62.5%;
+  background-color: var(--color-primary);
+}
+
+body {
+  font-size: 1.6rem;
+  box-sizing: border-box;
+  padding: 1.5rem;
+}
+
+main {
+  width: 100%;
+  display: flex;
+  padding: 1.5rem;
+}

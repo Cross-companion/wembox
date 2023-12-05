@@ -1,3 +1,11 @@
+import { Gradient } from './controllers/Gradient.js';
+
+// Create your instance
+const gradient = new Gradient();
+
+// Call `initGradient` with the selector to your canvas
+gradient.initGradient('#gradient-canvas');
+
 const recaptcha = document.querySelector('#recaptcha');
 
 recaptcha.addEventListener('submit', async (e) => {

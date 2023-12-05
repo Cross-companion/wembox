@@ -1,0 +1,13 @@
+.intro-head {
+  width: 100%;
+  border: 1px solid red;
+
+  > *:not(:last-child) {
+    margin-bottom: 1.3rem;
+    border: 1px solid green;
+  }
+
+  > div {
+    padding: 0.7rem;
+  }
+}

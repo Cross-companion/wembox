@@ -3,12 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="./script.js" defer></script>
+    <script type="module" src="./JS/script.js" defer></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="stylesheet" href="CSS/style.css" />
     <title>WEMBOX</title>
   </head>
   <body>
-    <h1>Welcome to Wembox</h1>
+    <canvas id="gradient-canvas" data-transition-in></canvas>
+    <main>
+      <section class="signup__container signup__root-item">
+        <header class="signup__intro-head intro-head">
+          <div class="intro-head__logo logo glassmorph">Wembox</div>
+          <div class="intro-head__hero-text glassmorph">
+            Write - Explore - Meet
+          </div>
+        </header>
+        <section class="signup-prompt glassmorph">
+          <div class="signup-prompt__prompt-btns">
+            <span id="signup-btn" class="signup-prompt__signup-btn"
+              >Signup</span
+            >
+            <span id="login-btn" class="signup-prompt__login-btn">Login</span>
+          </div>
+          <div class="signup-prompt__head">
+            <span class="signup-prompt__head-text">Quick Signup</span>
+            <span class="signup-prompt__head-cross-check"
+              >Already have an account?
+              <a href="#" id="login-link-btn">login</a></span
+            >
+          </div>
+          <div class="signup-prompt__checkbox-container glassmorph">
+            <span class="signup-prompt__checkbox"></span>
+            <span class="signup-prompt__checkbox"></span>
+            <span class="signup-prompt__checkbox"></span>
+          </div>
+          <form action="">
+            <label for="signup-name">Name</label>
+            <input type="text" id="signup-name" name="signup-name" />
+            <label for="signup-email">Email</label>
+            <input type="email" id="signup-email" name="signup-email" />
+            <label for="signup-username">Username</label>
+            <input type="text" id="signup-username" name="signup-username" />
+            <label for="signup-DOB">Date of Birth</label>
+            <input type="date" id="signup-DOB" name="signup-DOB" />
+            <input type="submit" value="Next" />
+          </form>
+          <div class="glassmorph">
+            <div>Already have an account?</div>
+            <div><button type="button">login</button></div>
+          </div>
+        </section>
+      </section>
+      <section class="intro-logo signup__root-item"></section>
+    </main>
+    <footer>
+      <span>&copy; Wembox inc. 2023</span>
+    </footer>
+
+    <!-- <h1>Welcome to Wembox</h1>
     <h3>Meet your people</h3>
     <h4>Make new memories</h4>
     <h4>Roll out you projects</h4>
@@ -22,7 +74,6 @@
       <br />
       <input type="submit" value="Submit" />
     </form>
-    <!-- g-recaptcha-response -->
     <img
       src="/images/user-images/profile-cover-image-65691f22eeb5df3324ac6641-1701526603721.jpeg"
       alt=""
@@ -30,6 +81,6 @@
     <img
       src="/images/user-images/profile-image-65691f22eeb5df3324ac6641-1701526603721.jpeg"
       alt=""
-    />
+    /> -->
   </body>
 </html>
