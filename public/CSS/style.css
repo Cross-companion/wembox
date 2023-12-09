@@ -9,7 +9,19 @@
   --color-tertiary-medium-light: rgba(255, 255, 255, 0.09);
   --color-tertiary-custom-light: rgba(255, 255, 255, 0.25);
   --color-tertiary-light: rgba(255, 255, 255, 0.5);
-  --lowest-z-index: -10; }
+  --lowest-z-index: -10;
+  --gradient-color-1: #a960ee;
+  --gradient-color-2: #ff333d;
+  --gradient-color-3: #90e0ff;
+  --gradient-color-4: #ffcb57;
+  --gradient-color-5: #2d3e50;
+  --gradient-color-6: #01c26e;
+  --gradient-color-7: #e24c3f;
+  --gradient-color-8: #f3c40f;
+  --gradient-color-9: #4cd4b0;
+  --gradient-color-10: #fffce6;
+  --gradient-color-11: #f24d16;
+  --gradient-color-12: #edd834; }
 
 ::selection {
   color: var(--color-primary);
@@ -30,22 +42,106 @@ html {
 
 body {
   font-size: 1.6rem;
+  font-family: 'Marcellus';
   box-sizing: border-box;
-  padding: 1.5rem; }
+  padding: 0.7rem 1.5rem;
+  color: #111111; }
 
 main {
   width: 100%;
   display: flex;
-  padding: 1.5rem; }
+  flex-direction: column;
+  padding: 0.5rem 1rem; }
+  @media (min-width: 850px) {
+    main {
+      flex-direction: row; } }
+
+.app-form {
+  display: flex; }
+  .app-form > input {
+    height: 6rem;
+    border-radius: 10px;
+    padding: 0.8rem 0 0 0.6rem;
+    border: none;
+    background-color: transparent;
+    border: 1px solid gray;
+    font-family: inherit;
+    transition: border 0.3s; }
+    .app-form > input:focus {
+      outline: none;
+      border: 1px solid var(--gradient-color-6); }
+      .app-form > input:focus + label {
+        color: var(--gradient-color-6); }
+      .app-form > input:focus:invalid {
+        border: 1px solid var(--gradient-color-2); }
+        .app-form > input:focus:invalid + label {
+          color: var(--gradient-color-2); }
+    .app-form > input::-ms-input-placeholder {
+      color: transparent; }
+    .app-form > input:-moz-placeholder {
+      color: transparent; }
+    .app-form > input::-moz-placeholder {
+      color: transparent; }
+    .app-form > input::-webkit-input-placeholder {
+      color: transparent; }
+    .app-form > input:not(:placeholder-shown) + label,
+    .app-form > input:focus + label {
+      font-size: 1.2rem;
+      bottom: 6.3rem;
+      margin-bottom: 0.5rem; }
+  .app-form > label {
+    position: relative;
+    margin: 0 0 0 0.6rem;
+    bottom: 4.95rem;
+    color: darkgray;
+    transition: bottom 0.05s; }
+  .app-form__column {
+    flex-direction: column; }
+    .app-form__column > input:not(:last-child) {
+      margin: 0 0 1rem 0; }
 
 .intro-head {
-  width: 100%;
-  border: 1px solid red; }
-  .intro-head > *:not(:last-child) {
-    margin-bottom: 1.3rem;
-    border: 1px solid green; }
+  width: 100%; }
   .intro-head > div {
-    padding: 0.7rem; }
+    padding: 0 0.7rem; }
+  .intro-head__logo {
+    font-size: 2.8rem; }
+  .intro-head__hero-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; }
+    .intro-head__hero-text > span {
+      font-size: 2rem; }
+
+.logo {
+  display: inline-block;
+  padding: 0.3rem;
+  font-family: 'Courier New', Courier, monospace;
+  mix-blend-mode: color-burn;
+  font-family: 'Acme', Courier, monospace;
+  font-size: 4rem;
+  color: #000000;
+  opacity: 0.3;
+  font-family: 'Cinzel'; }
+  .logo__phrase {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 3rem;
+    max-width: 60rem;
+    min-width: 25rem;
+    font-family: 'cinzel';
+    color: #000000a4; }
+
+.glassmorph {
+  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 10px;
+  border: 1px solid white; }
 
 @media (min-width: 850px) {
   .signup__root-item {
@@ -54,22 +150,43 @@ main {
 .signup-prompt {
   display: flex;
   flex-direction: column;
-  margin: 3rem 0 2rem 0; }
+  margin: 2.8rem 0;
+  overflow: hidden; }
+  .signup-prompt > :not(:first-child) {
+    padding: 0 1.2rem; }
+  .signup-prompt > div {
+    margin-top: 1.5rem; }
   .signup-prompt__prompt-btns {
-    border: 1px solid red;
+    display: flex; }
+    .signup-prompt__prompt-btns > span {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+      font-size: 2.1rem; }
+      .signup-prompt__prompt-btns > span.btn__active {
+        text-decoration: underline; }
+    .signup-prompt__prompt-btns > span:last-child {
+      border-left: 1px solid grey; }
+  .signup-prompt__head-text {
+    font-size: 2.3rem; }
+  .signup-prompt__head-cross-check {
+    font-size: 1.2rem; }
+  .signup-prompt__cross-check {
+    margin-top: 3rem;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 1rem; }
+    flex-direction: column;
+    align-items: center; }
+    .signup-prompt__cross-check > :not(:last-child) {
+      margin-bottom: 1rem; }
+    .signup-prompt__cross-check > button {
+      width: 10rem; }
 
 #gradient-canvas {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: var(--lowest-z-index);
-  --gradient-color-1: #c3e4ff;
-  --gradient-color-2: #6ec3f4;
-  --gradient-color-3: #eae2ff;
-  --gradient-color-4: #b9beff; }
+  z-index: var(--lowest-z-index); }

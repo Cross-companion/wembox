@@ -1,0 +1,65 @@
+.app-form {
+  display: flex;
+
+  & > input {
+    height: 6rem;
+    border-radius: 10px;
+    padding: 0.8rem 0 0 0.6rem;
+    border: none;
+    background-color: transparent;
+    border: 1px solid gray;
+    font-family: inherit;
+    transition: border 0.3s;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--gradient-color-6);
+      & + label {
+        color: var(--gradient-color-6);
+      }
+
+      &:invalid {
+        border: 1px solid var(--gradient-color-2);
+        & + label {
+          color: var(--gradient-color-2);
+        }
+      }
+    }
+
+    &::-ms-input-placeholder {
+      color: transparent;
+    }
+    &:-moz-placeholder {
+      color: transparent;
+    }
+    &::-moz-placeholder {
+      color: transparent;
+    }
+    &::-webkit-input-placeholder {
+      color: transparent;
+    }
+
+    &:not(:placeholder-shown) + label,
+    &:focus + label {
+      font-size: 1.2rem;
+      bottom: 6.3rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  & > label {
+    position: relative;
+    margin: 0 0 0 0.6rem;
+    bottom: 4.95rem;
+    color: darkgray;
+    transition: bottom 0.05s;
+  }
+
+  &__column {
+    flex-direction: column;
+
+    & > input:not(:last-child) {
+      margin: 0 0 1rem 0;
+    }
+  }
+}

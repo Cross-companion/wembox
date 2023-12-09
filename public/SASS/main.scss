@@ -3,6 +3,11 @@
 @import 'base/typography';
 @import 'base/utilities';
 
+@import 'components/app-form';
+@import 'components/btn';
 @import 'components/intro-head';
+@import 'components/logo';
+
+@import 'layouts/glassmorph';
 
 @import 'pages/signup';

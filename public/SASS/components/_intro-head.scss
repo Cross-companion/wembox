@@ -1,13 +1,25 @@
 .intro-head {
   width: 100%;
-  border: 1px solid red;
 
-  > *:not(:last-child) {
-    margin-bottom: 1.3rem;
-    border: 1px solid green;
+  // & > *:not(:last-child) {
+  // }
+
+  & > div {
+    padding: 0 0.7rem;
   }
 
-  > div {
-    padding: 0.7rem;
+  &__logo {
+    font-size: 2.8rem;
+  }
+
+  &__hero-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    & > span {
+      font-size: 2rem;
+    }
   }
 }

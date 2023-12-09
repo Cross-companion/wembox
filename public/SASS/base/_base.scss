@@ -14,6 +14,52 @@
   --color-tertiary-light: rgba(255, 255, 255, 0.5);
 
   --lowest-z-index: -10;
+
+  // Gradients
+  // -- Gradient credits to stripe.com and whatamesh.com
+  --gradient-color-1: #a960ee;
+  --gradient-color-2: #ff333d;
+  --gradient-color-3: #90e0ff;
+  --gradient-color-4: #ffcb57;
+  //
+  --gradient-color-5: #2d3e50;
+  --gradient-color-6: #01c26e;
+  --gradient-color-7: #e24c3f;
+  --gradient-color-8: #f3c40f;
+  //
+  --gradient-color-9: #4cd4b0;
+  --gradient-color-10: #fffce6;
+  --gradient-color-11: #f24d16;
+  --gradient-color-12: #edd834;
+  // --gradient-color-1: #d1d5d8;
+  // --gradient-color-2: #3498db;
+  // --gradient-color-3: #e74c3c;
+  // --gradient-color-4: #f1c40f;
+  //
+  // --gradient-color-1: #d1d5d8;
+  // --gradient-color-2: #3498db;
+  // --gradient-color-3: #e74c3c;
+  // --gradient-color-4: #f1c40f;
+  //
+  // --gradient-color-1: #4cd4b0;
+  // --gradient-color-2: #fffce6;
+  // --gradient-color-3: #f24d16;
+  // --gradient-color-4: #edd834;
+  //
+  // --gradient-color-1: #fe6860;
+  // --gradient-color-2: #fe8a71;
+  // --gradient-color-3: #d9bbae;
+  // --gradient-color-4: #f3c9bf;
+  //
+  // --gradient-color-1: #043d5d;
+  // --gradient-color-2: #032e46;
+  // --gradient-color-3: #23b684;
+  // --gradient-color-4: #0f595e;
+  //
+  // --gradient-color-1: #c3e4ff;
+  // --gradient-color-2: #6ec3f4;
+  // --gradient-color-3: #eae2ff;
+  // --gradient-color-4: #b9beff;
 }
 
 ::selection {
@@ -39,12 +85,19 @@ html {
 
 body {
   font-size: 1.6rem;
+  font-family: 'Marcellus';
   box-sizing: border-box;
-  padding: 1.5rem;
+  padding: 0.7rem 1.5rem;
+  color: rgb(17, 17, 17);
 }
 
 main {
   width: 100%;
   display: flex;
-  padding: 1.5rem;
+  flex-direction: column;
+  padding: 0.5rem 1rem;
+
+  @media (min-width: 850px) {
+    flex-direction: row;
+  }
 }

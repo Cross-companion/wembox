@@ -6,51 +6,79 @@
     <script type="module" src="./JS/script.js" defer></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link rel="stylesheet" href="CSS/style.css" />
-    <title>WEMBOX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Acme&family=Beau+Rivage&family=Borel&family=Bruno+Ace+SC&family=Cinzel&family=Cinzel+Decorative&family=Dancing+Script:wght@400;600;700&family=Ephesis&family=Lato:wght@300;400;700;900&family=Lobster&family=Macondo&family=Marcellus&family=Molle&family=Monoton&family=Montserrat+Alternates:wght@200;300&family=Pacifico&family=Raleway:wght@200&family=Rubik+Glitch&family=Satisfy&family=Tsukimi+Rounded:wght@300&family=Young+Serif&display=swap"
+      rel="stylesheet"
+    />
+    <title>Wembox</title>
   </head>
   <body>
     <canvas id="gradient-canvas" data-transition-in></canvas>
     <main>
       <section class="signup__container signup__root-item">
-        <header class="signup__intro-head intro-head">
-          <div class="intro-head__logo logo glassmorph">Wembox</div>
-          <div class="intro-head__hero-text glassmorph">
-            Write - Explore - Meet
-          </div>
-        </header>
+        <div class="logo">Wembox</div>
+        <div class="logo__phrase glassmorph">
+          <span>Write</span> - <span>Explore</span> - <span>Meet</span>
+        </div>
         <section class="signup-prompt glassmorph">
           <div class="signup-prompt__prompt-btns">
-            <span id="signup-btn" class="signup-prompt__signup-btn"
+            <span id="signup-btn" class="signup-prompt__signup-btn btn__active"
               >Signup</span
             >
             <span id="login-btn" class="signup-prompt__login-btn">Login</span>
           </div>
           <div class="signup-prompt__head">
-            <span class="signup-prompt__head-text">Quick Signup</span>
+            <div class="signup-prompt__head-text">Quick Signup.</div>
             <span class="signup-prompt__head-cross-check"
               >Already have an account?
               <a href="#" id="login-link-btn">login</a></span
             >
           </div>
-          <div class="signup-prompt__checkbox-container glassmorph">
+          <div class="signup-prompt__checkbox-container">
             <span class="signup-prompt__checkbox"></span>
             <span class="signup-prompt__checkbox"></span>
             <span class="signup-prompt__checkbox"></span>
           </div>
-          <form action="">
-            <label for="signup-name">Name</label>
-            <input type="text" id="signup-name" name="signup-name" />
+          <form class="app-form app-form__column" action="">
+            <input
+              type="text"
+              id="signup-name"
+              name="signup-name"
+              class="inpo"
+              placeholder="name"
+              required
+            />
+            <label for="signup-name" class="lobe">Name</label>
+            <input
+              type="email"
+              id="signup-email"
+              name="signup-email"
+              placeholder="email"
+              required
+            />
             <label for="signup-email">Email</label>
-            <input type="email" id="signup-email" name="signup-email" />
+            <input
+              type="text"
+              id="signup-username"
+              name="signup-username"
+              placeholder="username"
+              required
+            />
             <label for="signup-username">Username</label>
-            <input type="text" id="signup-username" name="signup-username" />
+            <input type="date" id="signup-DOB" name="signup-DOB" required />
             <label for="signup-DOB">Date of Birth</label>
-            <input type="date" id="signup-DOB" name="signup-DOB" />
-            <input type="submit" value="Next" />
+            <input
+              type="submit"
+              value="Next"
+              placeholder="Date of Birth"
+              required
+            />
           </form>
-          <div class="glassmorph">
+          <div class="signup-prompt__cross-check glassmorph">
             <div>Already have an account?</div>
-            <div><button type="button">login</button></div>
+            <button type="button">login</button>
           </div>
         </section>
       </section>
