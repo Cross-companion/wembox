@@ -1,1 +1,22 @@
+.btn {
+  border: none;
+  font-family: inherit;
 
+  &__main {
+    font-size: 2rem;
+    max-width: 25rem;
+    width: 60%;
+    height: 4rem;
+    border-radius: 50px;
+    color: white;
+    background-color: var(--gradient-color-6);
+
+    &--red {
+      background-color: var(--gradient-color-7);
+    }
+  }
+
+  &__signup--active {
+    text-decoration: underline;
+  }
+}

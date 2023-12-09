@@ -57,8 +57,11 @@ main {
       flex-direction: row; } }
 
 .app-form {
-  display: flex; }
-  .app-form > input {
+  display: flex;
+  justify-content: center; }
+  .app-form > input[type='submit'] {
+    align-self: center; }
+  .app-form > input:not([type='submit']) {
     height: 6rem;
     border-radius: 10px;
     padding: 0.8rem 0 0 0.6rem;
@@ -67,25 +70,25 @@ main {
     border: 1px solid gray;
     font-family: inherit;
     transition: border 0.3s; }
-    .app-form > input:focus {
+    .app-form > input:not([type='submit']):focus {
       outline: none;
       border: 1px solid var(--gradient-color-6); }
-      .app-form > input:focus + label {
+      .app-form > input:not([type='submit']):focus + label {
         color: var(--gradient-color-6); }
-      .app-form > input:focus:invalid {
+      .app-form > input:not([type='submit']):focus:invalid {
         border: 1px solid var(--gradient-color-2); }
-        .app-form > input:focus:invalid + label {
+        .app-form > input:not([type='submit']):focus:invalid + label {
           color: var(--gradient-color-2); }
-    .app-form > input::-ms-input-placeholder {
+    .app-form > input:not([type='submit'])::-ms-input-placeholder {
       color: transparent; }
-    .app-form > input:-moz-placeholder {
+    .app-form > input:not([type='submit']):-moz-placeholder {
       color: transparent; }
-    .app-form > input::-moz-placeholder {
+    .app-form > input:not([type='submit'])::-moz-placeholder {
       color: transparent; }
-    .app-form > input::-webkit-input-placeholder {
+    .app-form > input:not([type='submit'])::-webkit-input-placeholder {
       color: transparent; }
-    .app-form > input:not(:placeholder-shown) + label,
-    .app-form > input:focus + label {
+    .app-form > input:not([type='submit']):not(:placeholder-shown) + label,
+    .app-form > input:not([type='submit']):focus + label {
       font-size: 1.2rem;
       bottom: 6.3rem;
       margin-bottom: 0.5rem; }
@@ -99,6 +102,22 @@ main {
     flex-direction: column; }
     .app-form__column > input:not(:last-child) {
       margin: 0 0 1rem 0; }
+
+.btn {
+  border: none;
+  font-family: inherit; }
+  .btn__main {
+    font-size: 2rem;
+    max-width: 25rem;
+    width: 60%;
+    height: 4rem;
+    border-radius: 50px;
+    color: white;
+    background-color: var(--gradient-color-6); }
+    .btn__main--red {
+      background-color: var(--gradient-color-7); }
+  .btn__signup--active {
+    text-decoration: underline; }
 
 .intro-head {
   width: 100%; }
@@ -115,15 +134,18 @@ main {
       font-size: 2rem; }
 
 .logo {
+  position: relative;
   display: inline-block;
-  padding: 0.3rem;
-  font-family: 'Courier New', Courier, monospace;
-  mix-blend-mode: color-burn;
-  font-family: 'Acme', Courier, monospace;
-  font-size: 4rem;
-  color: #000000;
-  opacity: 0.3;
-  font-family: 'Cinzel'; }
+  padding: 0.3rem; }
+  .logo__text {
+    top: 0;
+    left: 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Cinzel';
+    font-size: 4.5rem;
+    mix-blend-mode: color-burn;
+    color: #3a3a3a;
+    opacity: 1; }
   .logo__phrase {
     display: flex;
     justify-content: space-around;
@@ -132,7 +154,9 @@ main {
     max-width: 60rem;
     min-width: 25rem;
     font-family: 'cinzel';
-    color: #000000a4; }
+    color: #000000; }
+    .logo__phrase > span {
+      opacity: 0.5; }
 
 .glassmorph {
   background: rgba(255, 255, 255, 0.25);
@@ -151,7 +175,8 @@ main {
   display: flex;
   flex-direction: column;
   margin: 2.8rem 0;
-  overflow: hidden; }
+  overflow: hidden;
+  padding-bottom: 2rem; }
   .signup-prompt > :not(:first-child) {
     padding: 0 1.2rem; }
   .signup-prompt > div {
@@ -165,8 +190,6 @@ main {
       align-items: center;
       padding: 1rem;
       font-size: 2.1rem; }
-      .signup-prompt__prompt-btns > span.btn__active {
-        text-decoration: underline; }
     .signup-prompt__prompt-btns > span:last-child {
       border-left: 1px solid grey; }
   .signup-prompt__head-text {
@@ -175,6 +198,7 @@ main {
     font-size: 1.2rem; }
   .signup-prompt__cross-check {
     margin-top: 3rem;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center; }

@@ -1,33 +1,19 @@
 .logo {
+  position: relative;
   display: inline-block;
   padding: 0.3rem;
-  font-family: 'Courier New', Courier, monospace;
-  mix-blend-mode: color-burn;
-  font-family: 'Acme', Courier, monospace;
-  font-size: 4rem;
-  color: #000000;
-  opacity: 0.3;
-  //   font-size: 3rem;
-  // font-family: 'Beau Rivage', Courier, monospace;
-  // font-weight: 900;
-  //   font-size: 5rem;
-  // font-family: 'Borel';
-  // font-family: 'Bruno Ace';
-  font-family: 'Cinzel';
-  // font-weight: 500;
-  // font-family: 'Cinzel Decorative';
-  // font-family: 'Dancing Script';
-  // font-weight: 900;
-  // font-family: 'Ephesis';
-  // font-weight: 600;
-  // font-family: 'Lobster';
-  // font-family: 'Macondo';
-  // font-family: 'Marcellus';
-  // font-family: 'Molle';
-  // font-family: 'Monoton';
-  // font-family: 'Montserrat Alternates';
-  // font-family: 'Pacifico';
-  // font-family: 'Raleway';
+
+  &__text {
+    top: 0;
+    left: 0;
+    font-family: 'Courier New', Courier, monospace;
+    // font-family: 'Acme', Courier, monospace;
+    font-family: 'Cinzel';
+    font-size: 4.5rem;
+    mix-blend-mode: color-burn;
+    color: #3a3a3a;
+    opacity: 1;
+  }
 
   &__phrase {
     display: flex;
@@ -37,6 +23,10 @@
     max-width: 60rem;
     min-width: 25rem;
     font-family: 'cinzel';
-    color: #000000a4;
+    color: #000000;
+
+    & > span {
+      opacity: 0.5;
+    }
   }
 }

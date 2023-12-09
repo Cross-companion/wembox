@@ -1,7 +1,12 @@
 .app-form {
   display: flex;
+  justify-content: center;
 
-  & > input {
+  & > input[type='submit'] {
+    align-self: center;
+  }
+
+  & > input:not([type='submit']) {
     height: 6rem;
     border-radius: 10px;
     padding: 0.8rem 0 0 0.6rem;

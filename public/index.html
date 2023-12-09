@@ -3,7 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="./JS/script.js" defer></script>
+    <script
+      type="module"
+      src="./JS/controllers/signUpController.js"
+      defer
+    ></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link rel="stylesheet" href="CSS/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,67 +22,76 @@
     <canvas id="gradient-canvas" data-transition-in></canvas>
     <main>
       <section class="signup__container signup__root-item">
-        <div class="logo">Wembox</div>
+        <div class="logo">
+          <span class="logo__text logo__text--burn">Wembox</span>
+        </div>
         <div class="logo__phrase glassmorph">
           <span>Write</span> - <span>Explore</span> - <span>Meet</span>
         </div>
-        <section class="signup-prompt glassmorph">
-          <div class="signup-prompt__prompt-btns">
-            <span id="signup-btn" class="signup-prompt__signup-btn btn__active"
-              >Signup</span
-            >
-            <span id="login-btn" class="signup-prompt__login-btn">Login</span>
+        <section class="">
+          <div class="signup-prompt glassmorph">
+            <div class="signup-prompt__prompt-btns">
+              <span
+                id="signup-btn"
+                class="signup-prompt__signup-btn btn__signup--active"
+                >Signup</span
+              >
+              <span id="login-btn" class="signup-prompt__login-btn">Login</span>
+            </div>
+            <div class="signup-prompt__head">
+              <div class="signup-prompt__head-text">Quick Signup.</div>
+              <span class="signup-prompt__head-cross-check"
+                >Already have an account?
+                <a href="#" id="login-link-btn">login</a></span
+              >
+            </div>
+            <div class="signup-prompt__checkbox-container">
+              <span class="signup-prompt__checkbox"></span>
+              <span class="signup-prompt__checkbox"></span>
+              <span class="signup-prompt__checkbox"></span>
+            </div>
+            <form class="app-form app-form__column" action="">
+              <input
+                type="text"
+                id="signup-name"
+                name="signup-name"
+                class="inpo"
+                placeholder="name"
+                required
+              />
+              <label for="signup-name" class="lobe">Name</label>
+              <input
+                type="email"
+                id="signup-email"
+                name="signup-email"
+                placeholder="email"
+                required
+              />
+              <label for="signup-email">Email</label>
+              <input
+                type="text"
+                id="signup-username"
+                name="signup-username"
+                placeholder="username"
+                required
+              />
+              <label for="signup-username">Username</label>
+              <input type="date" id="signup-DOB" name="signup-DOB" required />
+              <label for="signup-DOB">Date of Birth</label>
+              <input
+                type="submit"
+                value="Next"
+                placeholder="Date of Birth"
+                class="btn btn__main"
+                required
+              />
+            </form>
           </div>
-          <div class="signup-prompt__head">
-            <div class="signup-prompt__head-text">Quick Signup.</div>
-            <span class="signup-prompt__head-cross-check"
-              >Already have an account?
-              <a href="#" id="login-link-btn">login</a></span
-            >
-          </div>
-          <div class="signup-prompt__checkbox-container">
-            <span class="signup-prompt__checkbox"></span>
-            <span class="signup-prompt__checkbox"></span>
-            <span class="signup-prompt__checkbox"></span>
-          </div>
-          <form class="app-form app-form__column" action="">
-            <input
-              type="text"
-              id="signup-name"
-              name="signup-name"
-              class="inpo"
-              placeholder="name"
-              required
-            />
-            <label for="signup-name" class="lobe">Name</label>
-            <input
-              type="email"
-              id="signup-email"
-              name="signup-email"
-              placeholder="email"
-              required
-            />
-            <label for="signup-email">Email</label>
-            <input
-              type="text"
-              id="signup-username"
-              name="signup-username"
-              placeholder="username"
-              required
-            />
-            <label for="signup-username">Username</label>
-            <input type="date" id="signup-DOB" name="signup-DOB" required />
-            <label for="signup-DOB">Date of Birth</label>
-            <input
-              type="submit"
-              value="Next"
-              placeholder="Date of Birth"
-              required
-            />
-          </form>
           <div class="signup-prompt__cross-check glassmorph">
             <div>Already have an account?</div>
-            <button type="button">login</button>
+            <button class="btn btn__main btn__main--red" type="button">
+              login
+            </button>
           </div>
         </section>
       </section>

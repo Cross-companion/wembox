@@ -10,6 +10,7 @@
     flex-direction: column;
     margin: 2.8rem 0;
     overflow: hidden;
+    padding-bottom: 2rem;
 
     & > :not(:first-child) {
       padding: 0 1.2rem;
@@ -29,11 +30,8 @@
         align-items: center;
         padding: 1rem;
         font-size: 2.1rem;
-
-        &.btn__active {
-          text-decoration: underline;
-        }
       }
+
       & > span:last-child {
         border-left: 1px solid grey;
       }
@@ -49,6 +47,7 @@
 
     &__cross-check {
       margin-top: 3rem;
+      padding: 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
