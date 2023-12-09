@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script
       type="module"
-      src="./JS/controllers/signUpController.js"
+      src="./JS/controllers/signupController.js"
       defer
     ></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -76,12 +76,19 @@
                 required
               />
               <label for="signup-username">Username</label>
-              <input type="date" id="signup-DOB" name="signup-DOB" required />
-              <label for="signup-DOB">Date of Birth</label>
+              <input
+                type="date"
+                placeholder="Date of Birth"
+                id="DOB-input"
+                name="DOB-input"
+                required=""
+                min="1903-12-9"
+                max="2016-12-9"
+              />
+              <label for="DOB-input">Date of Birth</label>
               <input
                 type="submit"
                 value="Next"
-                placeholder="Date of Birth"
                 class="btn btn__main"
                 required
               />

@@ -1,5 +1,6 @@
 import { Gradient } from './Gradient.js';
 import Config from '../config.js';
+import SignupViews from '../views/signupViews.js';
 
 class SignUp {
   constructor() {
@@ -8,7 +9,7 @@ class SignUp {
 
   init() {
     this.gradient();
-    getMinMaxDOB();
+    this.setMinMaxDOB();
   }
 
   gradient(canvas = '#gradient-canvas') {
@@ -16,11 +17,32 @@ class SignUp {
     gradient.initGradient(canvas);
   }
 
+  setMinMaxDOB(DOBInput = SignupViews.DOBInput) {
+    const { maxDOB, minDOB } = this.getMinMaxDOB();
+    // Set the min and max attributes
+    DOBInput.setAttribute('min', maxDOB);
+    DOBInput.setAttribute('max', minDOB);
+    console.log(DOBInput);
+  }
+
   getMinMaxDOB() {
-    const todaysMonth = new Date().getMonth();
-    const todaysDate = new Date().getDay();
-    const todaysYear = new Date().getFullYear();
-    const minDOB = `${todaysMonth}-${todaysDate}-${todaysYear - Config.minAge}`;
+    const today = new Date();
+    const todaysMonth = today.getMonth() + 1;
+    const todaysDate = today.getDate();
+    const todaysYear = today.getFullYear();
+
+    function formatForZero(number) {
+      return number <= 9 ? '0' + number : number;
+    }
+
+    const maxDOB = `${todaysYear - Config.maxAge}-${formatForZero(
+      todaysMonth
+    )}-${formatForZero(todaysDate)}`;
+    const minDOB = `${todaysYear - Config.minAge}-${formatForZero(
+      todaysMonth
+    )}-${formatForZero(todaysDate)}`;
+
+    return { maxDOB, minDOB };
   }
 
   async recapcha() {
