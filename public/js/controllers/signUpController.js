@@ -1,28 +1,118 @@
 import { Gradient } from './Gradient.js';
 import Config from '../config.js';
-import SignupViews from '../views/signupViews.js';
+import signupViews from '../views/signupViews.js';
+import signupModel from '../models/signupModel.js';
 
-class SignUp {
+const { reCaptchaKey } = Config;
+
+class SignupController {
   constructor() {
+    this.promptTypes = ['signup', 'login'];
+    this.promptStates = { active: 'active', inactive: 'inactive' };
     this.init();
   }
 
   init() {
+    this.tooglePrompt();
     this.gradient();
     this.setMinMaxDOB();
+    signupViews.promptForm.addEventListener('submit', this.processForm);
+    signupViews.promptContainer.addEventListener('click', (e) => {
+      const target = e.target;
+      if (target.dataset.isPromptBtn !== 'true') return;
+      if (target.dataset.state === this.promptStates.active) return;
+      const { promptType } = target.dataset;
+      if (!this.promptTypes.includes(promptType))
+        throw new Error('Invalid promptType');
+      this.tooglePrompt(promptType);
+    });
   }
+
+  tooglePrompt(promptType = this.promptTypes[0]) {
+    const { heading, form, crossCheck } =
+      signupViews[`${promptType}PromptHTML`]();
+    signupViews.promptHeading.innerHTML = heading;
+    signupViews.promptForm.innerHTML = form;
+    signupViews.promptCrossCheck.innerHTML = crossCheck;
+    signupViews.promptHeadBtn.forEach((el) => {
+      if (el.dataset.state === this.promptStates.inactive)
+        el.dataset.state = this.promptStates.active;
+      else el.dataset.state = this.promptStates.inactive;
+    });
+    if (promptType === this.promptTypes[0]) {
+      signupViews.redefineElementsAtSignup();
+      this.setMinMaxDOB();
+    } else signupViews.redefineElementsAtLogin();
+
+    signupViews.promptForm.setAttribute('data-form-for', promptType);
+    signupViews.promptForm.setAttribute('data-dialogue', `${promptType}-1`);
+  }
+
+  resetSubmitBtn(pending = true, resetText = 'Next') {
+    signupViews.submitBtn.value = pending ? 'Loading...' : resetText;
+    signupViews.submitBtn.style.opacity = pending ? 0.6 : 1;
+    signupViews.submitBtn.dataset.btnStatus = pending ? 'pending' : 'accepted';
+  }
+
+  processForm = async (e) => {
+    e.preventDefault();
+    if (signupViews.submitBtn.dataset.btnStatus == 'pending') return;
+    this.resetSubmitBtn();
+    const positionOfDialogueNum = 1;
+    const { formFor, dialogue } = e.target.dataset;
+    const dialogueNum = +dialogue.split('-')[positionOfDialogueNum];
+
+    if (formFor === this.promptTypes[0]) this.processSignup(dialogueNum);
+    else this.processLogin();
+  };
+
+  async processSignup(dialogueNum) {
+    if (dialogueNum === 1) {
+      const name = signupViews.nameInput.value;
+      const email = signupViews.emailInput.value;
+      const username = signupViews.usernameInput.value;
+      const DOB = signupViews.DOBInput.value;
+      if (!(name && email && username && DOB)) return;
+      const dataExists = await signupModel.storeUserDetails(dialogueNum, {
+        name,
+        email,
+        username,
+        DOB,
+      });
+      this.resetSubmitBtn(false);
+      if (dataExists) {
+        const errMsg = 'username or password already exist';
+        alert(errMsg);
+        throw new Error(errMsg);
+      }
+      // si
+      this.showSignupDialogueTwo();
+    }
+  }
+
+  showSignupDialogueTwo() {
+    const dialogueNum = 2;
+    signupViews.promptForm.innerHTML = signupViews.signupDialogueTwo();
+    signupViews.promptForm.setAttribute(
+      'data-dialogue',
+      `${this.promptTypes[0]}-${dialogueNum}`
+    );
+    signupViews.redefineElementsAtSignup(dialogueNum);
+    this.recaptcha();
+  }
+
+  processLogin() {}
 
   gradient(canvas = '#gradient-canvas') {
     const gradient = new Gradient();
     gradient.initGradient(canvas);
   }
 
-  setMinMaxDOB(DOBInput = SignupViews.DOBInput) {
+  setMinMaxDOB(DOBInput = signupViews.DOBInput) {
     const { maxDOB, minDOB } = this.getMinMaxDOB();
     // Set the min and max attributes
     DOBInput.setAttribute('min', maxDOB);
     DOBInput.setAttribute('max', minDOB);
-    console.log(DOBInput);
   }
 
   getMinMaxDOB() {
@@ -45,27 +135,35 @@ class SignUp {
     return { maxDOB, minDOB };
   }
 
-  async recapcha() {
-    const recaptcha = document.querySelector('#recaptcha');
+  async recaptcha() {
+    const captchaContainer = signupViews.captchaContainer;
+    captchaContainer.innerHTML = '';
 
-    recaptcha.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const email = document.getElementById('email').value;
-      const captcha = document.getElementById('g-recaptcha-response').value;
-      if (!email || !captcha) return;
-
-      const verified = await fetch('/api/v1/users/captcha', {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify({ captcha, email }),
-      }).then((res) => res.json());
-
-      console.log(verified);
+    grecaptcha.render(captchaContainer, {
+      sitekey: reCaptchaKey,
+      theme: 'light', // You can customize the theme and other options
     });
+    // var onloadCallback = function () {
+    //   grecaptcha.render('grecaptcha_element', {
+    //     sitekey: '6LeEx4EnAAAAABjh7VHeMAe9_0K8sLe5oKndw4dU',
+    //   });
+    // };
+    //   const recaptcha = document.querySelector('#recaptcha');
+    //   recaptcha.addEventListener('submit', async (e) => {
+    //     e.preventDefault();
+    //     const email = document.getElementById('email').value;
+    //     const captcha = document.getElementById('g-recaptcha-response').value;
+    //     if (!email || !captcha) return;
+    //     const verified = await fetch('/api/v1/users/captcha', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-type': 'application/json',
+    //       },
+    //       body: JSON.stringify({ captcha, email }),
+    //     }).then((res) => res.json());
+    //     console.log(verified);
+    //   });
   }
 }
 
-export default new SignUp();
+export default new SignupController();

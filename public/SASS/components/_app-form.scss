@@ -67,4 +67,14 @@
       margin: 0 0 1rem 0;
     }
   }
+
+  & > div#captcha-container {
+    margin: 0 0 1rem 0.5rem;
+
+    @media (max-width: 35em) {
+      position: relative;
+      left: -2.5rem;
+      transform: scale(0.9);
+    }
+  }
 }

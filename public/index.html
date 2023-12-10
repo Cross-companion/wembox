@@ -9,6 +9,13 @@
       defer
     ></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- <script type="text/javascript">
+      var onloadCallback = function () {
+        grecaptcha.render('grecaptcha_element', {
+          sitekey: '6LeEx4EnAAAAABjh7VHeMAe9_0K8sLe5oKndw4dU',
+        });
+      };
+    </script> -->
     <link rel="stylesheet" href="CSS/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,62 +27,83 @@
   </head>
   <body>
     <canvas id="gradient-canvas" data-transition-in></canvas>
-    <main>
-      <section class="signup__container signup__root-item">
+    <main class="main__signup">
+      <section
+        id="prompt-container"
+        class="signup__container signup__root-item"
+      >
         <div class="logo">
           <span class="logo__text logo__text--burn">Wembox</span>
         </div>
         <div class="logo__phrase glassmorph">
           <span>Write</span> - <span>Explore</span> - <span>Meet</span>
         </div>
-        <section class="">
+        <section>
           <div class="signup-prompt glassmorph">
             <div class="signup-prompt__prompt-btns">
               <span
-                id="signup-btn"
-                class="signup-prompt__signup-btn btn__signup--active"
+                id="signup-prompt-btn"
+                data-is-prompt-btn="true"
+                data-prompt-btn="head"
+                data-prompt-type="signup"
+                data-state="inactive"
+                class="signup-prompt__btn btn__signup"
                 >Signup</span
               >
-              <span id="login-btn" class="signup-prompt__login-btn">Login</span>
+              <span
+                id="login-prompt-btn"
+                data-is-prompt-btn="true"
+                data-prompt-btn="head"
+                data-prompt-type="login"
+                data-state="null"
+                class="signup-prompt__btn btn__signup"
+                >Login</span
+              >
             </div>
-            <div class="signup-prompt__head">
-              <div class="signup-prompt__head-text">Quick Signup.</div>
+            <div id="prompt-heading" class="signup-prompt__head">
+              <!-- <div class="signup-prompt__head-text">Quick Signup.</div>
               <span class="signup-prompt__head-cross-check"
                 >Already have an account?
-                <a href="#" id="login-link-btn">login</a></span
-              >
+                <a
+                  href="#"
+                  id="login-link-btn"
+                  data-is-prompt-btn="true"
+                  data-prompt-type="login"
+                  >login</a
+                ></span
+              > -->
             </div>
             <div class="signup-prompt__checkbox-container">
               <span class="signup-prompt__checkbox"></span>
               <span class="signup-prompt__checkbox"></span>
               <span class="signup-prompt__checkbox"></span>
             </div>
-            <form class="app-form app-form__column" action="">
-              <input
+            <form id="prompt-form" class="app-form app-form__column" action="">
+              <!-- <input
                 type="text"
-                id="signup-name"
-                name="signup-name"
-                class="inpo"
+                id="name-input"
+                name="name"
                 placeholder="name"
                 required
               />
-              <label for="signup-name" class="lobe">Name</label>
+              <label for="name-input">Name</label>
               <input
                 type="email"
-                id="signup-email"
-                name="signup-email"
+                id="email-input"
+                name="email"
                 placeholder="email"
                 required
               />
-              <label for="signup-email">Email</label>
+              <label for="email-input">Email</label>
               <input
                 type="text"
-                id="signup-username"
-                name="signup-username"
+                id="username-input"
+                name="username"
                 placeholder="username"
+                pattern="^[A-Za-z_][A-Za-z0-9_]*$"
                 required
               />
-              <label for="signup-username">Username</label>
+              <label for="username-input">Username</label>
               <input
                 type="date"
                 placeholder="Date of Birth"
@@ -91,20 +119,28 @@
                 value="Next"
                 class="btn btn__main"
                 required
-              />
+              /> -->
             </form>
           </div>
-          <div class="signup-prompt__cross-check glassmorph">
-            <div>Already have an account?</div>
-            <button class="btn btn__main btn__main--red" type="button">
+          <div
+            id="prompt-cross-check"
+            class="signup-prompt__cross-check glassmorph"
+          >
+            <!-- <div>Already have an account?</div>
+            <button
+              class="btn btn__main btn__main--red"
+              type="button"
+              data-is-prompt-btn="true"
+              data-prompt-type="login"
+            >
               login
-            </button>
+            </button> -->
           </div>
         </section>
       </section>
       <section class="intro-logo signup__root-item"></section>
     </main>
-    <footer>
+    <footer class="footer__signup">
       <span>&copy; Wembox inc. 2023</span>
     </footer>
 
@@ -130,5 +166,11 @@
       src="/images/user-images/profile-image-65691f22eeb5df3324ac6641-1701526603721.jpeg"
       alt=""
     /> -->
+    <!-- <div id="grecaptcha_element"></div>
+    <script
+      src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=onload"
+      async
+      defer
+    ></script> -->
   </body>
 </html>

@@ -1,0 +1,11 @@
+.footer {
+  &__signup {
+    // position: fixed;
+    // left: 0;
+    // bottom: 0;
+    color: var(--color-white);
+    background-color: var(--color-dark);
+    padding: 2rem;
+    text-align: center;
+  }
+}

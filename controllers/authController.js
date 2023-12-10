@@ -50,29 +50,17 @@ const createSendToken = (res, user, statusCode) => {
 exports.dataExists = catchAsync(async (req, res, next) => {
   let emailExists, usernameExists;
 
-  const { email, username } = req.body;
-  if (email && !username) {
-    emailExists = (await User.findOne({ email })) ? true : false;
+  let { email, username } = req.body;
+  const dataAlreadyExist = (await User.findOne({
+    $or: [{ email }, { username }],
+  }))
+    ? true
+    : false;
 
-    res.status(200).json({
-      status: 'success',
-      emailExists,
-    });
-  } else if (username && !email) {
-    usernameExists = (await User.findOne({ username })) ? true : false;
-
-    res.status(200).json({
-      status: 'success',
-      usernameExists,
-    });
-  } else if (username && email)
-    return next(
-      new AppError('This route verifies only one email or username', 400)
-    );
-  else
-    return next(
-      new AppError(`Please provide a username or an email to be verified`, 400)
-    );
+  res.status(200).json({
+    status: 'success',
+    dataExists: dataAlreadyExist,
+  });
 });
 
 exports.captcha = catchAsync(async (req, res, next) => {

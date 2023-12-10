@@ -16,7 +16,7 @@
     }
   }
 
-  &__signup--active {
+  &__signup[data-state='active'] {
     text-decoration: underline;
   }
 }

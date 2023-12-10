@@ -1,12 +1,11 @@
 :root {
   // CSS SPECIFIC VARS
-  --color-primary: #ffffff;
-  --color-primary-rgb: rgb(11, 13, 23);
   //
   --color-secondary: #d0d6f9;
   --color-secondary-rgb: rgb(208, 214, 249);
   //
-  --color-tertiary: #ffffff;
+  --color-dark: #0b0d17;
+  --color-white: #ffffff;
   --color-tertiary-rgb: rgb(255, 255, 255);
   --color-tertiary-super-light: rgba(255, 255, 255, 0.05);
   --color-tertiary-medium-light: rgba(255, 255, 255, 0.09);
@@ -62,10 +61,10 @@
   // --gradient-color-4: #b9beff;
 }
 
-::selection {
-  color: var(--color-primary);
-  background-color: var(--color-tertiary);
-}
+// ::selection {
+//   color: var(--color-primary);
+//   background-color: var(--color-tertiary);
+// }
 
 *,
 *:link,
@@ -87,7 +86,6 @@ body {
   font-size: 1.6rem;
   font-family: 'Marcellus';
   box-sizing: border-box;
-  padding: 0.7rem 1.5rem;
   color: rgb(17, 17, 17);
 }
 
@@ -96,6 +94,12 @@ main {
   display: flex;
   flex-direction: column;
   padding: 0.5rem 1rem;
+
+  &.main {
+    &__signup {
+      padding: 1.2rem 2.5rem;
+    }
+  }
 
   @media (min-width: 850px) {
     flex-direction: row;

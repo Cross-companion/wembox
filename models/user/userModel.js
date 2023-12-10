@@ -22,6 +22,14 @@ const userSchema = new mongoose.Schema(
         1,
         'You must have at least 1 valid character on your username',
       ],
+      validate: {
+        validator: function (value) {
+          // Allows only alphanumeric characters and underscores
+          return /^[A-Za-z_][A-Za-z0-9_]*$/.test(value);
+        },
+        message:
+          'Invalid username format. Usernames can only contain letters, numbers, and underscores and must start with a letter or underscore.',
+      },
     },
     username: {
       type: String,
@@ -39,14 +47,6 @@ const userSchema = new mongoose.Schema(
         'Username has been taken by another user. Please choose another username.',
       ],
       lowercase: true,
-      validate: {
-        validator: function (value) {
-          // Allows only alphanumeric characters and underscores
-          return /^[A-Za-z_][A-Za-z0-9_]*$/.test(value);
-        },
-        message:
-          'Invalid username format. Usernames can only contain letters, numbers, and underscores and must start with a letter or underscore.',
-      },
     },
     email: {
       type: String,

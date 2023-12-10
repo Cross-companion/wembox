@@ -1,9 +1,8 @@
 :root {
-  --color-primary: #ffffff;
-  --color-primary-rgb: rgb(11, 13, 23);
   --color-secondary: #d0d6f9;
   --color-secondary-rgb: rgb(208, 214, 249);
-  --color-tertiary: #ffffff;
+  --color-dark: #0b0d17;
+  --color-white: #ffffff;
   --color-tertiary-rgb: rgb(255, 255, 255);
   --color-tertiary-super-light: rgba(255, 255, 255, 0.05);
   --color-tertiary-medium-light: rgba(255, 255, 255, 0.09);
@@ -23,10 +22,6 @@
   --gradient-color-11: #f24d16;
   --gradient-color-12: #edd834; }
 
-::selection {
-  color: var(--color-primary);
-  background-color: var(--color-tertiary); }
-
 *,
 *:link,
 *::after,
@@ -44,7 +39,6 @@ body {
   font-size: 1.6rem;
   font-family: 'Marcellus';
   box-sizing: border-box;
-  padding: 0.7rem 1.5rem;
   color: #111111; }
 
 main {
@@ -52,6 +46,8 @@ main {
   display: flex;
   flex-direction: column;
   padding: 0.5rem 1rem; }
+  main.main__signup {
+    padding: 1.2rem 2.5rem; }
   @media (min-width: 850px) {
     main {
       flex-direction: row; } }
@@ -102,6 +98,13 @@ main {
     flex-direction: column; }
     .app-form__column > input:not(:last-child) {
       margin: 0 0 1rem 0; }
+  .app-form > div#captcha-container {
+    margin: 0 0 1rem 0.5rem; }
+    @media (max-width: 35em) {
+      .app-form > div#captcha-container {
+        position: relative;
+        left: -2.5rem;
+        transform: scale(0.9); } }
 
 .btn {
   border: none;
@@ -116,8 +119,14 @@ main {
     background-color: var(--gradient-color-6); }
     .btn__main--red {
       background-color: var(--gradient-color-7); }
-  .btn__signup--active {
+  .btn__signup[data-state='active'] {
     text-decoration: underline; }
+
+.footer__signup {
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  padding: 2rem;
+  text-align: center; }
 
 .intro-head {
   width: 100%; }
@@ -167,7 +176,7 @@ main {
   border-radius: 10px;
   border: 1px solid white; }
 
-@media (min-width: 850px) {
+@media (min-width: 83em) {
   .signup__root-item {
     flex: 1; } }
 

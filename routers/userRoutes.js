@@ -5,7 +5,7 @@ const authController = require('../controllers/authController');
 const usersController = require('../controllers/user/usersController');
 const chatController = require('../controllers/chat/chatController');
 
-router.route('/data-exists').get(authController.dataExists);
+router.route('/data-exists').post(authController.dataExists);
 
 router
   .route('/captcha')
