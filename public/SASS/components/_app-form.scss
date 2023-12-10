@@ -73,8 +73,13 @@
 
     @media (max-width: 35em) {
       position: relative;
-      left: -2.5rem;
+      left: -2rem;
       transform: scale(0.9);
+    }
+    @media (max-width: 22em) {
+      position: relative;
+      left: -3rem;
+      transform: scale(0.8);
     }
   }
 }
