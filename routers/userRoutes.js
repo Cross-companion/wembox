@@ -8,8 +8,8 @@ const chatController = require('../controllers/chat/chatController');
 router.route('/data-exists').post(authController.dataExists);
 
 router
-  .route('/captcha')
-  .post(authController.captcha, authController.sendEmailOtp);
+  .route('/recaptcha')
+  .post(authController.recaptcha, authController.sendEmailOtp);
 
 // -- <> -- REMOVE COMMENT WHEN ITS TIME FOR PRODUCTION
 // router

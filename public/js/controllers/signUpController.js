@@ -48,7 +48,8 @@ class SignupController {
     signupViews.promptForm.setAttribute('data-dialogue', `${promptType}-1`);
   }
 
-  resetSubmitBtn(pending = true, resetText = 'Next') {
+  resetSubmitBtn(pending = true) {
+    const resetText = signupViews.btnResetText;
     signupViews.submitBtn.value = pending ? 'Loading...' : resetText;
     signupViews.submitBtn.style.opacity = pending ? 0.6 : 1;
     signupViews.submitBtn.dataset.btnStatus = pending ? 'pending' : 'accepted';
@@ -85,8 +86,27 @@ class SignupController {
         alert(errMsg);
         throw new Error(errMsg);
       }
-      // si
       this.showSignupDialogueTwo();
+      return;
+    }
+
+    if (dialogueNum === 2) {
+      const password = signupViews.passwordInput.value;
+      const passwordConfirm = signupViews.passwordConfirmInput.value;
+      const recaptcha = document.querySelector('#g-recaptcha-response').value;
+
+      try {
+        const check = await signupModel.storeUserDetails(dialogueNum, {
+          password,
+          passwordConfirm,
+          recaptcha,
+        });
+        this.resetSubmitBtn(false);
+        alert('Email has been sent');
+      } catch (err) {
+        alert(err.message);
+        this.resetSubmitBtn(false);
+      }
     }
   }
 
@@ -141,13 +161,7 @@ class SignupController {
 
     grecaptcha.render(captchaContainer, {
       sitekey: reCaptchaKey,
-      theme: 'light', // You can customize the theme and other options
     });
-    // var onloadCallback = function () {
-    //   grecaptcha.render('grecaptcha_element', {
-    //     sitekey: '6LeEx4EnAAAAABjh7VHeMAe9_0K8sLe5oKndw4dU',
-    //   });
-    // };
     //   const recaptcha = document.querySelector('#recaptcha');
     //   recaptcha.addEventListener('submit', async (e) => {
     //     e.preventDefault();

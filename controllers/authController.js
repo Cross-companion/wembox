@@ -63,9 +63,9 @@ exports.dataExists = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.captcha = catchAsync(async (req, res, next) => {
-  const captchaResponse = req.body.captcha;
-  const verifyURL = `${process.env.RECATPCHA_VERIFY_URL}?secret=${process.env.RECATPCHA_SECRET_KEY}&response=${captchaResponse}&remoteip=${req.connection.remoteAddress}`;
+exports.recaptcha = catchAsync(async (req, res, next) => {
+  const recaptchaResponse = req.body.recaptcha;
+  const verifyURL = `${process.env.RECATPCHA_VERIFY_URL}?secret=${process.env.RECATPCHA_SECRET_KEY}&response=${recaptchaResponse}&remoteip=${req.connection.remoteAddress}`;
 
   request(verifyURL, (err, response, body) => {
     body = JSON.parse(body);
@@ -76,7 +76,7 @@ exports.captcha = catchAsync(async (req, res, next) => {
 });
 
 exports.sendEmailOtp = catchAsync(async (req, res, next) => {
-  const email = req.body.email;
+  const { email, name = 'user' } = req.body;
   if (!email)
     return next(
       new AppError(
@@ -88,7 +88,7 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
   const token = generateRandomToken();
   const emailKey = process.env.EMAIL_CACHE_KEY + email;
   redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
-  const message = `Hello ${req.body.name}, \nYour email verification token is: ${token}.\n Please do not share this with anyone. Thanks.\nNwodoh Daniel\nLead-member`;
+  const message = `Hello ${name}, \nYour email verification token is: ${token}.\n Please do not share this with anyone. Thanks.\nNwodoh Daniel\nLead-member`;
 
   await sendEmail({
     email,

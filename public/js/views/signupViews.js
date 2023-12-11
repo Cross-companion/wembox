@@ -8,6 +8,7 @@ class SignupViews {
   }
 
   signupPromptHTML() {
+    this.btnResetText = 'Next';
     const heading = `
       <div class="signup-prompt__head-text">Quick Signup.</div>
       <span class="signup-prompt__head-cross-check"
@@ -57,7 +58,7 @@ class SignupViews {
       <input
         type="submit"
         id="submit-input"
-        value="Next"
+        value="${this.btnResetText}"
         class="btn btn__main"
         required
       />`;
@@ -103,6 +104,7 @@ class SignupViews {
     <label for="login-password">Password</label>
     <input
     type="submit"
+    id=""submit-input
     value="Login"
     class="btn btn__main"
     required
@@ -121,6 +123,7 @@ class SignupViews {
   }
 
   signupDialogueTwo() {
+    this.btnResetText = 'Next';
     const form = `
     <input
       type="password"
@@ -129,31 +132,33 @@ class SignupViews {
       placeholder="Password"
       minlength="8"
       maxlength="25"
+      value="#1234567eR"
       autocomplete="current-password"
-      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,25}$"
+      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
       required
     />
     <label for="password">Password</label>
     <input
       type="password"
-      id="confirm-password"
+      id="password-confirm"
       name="confirm-password"
       placeholder="Confirm password"
       minlength="8"
       maxlength="25"
+      value="#1234567eR"
       autocomplete="current-password"
-      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,25}$"
+      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
       required
     />
-    <label for="confirm-password">Confirm password</label>
+    <label for="password-confirm">Confirm password</label>
     <div
       id="captcha-container"
       data-sitekey="6LeEx4EnAAAAABjh7VHeMAe9_0K8sLe5oKndw4dU"
     ></div>
     <input
       type="submit"
-      id="#submit-input"
-      value="Signup"
+      id="submit-input"
+      value="${this.btnResetText}"
       class="btn btn__main"
       required
     />`;
@@ -171,6 +176,8 @@ class SignupViews {
     }
 
     if (dialogueNum === 2) {
+      this.passwordInput = document.querySelector('#password');
+      this.passwordConfirmInput = document.querySelector('#password-confirm');
       this.captchaContainer = document.querySelector('#captcha-container');
       this.submitBtn = document.querySelector('#submit-input');
     }
