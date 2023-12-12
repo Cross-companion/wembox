@@ -1,5 +1,6 @@
 import { Gradient } from './Gradient.js';
 import Config from '../config.js';
+import appForm from '../appForm.js';
 import signupViews from '../views/signupViews.js';
 import signupModel from '../models/signupModel.js';
 
@@ -30,7 +31,7 @@ class SignupController {
 
   tooglePrompt(promptType = this.promptTypes[0]) {
     const { heading, form, crossCheck } =
-      signupViews[`${promptType}PromptHTML`]();
+      signupViews[`${promptType}Dialogue1`]();
     signupViews.promptHeading.innerHTML = heading;
     signupViews.promptForm.innerHTML = form;
     signupViews.promptCrossCheck.innerHTML = crossCheck;
@@ -62,7 +63,6 @@ class SignupController {
     const positionOfDialogueNum = 1;
     const { formFor, dialogue } = e.target.dataset;
     const dialogueNum = +dialogue.split('-')[positionOfDialogueNum];
-
     if (formFor === this.promptTypes[0]) this.processSignup(dialogueNum);
     else this.processLogin();
   };
@@ -74,54 +74,95 @@ class SignupController {
       const username = signupViews.usernameInput.value;
       const DOB = signupViews.DOBInput.value;
       if (!(name && email && username && DOB)) return;
-      const dataExists = await signupModel.storeUserDetails(dialogueNum, {
-        name,
-        email,
-        username,
-        DOB,
-      });
-      this.resetSubmitBtn(false);
-      if (dataExists) {
-        const errMsg = 'username or password already exist';
-        alert(errMsg);
-        throw new Error(errMsg);
+      try {
+        await signupModel.dataExists({ username, email });
+        await signupModel.storeUserDetails({
+          name,
+          email,
+          username,
+          DOB,
+        });
+        const { message } = await signupModel.sendEmailOTP(email);
+        alert(message);
+        this.changeDialogue(2);
+        signupViews.OTPContainer.addEventListener('keyup', (e) => {
+          const target = e.target;
+          if (target.dataset.inputType !== 'OTP') return;
+          appForm.watchOTPInput(e.target);
+        });
+        signupViews.OTPContainer.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const target = e.target;
+          if (target.dataset.inputType !== 'OTP') return;
+          const pastedText = (e.clipboardData || window.Clipboard).getData(
+            'text'
+          );
+          pastedText.length &&
+            appForm.formatPastedOTP(
+              signupViews.OTPNodeList,
+              pastedText,
+              target
+            );
+        });
+        this.resetSubmitBtn(false);
+        return;
+      } catch (err) {
+        this.resetSubmitBtn(false);
+        alert(`ERROR: ${err.message}`);
       }
-      this.showSignupDialogueTwo();
       return;
     }
 
     if (dialogueNum === 2) {
+      try {
+        const OTP = appForm.getOTPInput(signupViews.OTPNodeList);
+        const { message } = await signupModel.verifyOTP(OTP);
+        alert(message);
+        this.changeDialogue(3);
+        this.recaptcha();
+        this.resetSubmitBtn(false);
+      } catch (err) {
+        this.resetSubmitBtn(false);
+        alert(err.message);
+      }
+      return;
+    }
+
+    if (dialogueNum === 3) {
       const password = signupViews.passwordInput.value;
       const passwordConfirm = signupViews.passwordConfirmInput.value;
       const recaptcha = document.querySelector('#g-recaptcha-response').value;
 
       try {
-        const check = await signupModel.storeUserDetails(dialogueNum, {
+        await signupModel.signup({
           password,
           passwordConfirm,
           recaptcha,
         });
         this.resetSubmitBtn(false);
-        alert('Email has been sent');
+        alert('Signed up complete!🎉🎉');
       } catch (err) {
         alert(err.message);
         this.resetSubmitBtn(false);
       }
+      return;
     }
   }
 
-  showSignupDialogueTwo() {
-    const dialogueNum = 2;
-    signupViews.promptForm.innerHTML = signupViews.signupDialogueTwo();
+  changeDialogue(dialogueNum = 1, promptTypeNum = 0) {
+    const promptType = this.promptTypes[promptTypeNum];
+    const dialogueDataFunction = `${promptType}Dialogue${dialogueNum}`;
+    signupViews.promptForm.innerHTML = signupViews[dialogueDataFunction]().form;
     signupViews.promptForm.setAttribute(
       'data-dialogue',
-      `${this.promptTypes[0]}-${dialogueNum}`
+      `${promptType}-${dialogueNum}`
     );
     signupViews.redefineElementsAtSignup(dialogueNum);
-    this.recaptcha();
   }
 
-  processLogin() {}
+  processLogin() {
+    // const identityData =
+  }
 
   gradient(canvas = '#gradient-canvas') {
     const gradient = new Gradient();
@@ -162,21 +203,6 @@ class SignupController {
     grecaptcha.render(captchaContainer, {
       sitekey: reCaptchaKey,
     });
-    //   const recaptcha = document.querySelector('#recaptcha');
-    //   recaptcha.addEventListener('submit', async (e) => {
-    //     e.preventDefault();
-    //     const email = document.getElementById('email').value;
-    //     const captcha = document.getElementById('g-recaptcha-response').value;
-    //     if (!email || !captcha) return;
-    //     const verified = await fetch('/api/v1/users/captcha', {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-type': 'application/json',
-    //       },
-    //       body: JSON.stringify({ captcha, email }),
-    //     }).then((res) => res.json());
-    //     console.log(verified);
-    //   });
   }
 }
 

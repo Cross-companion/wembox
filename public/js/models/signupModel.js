@@ -6,62 +6,116 @@ class SignupModel {
     this.userDetails = {};
   }
 
-  async storeUserDetails(
-    dialogueNum,
-    { name, email, username, DOB, password, passwordConfirm, recaptcha }
+  async storeUserDetails({ name, email, username, DOB } = {}) {
+    if (!(name && email && username && DOB))
+      throw new Error(
+        'Incomplete details specified. Please fill all the input fields.'
+      );
+
+    this.userDetails = { name, email, username, DOB };
+  }
+
+  async sendEmailOTP(
+    email = this.userDetails.email,
+    name = this.userDetails.name
   ) {
-    if (!dialogueNum)
-      alert(`Invalid dialogueNum @storeUserDetails: ${dialogueNum}`);
+    const data = await fetch(`${userRoute}/signup/send-email-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,
+        name: name.split(' ')[0],
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
 
-    if (dialogueNum === 1) {
-      if (!(name && email && username && DOB)) return;
-      const { dataExists } = await this.dataExists({ username, email });
-      if (!dataExists) this.userDetails = { name, email, username, DOB };
-      return dataExists;
-    }
+    if (data.status !== 'success') throw new Error(data.message);
 
-    if (dialogueNum === 2) {
-      if (password !== passwordConfirm) {
-        return alert('Passwords are not the same. Please try again JORR.');
-      }
-      if (!this.recaptchaIsChecked()) {
-        return alert('Please complete the reCAPTCHA challenge JORR.');
-      }
+    return data;
+  }
 
-      alert(`${password} = ${passwordConfirm} JORR`);
-
-      this.userDetails.password = password;
-
-      console.log({
+  async verifyOTP(otp) {
+    const data = await fetch(`${userRoute}/signup/verify-email-otp`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        emailOTP: otp,
         email: this.userDetails.email,
-        name: this.userDetails.name.split(' ')[0],
-      });
-      const check = await fetch(`${userRoute}/recaptcha`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: this.userDetails.email,
-          name: this.userDetails.name.split(' ')[0],
-          recaptcha,
-        }),
-      }).then((res) => res.json());
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
 
-      console.log(check);
-    }
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
+  async signup({ password, passwordConfirm, recaptcha } = {}) {
+    if (!(password && passwordConfirm && recaptcha))
+      throw new Error(
+        'Incomplete details specified. Please try signing up again.'
+      );
+    const { name, email, username, DOB } = this.userDetails;
+    const data = await fetch(`${userRoute}/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        username,
+        dateOfBirth: DOB,
+        password,
+        passwordConfirm,
+        recaptcha,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
+  async login(username, password) {
+    const data = await fetch(`${userRoute}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    return data;
   }
 
   async dataExists(dataObject = { username, email }) {
-    const dataAlreadyExists = await fetch(`${userRoute}/data-exists`, {
+    const data = await fetch(`${userRoute}/data-exists`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataObject),
-    }).then((res) => res.json());
+    })
+      .then((res) => res.json())
+      .then((data) => data);
 
-    return dataAlreadyExists;
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
   }
 
   recaptchaIsChecked() {

@@ -1,3 +1,4 @@
+const validator = require('validator');
 const fs = require('fs');
 const { promisify } = require('util');
 
@@ -48,18 +49,32 @@ const createSendToken = (res, user, statusCode) => {
 };
 
 exports.dataExists = catchAsync(async (req, res, next) => {
-  let emailExists, usernameExists;
-
   let { email, username } = req.body;
-  const dataAlreadyExist = (await User.findOne({
+  const isEmail = email ? await validator.isEmail(email) : true;
+
+  if (!isEmail)
+    return next(new AppError(`Invalid email address ${email}`, 400));
+
+  const otherUser = await User.findOne({
     $or: [{ email }, { username }],
-  }))
-    ? true
-    : false;
+  });
+
+  if (otherUser) {
+    const emailIsTaken = otherUser.email == email;
+    const contradictingData = emailIsTaken
+      ? `email '${email}'`
+      : `username '${username}'`;
+    return next(
+      new AppError(
+        `This ${contradictingData} already exist in the data base.`,
+        400
+      )
+    );
+  }
 
   res.status(200).json({
     status: 'success',
-    dataExists: dataAlreadyExist,
+    message: 'There is an available name sapce for specified data',
   });
 });
 
@@ -70,6 +85,7 @@ exports.recaptcha = catchAsync(async (req, res, next) => {
   request(verifyURL, (err, response, body) => {
     body = JSON.parse(body);
     if (body.success === true) {
+      req.isHuman = true;
       return next();
     } else return next(new AppError('Your verification failed'));
   });
@@ -98,12 +114,12 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: 'Verification passed and 6 digit otp has been sent to email.',
+    message: `6 digit otp has been sent to ${email}.`,
   });
 });
 
 exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
-  const { email, emailOtp } = req.body;
+  const { email, emailOTP } = req.body;
   if (!email)
     return next(
       new AppError(
@@ -111,7 +127,7 @@ exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
         400
       )
     );
-  if (!emailOtp)
+  if (!emailOTP)
     return next(new AppError('Invalid token. Input your token and try again.'));
 
   const emailKey = process.env.EMAIL_CACHE_KEY + email;
@@ -119,17 +135,27 @@ exports.verifyEmailOtp = catchAsync(async (req, res, next) => {
 
   if (!originalToken) return next(new AppError('Your token expired.', 404));
 
-  if (emailOtp !== originalToken)
+  if (emailOTP !== originalToken)
     return next(new AppError('Incorrect token. Try again.'));
 
-  req.userWasVerified = emailOtp === originalToken;
-
-  next();
+  res.status(200).json({
+    status: 'success',
+    message: `Email verification successful.`,
+  });
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
   const userIP = getIPAddress(req);
   const userLocation = await getLocationByIP(userIP);
+
+  const { isHuman } = req;
+  if (!isHuman)
+    return next(
+      new AppError(
+        'This process has not been verified to be humanly initiated',
+        401
+      )
+    );
 
   const newUser = await User.create({
     name: req.body.name,
@@ -138,18 +164,18 @@ exports.signup = catchAsync(async (req, res, next) => {
     email: req.body.email,
     dateOfBirth: req.body.dateOfBirth,
     password: req.body.password,
-    isHuman: req.userWasVerified, // from verifyEmailOtp
     passwordConfirm: req.body.passwordConfirm,
+    isHuman: req.isHuman, // from recaptcha
     IPGeoLocation: userLocation,
   });
 
   const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
 
-  // await sendEmail({
-  //   email: req.body.email,
-  //   subject: 'Welcome to WEMBOX!!',
-  //   message,
-  // });
+  await sendEmail({
+    email: req.body.email,
+    subject: 'Welcome to WEMBOX!!',
+    message,
+  });
 
   createSendToken(res, newUser, 200);
 });
@@ -194,7 +220,6 @@ exports.logout = (req, res) => {
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    console.log(req.user.accountType);
     if (!roles.includes(req.user.accountType)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)

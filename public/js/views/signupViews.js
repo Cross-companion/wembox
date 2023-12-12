@@ -1,3 +1,5 @@
+import appForm from '../appForm.js';
+
 class SignupViews {
   constructor() {
     this.promptContainer = document.querySelector('#prompt-container');
@@ -7,7 +9,7 @@ class SignupViews {
     this.promptCrossCheck = document.querySelector('#prompt-cross-check');
   }
 
-  signupPromptHTML() {
+  signupDialogue1() {
     this.btnResetText = 'Next';
     const heading = `
       <div class="signup-prompt__head-text">Quick Signup.</div>
@@ -75,7 +77,116 @@ class SignupViews {
     return { heading, form, crossCheck };
   }
 
-  loginPromptHTML() {
+  signupDialogue2() {
+    this.btnResetText = 'Verify';
+    const form = `
+      <div id="otp-container" class="otp-container">
+        <input
+          type="number"
+          data-input-type="OTP"
+          name="OTP"
+          min="0"
+          max="9"
+          required
+        />
+        <input
+          type="number"
+          data-input-type="OTP"
+          name="OTP"
+          min="0"
+          max="9"
+          required
+        />
+        <input
+          type="number"
+          data-input-type="OTP"
+          name="OTP"
+          min="0"
+          max="9"
+          required
+        />
+        <input
+          type="number"
+          data-input-type="OTP"
+          name="OTP"
+          min="0"
+          max="9"
+          required
+        />
+        <input
+          type="number"
+          data-input-type="OTP"
+          name="OTP"
+          min="0"
+          max="9"
+          required
+        />
+        <input
+          type="number"
+          data-input-type="OTP"
+          name="OTP"
+          min="0"
+          max="9"
+          required
+        />
+      </div>
+      <input
+        type="submit"
+        id="submit-input"
+        value="${this.btnResetText}"
+        class="btn btn__main"
+        required
+      />`;
+
+    return { form };
+  }
+
+  signupDialogue3() {
+    this.btnResetText = 'Signup!';
+    const form = `
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Password"
+        minlength="8"
+        maxlength="25"
+        value="#1234567eR"
+        autocomplete="current-password"
+        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
+        required
+      />
+      <label for="password">Password</label>
+      <input
+        type="password"
+        id="password-confirm"
+        name="confirm-password"
+        placeholder="Confirm password"
+        minlength="8"
+        maxlength="25"
+        value="#1234567eR"
+        autocomplete="current-password"
+        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
+        required
+      />
+      <label for="password-confirm">Confirm password</label>
+      <div
+        id="captcha-container"
+        data-sitekey="6LeEx4EnAAAAABjh7VHeMAe9_0K8sLe5oKndw4dU"
+      ></div>
+      <input
+        type="submit"
+        id="submit-input"
+        value="${this.btnResetText}"
+        class="btn btn__main"
+        required
+      />`;
+
+    return { form };
+  }
+
+  loginDialogue1() {
+    this.btnResetText = 'Login';
     const heading = `
     <div class="signup-prompt__head-text">Login.</div>
     <span class="signup-prompt__head-cross-check"
@@ -88,16 +199,16 @@ class SignupViews {
     const form = `
     <input
     type="text"
-    id="username-or-email"
-    name="username-or-email"
-    placeholder="username or email"
+    id="identity-data"
+    name="identity-data"
+    placeholder="Your email or username"
     required
     />
-    <label for="username-or-email">Username or email</label>
+    <label for="identity-data">Your email or username</label>
     <input
     type="password"
-    id="login-password"
-    name="login-password"
+    id="password"
+    name="password"
     placeholder="Password"
     required
     />
@@ -105,7 +216,7 @@ class SignupViews {
     <input
     type="submit"
     id=""submit-input
-    value="Login"
+    value="${this.btnResetText}"
     class="btn btn__main"
     required
     />`;
@@ -122,50 +233,6 @@ class SignupViews {
     return { heading, form, crossCheck };
   }
 
-  signupDialogueTwo() {
-    this.btnResetText = 'Next';
-    const form = `
-    <input
-      type="password"
-      id="password"
-      name="password"
-      placeholder="Password"
-      minlength="8"
-      maxlength="25"
-      value="#1234567eR"
-      autocomplete="current-password"
-      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
-      required
-    />
-    <label for="password">Password</label>
-    <input
-      type="password"
-      id="password-confirm"
-      name="confirm-password"
-      placeholder="Confirm password"
-      minlength="8"
-      maxlength="25"
-      value="#1234567eR"
-      autocomplete="current-password"
-      pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
-      required
-    />
-    <label for="password-confirm">Confirm password</label>
-    <div
-      id="captcha-container"
-      data-sitekey="6LeEx4EnAAAAABjh7VHeMAe9_0K8sLe5oKndw4dU"
-    ></div>
-    <input
-      type="submit"
-      id="submit-input"
-      value="${this.btnResetText}"
-      class="btn btn__main"
-      required
-    />`;
-
-    return form;
-  }
-
   redefineElementsAtSignup(dialogueNum = 1) {
     if (dialogueNum === 1) {
       this.nameInput = document.querySelector('#name-input');
@@ -173,18 +240,27 @@ class SignupViews {
       this.usernameInput = document.querySelector('#username-input');
       this.DOBInput = document.querySelector('#DOB-input');
       this.submitBtn = document.querySelector('#submit-input');
+      return;
     }
 
     if (dialogueNum === 2) {
+      this.OTPContainer = document.querySelector('#otp-container');
+      this.OTPNodeList = document.querySelectorAll('[data-input-type="OTP"]');
+      this.submitBtn = document.querySelector('#submit-input');
+      return;
+    }
+
+    if (dialogueNum === 3) {
       this.passwordInput = document.querySelector('#password');
       this.passwordConfirmInput = document.querySelector('#password-confirm');
       this.captchaContainer = document.querySelector('#captcha-container');
       this.submitBtn = document.querySelector('#submit-input');
+      return;
     }
   }
 
   redefineElementsAtLogin() {
-    // this.DOBInput = document.querySelector('#DOB-input');
+    this.passwordInput = document.querySelector('#password');
   }
 }
 

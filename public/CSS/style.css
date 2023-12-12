@@ -58,23 +58,9 @@ main {
   .app-form > input[type='submit'] {
     align-self: center; }
   .app-form > input:not([type='submit']) {
-    height: 6rem;
-    border-radius: 10px;
-    padding: 0.8rem 0 0 0.6rem;
     border: none;
     background-color: transparent;
-    border: 1px solid gray;
-    font-family: inherit;
     transition: border 0.3s; }
-    .app-form > input:not([type='submit']):focus {
-      outline: none;
-      border: 1px solid var(--gradient-color-6); }
-      .app-form > input:not([type='submit']):focus + label {
-        color: var(--gradient-color-6); }
-      .app-form > input:not([type='submit']):focus:invalid {
-        border: 1px solid var(--gradient-color-2); }
-        .app-form > input:not([type='submit']):focus:invalid + label {
-          color: var(--gradient-color-2); }
     .app-form > input:not([type='submit'])::-ms-input-placeholder {
       color: transparent; }
     .app-form > input:not([type='submit']):-moz-placeholder {
@@ -83,8 +69,23 @@ main {
       color: transparent; }
     .app-form > input:not([type='submit'])::-webkit-input-placeholder {
       color: transparent; }
-    .app-form > input:not([type='submit']):not(:placeholder-shown) + label,
-    .app-form > input:not([type='submit']):focus + label {
+  .app-form > input:not([type='submit']):not([data-input-type='OTP']) {
+    height: 6rem;
+    border-radius: 10px;
+    padding: 0.8rem 0 0 0.6rem;
+    border: 1px solid gray;
+    font-family: inherit; }
+    .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus {
+      outline: none;
+      border: 1px solid var(--gradient-color-6); }
+      .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus + label {
+        color: var(--gradient-color-6); }
+      .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus:invalid {
+        border: 1px solid var(--gradient-color-2); }
+        .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus:invalid + label {
+          color: var(--gradient-color-2); }
+    .app-form > input:not([type='submit']):not([data-input-type='OTP']):not(:placeholder-shown) + label,
+    .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus + label {
       font-size: 1.2rem;
       bottom: 6.3rem;
       margin-bottom: 0.5rem; }
@@ -110,6 +111,50 @@ main {
         position: relative;
         left: -3rem;
         transform: scale(0.8); } }
+  .app-form .otp-container {
+    display: flex;
+    justify-content: center;
+    height: 4rem;
+    margin: 2rem 0; }
+    .app-form .otp-container input[data-input-type='OTP'] {
+      text-align: center;
+      border: none;
+      border-bottom: 0.4rem solid grey;
+      height: 100%;
+      background-color: transparent;
+      font-size: 2rem;
+      color: inherit;
+      /* Hide the up and down arrows of the number input */ }
+      .app-form .otp-container input[data-input-type='OTP']:not(:last-child) {
+        margin-right: 1rem; }
+      .app-form .otp-container input[data-input-type='OTP'][type='number']::-webkit-inner-spin-button, .app-form .otp-container input[data-input-type='OTP'][type='number']::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0; }
+      .app-form .otp-container input[data-input-type='OTP'][type='number'] {
+        -moz-appearance: textfield;
+        /* Firefox */ }
+      .app-form .otp-container input[data-input-type='OTP']:focus {
+        outline: none; }
+      .app-form .otp-container input[data-input-type='OTP']:valid {
+        border-color: var(--gradient-color-6); }
+      .app-form .otp-container input[data-input-type='OTP']:invalid {
+        border-color: var(--gradient-color-2); }
+      @media (max-width: 28em) {
+        .app-form .otp-container input[data-input-type='OTP'] {
+          font-size: 1.6rem; } }
+      @media (max-width: 25em) {
+        .app-form .otp-container input[data-input-type='OTP'] {
+          font-size: 1.4rem; } }
+      @media (max-width: 21em) {
+        .app-form .otp-container input[data-input-type='OTP'] {
+          font-size: 1.2rem; } }
+      @media (max-width: 18.5em) {
+        .app-form .otp-container input[data-input-type='OTP'] {
+          font-size: 1rem;
+          height: 50%; } }
+    @media (max-width: 18.5em) {
+      .app-form .otp-container {
+        margin: 0; } }
 
 .btn {
   border: none;

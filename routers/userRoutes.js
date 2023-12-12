@@ -7,16 +7,10 @@ const chatController = require('../controllers/chat/chatController');
 
 router.route('/data-exists').post(authController.dataExists);
 
-router
-  .route('/recaptcha')
-  .post(authController.recaptcha, authController.sendEmailOtp);
+router.route('/signup/send-email-otp').post(authController.sendEmailOtp);
+router.route('/signup/verify-email-otp').post(authController.verifyEmailOtp);
 
-// -- <> -- REMOVE COMMENT WHEN ITS TIME FOR PRODUCTION
-// router
-//   .route('/signup')
-//   .post(authController.verifyEmailOtp, authController.signup);
-
-router.route('/signup').post(authController.signup);
+router.route('/signup').post(authController.recaptcha, authController.signup);
 
 router.route('/login').post(authController.login);
 router.route('/forgot_password').post(authController.forgotPassword);
