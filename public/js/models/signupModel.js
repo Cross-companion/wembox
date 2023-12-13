@@ -85,19 +85,25 @@ class SignupModel {
     return data;
   }
 
-  async login(username, password) {
+  async login(identity, password) {
+    const isEmail = identity.includes('@');
+    const loginObj = {
+      password,
+      email: isEmail ? identity : undefined,
+      username: isEmail ? undefined : identity,
+    };
+
     const data = await fetch(`${userRoute}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        username,
-        password,
-      }),
+      body: JSON.stringify(loginObj),
     })
       .then((res) => res.json())
       .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
 
     return data;
   }

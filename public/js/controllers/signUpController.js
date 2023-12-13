@@ -140,7 +140,7 @@ class SignupController {
           recaptcha,
         });
         this.resetSubmitBtn(false);
-        alert('Signed up complete!🎉🎉');
+        alert('Signup completed!🎉🎉');
       } catch (err) {
         alert(err.message);
         this.resetSubmitBtn(false);
@@ -160,8 +160,17 @@ class SignupController {
     signupViews.redefineElementsAtSignup(dialogueNum);
   }
 
-  processLogin() {
-    // const identityData =
+  async processLogin() {
+    const identity = signupViews.identityDataInput.value;
+    const password = signupViews.passwordInput.value;
+    try {
+      await signupModel.login(identity, password);
+      alert('Login successfull! 🥂🥂');
+      this.resetSubmitBtn(false);
+    } catch (err) {
+      alert(err.message);
+      this.resetSubmitBtn(false);
+    }
   }
 
   gradient(canvas = '#gradient-canvas') {

@@ -183,7 +183,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
 
-  if (!password || (!username && !email))
+  if (!password || !(username || email))
     return next(
       new AppError(
         `Incorrect details. Please input your correct ${

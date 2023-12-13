@@ -190,7 +190,7 @@ class SignupViews {
     const heading = `
     <div class="signup-prompt__head-text">Login.</div>
     <span class="signup-prompt__head-cross-check"
-    >Not having an account?
+    >Not having an account yet?
     <a href="#" 
     id="login-link-btn" 
     data-is-prompt-btn="true"
@@ -212,16 +212,16 @@ class SignupViews {
     placeholder="Password"
     required
     />
-    <label for="login-password">Password</label>
+    <label for="password">Password</label>
     <input
     type="submit"
-    id=""submit-input
+    id="submit-input"
     value="${this.btnResetText}"
     class="btn btn__main"
     required
     />`;
     const crossCheck = `
-    <div>Not having an account?</div>
+    <div>Not having an account yet?</div>
     <button
     class="btn btn__main btn__main--red"
     type="button"
@@ -261,6 +261,8 @@ class SignupViews {
 
   redefineElementsAtLogin() {
     this.passwordInput = document.querySelector('#password');
+    this.identityDataInput = document.querySelector('#identity-data');
+    this.submitBtn = document.querySelector('#submit-input');
   }
 }
 
