@@ -302,11 +302,11 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createPasswordResetToken();
 
   try {
-    const resetUrl = `${req.protocol}//${req.get(
-      'host'
-    )}/api/v1/users/reset-password/${resetToken}`;
+    // const resetUrl = `${req.protocol}//${req.get(
+    //   'host'
+    // )}/api/v1/users/reset-password/${resetToken}`;
 
-    const message = `Reset your password at ${resetUrl}`;
+    const message = `Your reset password token is\n  ${resetToken}\nCopy and paste this token into the required field.`;
 
     await sendEmail({
       email: user.email,

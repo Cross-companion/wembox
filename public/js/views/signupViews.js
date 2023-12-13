@@ -213,6 +213,7 @@ class SignupViews {
     required
     />
     <label for="password">Password</label>
+    <a href="#" id="forgot-password" data-link-type="extra">forgot password?</a>
     <input
     type="submit"
     id="submit-input"
@@ -231,6 +232,50 @@ class SignupViews {
     Signup
     </button>`;
     return { heading, form, crossCheck };
+  }
+
+  loginDialogue2() {
+    this.btnResetText = 'Send email';
+    const heading = `
+    <div class="signup-prompt__head-text">Forgot Password?</div>
+    <span class="signup-prompt__head-cross-check"
+    >We'll send you a reset password link via your email address.</span>`;
+    const form = `
+    <input
+    type="text"
+    id="identity-data"
+    name="identity-data"
+    placeholder="Your email or username"
+    required
+    />
+    <label for="identity-data">What's your registered email or username?</label>
+    <input
+    type="submit"
+    id="submit-input"
+    value="${this.btnResetText}"
+    class="btn btn__main"
+    required
+    />`;
+
+    return { heading, form };
+  }
+
+  loginDialogue3() {
+    this.btnResetText = 'Back to login';
+    const heading = `
+    <div class="signup-prompt__head-text">Reset password mail sent. <p style="font-size: 1.6rem">We sent a reset password mail to you via your email address.</p></div>
+    <p class="signup-prompt__head-cross-check"
+    >Click on the link to reset your Wembox password.</p>`;
+    const form = `
+    <input
+    type="submit"
+    id="submit-input"
+    value="${this.btnResetText}"
+    class="btn btn__main"
+    required
+    />`;
+
+    return { heading, form };
   }
 
   redefineElementsAtSignup(dialogueNum = 1) {
@@ -259,10 +304,22 @@ class SignupViews {
     }
   }
 
-  redefineElementsAtLogin() {
-    this.passwordInput = document.querySelector('#password');
-    this.identityDataInput = document.querySelector('#identity-data');
-    this.submitBtn = document.querySelector('#submit-input');
+  redefineElementsAtLogin(dialogueNum = 1) {
+    if (dialogueNum === 1) {
+      this.passwordInput = document.querySelector('#password');
+      this.identityDataInput = document.querySelector('#identity-data');
+      this.forgotPasswordBtn = document.querySelector('#forgot-password');
+      this.submitBtn = document.querySelector('#submit-input');
+    }
+
+    if (dialogueNum === 2) {
+      this.identityDataInput = document.querySelector('#identity-data');
+      this.submitBtn = document.querySelector('#submit-input');
+    }
+
+    if (dialogueNum === 3) {
+      this.submitBtn = document.querySelector('#submit-input');
+    }
   }
 }
 

@@ -16,7 +16,6 @@ class SignupController {
   init() {
     this.tooglePrompt();
     this.gradient();
-    this.setMinMaxDOB();
     signupViews.promptForm.addEventListener('submit', this.processForm);
     signupViews.promptContainer.addEventListener('click', (e) => {
       const target = e.target;
@@ -36,14 +35,20 @@ class SignupController {
     signupViews.promptForm.innerHTML = form;
     signupViews.promptCrossCheck.innerHTML = crossCheck;
     signupViews.promptHeadBtn.forEach((el) => {
-      if (el.dataset.state === this.promptStates.inactive)
+      if (el.dataset.promptType === promptType)
         el.dataset.state = this.promptStates.active;
       else el.dataset.state = this.promptStates.inactive;
     });
     if (promptType === this.promptTypes[0]) {
       signupViews.redefineElementsAtSignup();
       this.setMinMaxDOB();
-    } else signupViews.redefineElementsAtLogin();
+    } else {
+      signupViews.redefineElementsAtLogin();
+      signupViews.forgotPasswordBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.changeDialogue(2, 1);
+      });
+    }
 
     signupViews.promptForm.setAttribute('data-form-for', promptType);
     signupViews.promptForm.setAttribute('data-dialogue', `${promptType}-1`);
@@ -64,7 +69,7 @@ class SignupController {
     const { formFor, dialogue } = e.target.dataset;
     const dialogueNum = +dialogue.split('-')[positionOfDialogueNum];
     if (formFor === this.promptTypes[0]) this.processSignup(dialogueNum);
-    else this.processLogin();
+    else this.processLogin(dialogueNum);
   };
 
   async processSignup(dialogueNum) {
@@ -149,27 +154,56 @@ class SignupController {
     }
   }
 
-  changeDialogue(dialogueNum = 1, promptTypeNum = 0) {
-    const promptType = this.promptTypes[promptTypeNum];
+  changeDialogue(dialogueNum = 1, promptTypeIndex = 0) {
+    const promptType = this.promptTypes[promptTypeIndex];
     const dialogueDataFunction = `${promptType}Dialogue${dialogueNum}`;
-    signupViews.promptForm.innerHTML = signupViews[dialogueDataFunction]().form;
+    const { heading, form, crossCheck } = signupViews[dialogueDataFunction]();
+    heading && (signupViews.promptHeading.innerHTML = heading);
+    form && (signupViews.promptForm.innerHTML = form);
+    crossCheck && (signupViews.promptCrossCheck.innerHTML = crossCheck);
     signupViews.promptForm.setAttribute(
       'data-dialogue',
       `${promptType}-${dialogueNum}`
     );
-    signupViews.redefineElementsAtSignup(dialogueNum);
+    const capitalisedPromptType = `${promptType
+      .charAt(0)
+      .toUpperCase()}${promptType.slice(1)}`;
+    signupViews[`redefineElementsAt${capitalisedPromptType}`](dialogueNum);
   }
 
-  async processLogin() {
-    const identity = signupViews.identityDataInput.value;
-    const password = signupViews.passwordInput.value;
-    try {
-      await signupModel.login(identity, password);
-      alert('Login successfull! 🥂🥂');
-      this.resetSubmitBtn(false);
-    } catch (err) {
-      alert(err.message);
-      this.resetSubmitBtn(false);
+  async processLogin(dialogueNum) {
+    if (dialogueNum === 1) {
+      const identity = signupViews.identityDataInput.value;
+      const password = signupViews.passwordInput.value;
+      try {
+        await signupModel.login(identity, password);
+        alert('Login successfull! 🥂🥂');
+        this.resetSubmitBtn(false);
+      } catch (err) {
+        alert(err.message);
+        this.resetSubmitBtn(false);
+      }
+    }
+
+    if (dialogueNum === 2) {
+      try {
+        const identity = signupViews.identityDataInput.value;
+        await signupModel.sendResetPasswordEmail(identity);
+        alert('reset password link sent 🎉🎉');
+        this.resetSubmitBtn(false);
+        this.changeDialogue(3, 1);
+      } catch (err) {
+        alert(err.message);
+        this.resetSubmitBtn(false);
+      }
+    }
+
+    if (dialogueNum === 3) {
+      this.changeDialogue(1, 1);
+      signupViews.forgotPasswordBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.changeDialogue(2, 1);
+      });
     }
   }
 

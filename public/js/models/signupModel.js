@@ -108,6 +108,27 @@ class SignupModel {
     return data;
   }
 
+  async sendResetPasswordEmail(identity) {
+    const isEmail = identity.includes('@');
+    const reqObj = {
+      email: isEmail ? identity : undefined,
+      username: isEmail ? undefined : identity,
+    };
+    const data = await fetch(`${userRoute}/forgot_password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqObj),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
   async dataExists(dataObject = { username, email }) {
     const data = await fetch(`${userRoute}/data-exists`, {
       method: 'POST',
