@@ -1,0 +1,27 @@
+extends baseAuth
+
+block append head
+  script(src="/js/controllers/signupController.js" type="module" defer)
+
+block main
+  if onloadMessage 
+    span(data-type="onload-message" data-message=onloadMessage)
+  .signup-prompt__prompt-btns
+    span#signup-prompt-btn.signup-prompt__btn.btn__signup(data-is-prompt-btn='true', data-prompt-btn='head', data-prompt-type='signup') Signup
+    span#login-prompt-btn.signup-prompt__btn.btn__signup(data-is-prompt-btn='true', data-prompt-btn='head', data-prompt-type='login') Login
+  #prompt-heading.signup-prompt__head
+    .signup-prompt__head-text Quick Signup.
+    span.signup-prompt__head-cross-check
+      | Already have an account?
+      a#login-link-btn(href='#', data-is-prompt-btn='true', data-prompt-type='login') login
+  .signup-prompt__checkbox-container
+    span.signup-prompt__checkbox
+    span.signup-prompt__checkbox
+    span.signup-prompt__checkbox
+  form#prompt-form.app-form.app-form__column(action='')
+
+block crossCheck 
+  #prompt-cross-check.signup-prompt__cross-check.glassmorph
+    div Already have an account?
+    button.btn.btn__main.btn__main--red(type='button', data-is-prompt-btn='true', data-prompt-type='login')
+      | login

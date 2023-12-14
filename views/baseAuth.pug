@@ -1,0 +1,33 @@
+doctype html
+html(lang='en')
+  head
+    block head
+      meta(charset='UTF-8')
+      meta(
+        meta,
+        name='viewport',
+        content='width=device-width, initial-scale=1.0'
+      )
+      link(rel='stylesheet', href='/CSS/style.css')
+      link(href="https://fonts.googleapis.com/css2?family=Acme&family=Beau+Rivage&family=Borel&family=Bruno+Ace+SC&family=Cinzel&family=Cinzel+Decorative&family=Dancing+Script:wght@400;600;700&family=Ephesis&family=Lato:wght@300;400;700;900&family=Lobster&family=Macondo&family=Marcellus&family=Molle&family=Monoton&family=Montserrat+Alternates:wght@200;300&family=Pacifico&family=Raleway:wght@200&family=Rubik+Glitch&family=Satisfy&family=Tsukimi+Rounded:wght@300&family=Young+Serif&display=swap"
+      rel="stylesheet")
+      title Wembox | #{title}
+  body
+    canvas#gradient-canvas(data-transition-in='')
+    main.main__signup
+      section#prompt-container.signup__container.signup__root-item
+        .logo
+          span.logo__text.logo__text--burn Wembox
+        .logo__phrase.glassmorph
+          span Write
+          |  - 
+          span Explore
+          |  - 
+          span Meet
+        section
+          .signup-prompt.glassmorph
+            block main
+          block crossCheck
+      section.intro-logo.signup__root-item
+    footer.footer__signup
+      span &copy; Wembox inc. 2023

@@ -245,6 +245,8 @@ main {
     padding: 0 1.2rem; }
   .signup-prompt > div {
     margin-top: 1.5rem; }
+    .signup-prompt > div[data-helper='reset-password'] {
+      margin: 0 0 1rem 0; }
   .signup-prompt__prompt-btns {
     display: flex; }
     .signup-prompt__prompt-btns > span {

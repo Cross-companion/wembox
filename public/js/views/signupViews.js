@@ -7,6 +7,9 @@ class SignupViews {
     this.promptHeading = document.querySelector('#prompt-heading');
     this.promptForm = document.querySelector('#prompt-form');
     this.promptCrossCheck = document.querySelector('#prompt-cross-check');
+    this.onLoadMessage = document?.querySelector(
+      '[data-type="onload-message"]'
+    );
   }
 
   signupDialogue1() {

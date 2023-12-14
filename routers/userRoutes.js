@@ -13,8 +13,11 @@ router.route('/signup/verify-email-otp').post(authController.verifyEmailOtp);
 router.route('/signup').post(authController.recaptcha, authController.signup);
 
 router.route('/login').post(authController.login);
-router.route('/forgot_password').post(authController.forgotPassword);
-router.route('/reset_password/:token').post(authController.resetPassword);
+router.route('/forgot-password').post(authController.forgotPassword);
+router
+  .route('/reset-password/:token')
+  .get(authController.showResetPasswordPage)
+  .patch(authController.resetPassword);
 
 router.use(authController.protect);
 router.use(chatController.deliverChats);

@@ -18,6 +18,9 @@
 
     > div {
       margin-top: 1.5rem;
+      &[data-helper='reset-password'] {
+        margin: 0 0 1rem 0;
+      }
     }
 
     &__prompt-btns {

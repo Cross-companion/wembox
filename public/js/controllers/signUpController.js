@@ -26,6 +26,14 @@ class SignupController {
         throw new Error('Invalid promptType');
       this.tooglePrompt(promptType);
     });
+    this.fireOnloadMessage();
+  }
+
+  fireOnloadMessage() {
+    if (!signupViews.onLoadMessage) return;
+    const message = signupViews.onLoadMessage.dataset.message;
+    message && alert(message);
+    signupViews.onLoadMessage.remove();
   }
 
   tooglePrompt(promptType = this.promptTypes[0]) {
@@ -145,7 +153,7 @@ class SignupController {
           recaptcha,
         });
         this.resetSubmitBtn(false);
-        alert('Signup completed!🎉🎉');
+        location.reload();
       } catch (err) {
         alert(err.message);
         this.resetSubmitBtn(false);
@@ -177,8 +185,8 @@ class SignupController {
       const password = signupViews.passwordInput.value;
       try {
         await signupModel.login(identity, password);
-        alert('Login successfull! 🥂🥂');
         this.resetSubmitBtn(false);
+        location.reload();
       } catch (err) {
         alert(err.message);
         this.resetSubmitBtn(false);

@@ -114,7 +114,7 @@ class SignupModel {
       email: isEmail ? identity : undefined,
       username: isEmail ? undefined : identity,
     };
-    const data = await fetch(`${userRoute}/forgot_password`, {
+    const data = await fetch(`${userRoute}/forgot-password`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

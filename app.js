@@ -9,6 +9,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
 //Importing Custom modules
+const viewRouter = require('./routers/viewRoutes');
 const userRouter = require('./routers/userRoutes');
 const imageRouter = require('./routers/imageRoutes');
 const suggestionRouter = require('./routers/suggestionRoutes');
@@ -25,6 +26,10 @@ const redisStore = new RedisStore({
   client: redisClient,
   prefix: process.env.APP_NAME + ':',
 });
+
+// SETTING UP PUG
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
 
 // Serving static files
 app.set('trust proxy', true);
@@ -56,6 +61,7 @@ app.use((req, res, next) => {
 });
 
 // MOUNTING ROUTERS
+app.use('/', viewRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/images', imageRouter);
 app.use('/api/v1/suggest', suggestionRouter);

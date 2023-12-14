@@ -233,53 +233,51 @@ exports.restrictTo = (...roles) => {
 /**
  * Since this user is cached, it looses all it document methods, any document method used after here must be defined in and called from the DocumentMethods class.
  */
-exports.protect = catchAsync(async (req, res, next) => {
-  const jwtPasedByHeader = req.headers?.authorization?.startsWith('Bearer')
-    ? req.headers?.authorization?.split(' ')[1]
-    : '';
-  let token = req.cookies.jwt ?? jwtPasedByHeader;
-  if (!token) {
-    return next(
-      new AppError(
-        'Hey there, You are not logged in!. Please login to continue',
-        401
-      )
-    );
-  }
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  if (!decoded) return next(new AppError('Invalid JWT', 401));
+exports.protect = async (req, res, next) => {
+  try {
+    const jwtParsedByHeader = req.headers?.authorization?.startsWith('Bearer')
+      ? req.headers?.authorization?.split(' ')[1]
+      : '';
+    let token = req.cookies.jwt ?? jwtParsedByHeader;
+    if (!token) throw new Error();
 
-  const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
-  const cachedUser = JSON.parse(await redis.get(userKey));
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    if (!decoded)
+      throw new Error('Your session has exprired. Please login again.');
 
-  const user = cachedUser || (await User.findById(decoded.id));
-  if (!user) {
-    return next(new AppError('Sorry, this User no longer exits.', 404));
-  }
-  if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
-    return next(
-      new AppError(
+    const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
+    const cachedUser = JSON.parse(await redis.get(userKey));
+    const user = cachedUser || (await User.findById(decoded.id));
+    if (!user) throw new Error('Sorry, this User no longer exits.');
+
+    if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
+      throw new Error(
         'Looks like you have changed your password. Please login with your new password'
-      )
-    );
-  }
+      );
+    }
 
-  if (!cachedUser) {
-    await redis.set(
-      userKey,
-      JSON.stringify(user),
-      'ex',
-      process.env.REDIS_USER_EXP
-    );
-  }
+    if (!cachedUser) {
+      await redis.set(
+        userKey,
+        JSON.stringify(user),
+        'ex',
+        process.env.REDIS_USER_EXP
+      );
+    }
 
-  req.user = user;
-  res.locals.user = user; // Store in response locals for possible rendering
-  console.log(
-    `${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`
-  );
-  return next();
-});
+    req.user = user;
+    res.locals.user = user; // Store in response locals for possible rendering
+    console.log(
+      `${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`
+    );
+    return next();
+  } catch (err) {
+    return res.status(200).render('auth', {
+      title: 'Authentication',
+      onloadMessage: err.message || undefined,
+    });
+  }
+};
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const { email, username } = req.body;
@@ -302,11 +300,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createPasswordResetToken();
 
   try {
-    // const resetUrl = `${req.protocol}//${req.get(
-    //   'host'
-    // )}/api/v1/users/reset-password/${resetToken}`;
+    const resetUrl = `${req.protocol}//${req.get(
+      'host'
+    )}/api/v1/users/reset-password/${resetToken}`;
 
-    const message = `Your reset password token is\n  ${resetToken}\nCopy and paste this token into the required field.`;
+    const message = `Hello ${
+      user.name?.split(' ')[0] || 'dear user'
+    } you can reset your password at ${resetUrl}.\n Copy and paste the link into you browser into your favourite browser.`;
 
     await sendEmail({
       email: user.email,
@@ -334,8 +334,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.showResetPasswordPage = catchAsync(async (req, res, next) => {
+  console.log(__dirname);
+  res.sendFile(__dirname + '/../public/html/reset-password.html');
+});
+
 exports.resetPassword = catchAsync(async (req, res, next) => {
-  const { password, passwordConfirm } = req.body;
+  const { password, passwordConfirm, token } = req.body;
 
   if (!password || !passwordConfirm)
     return next(
@@ -347,7 +352,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
       new AppError('Your new password is different from your password confirm')
     );
 
-  const token = req.params.token;
   const hashedPassword = crypto
     .createHash('sha256')
     .update(token)
