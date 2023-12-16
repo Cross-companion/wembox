@@ -129,6 +129,28 @@ class SignupModel {
     return data;
   }
 
+  async resetPassword(password, passwordConfirm, token) {
+    if (!(password && passwordConfirm))
+      throw new Error(
+        'Please specify both your password and password confirmation'
+      );
+
+    const data = await fetch(`${userRoute}/reset-password/${token}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ password, passwordConfirm, token }),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    console.log(data.status, '/////', data.message);
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
   async dataExists(dataObject = { username, email }) {
     const data = await fetch(`${userRoute}/data-exists`, {
       method: 'POST',

@@ -1,6 +1,21 @@
 .signup {
   &__root-item {
-    @media (min-width: 83em) {
+    margin-bottom: 2rem;
+    &.intro-img-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      & img {
+        width: 100%;
+
+        @media (min-width: 53.15em) {
+          width: 86%;
+        }
+      }
+    }
+    @media (min-width: 53.15em) {
       flex: 1;
     }
   }

@@ -9,6 +9,8 @@ html(lang='en')
         content='width=device-width, initial-scale=1.0'
       )
       link(rel='stylesheet', href='/CSS/style.css')
+      link(rel='preconnect' href='https://fonts.googleapis.com') 
+      link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin)  
       link(href="https://fonts.googleapis.com/css2?family=Acme&family=Beau+Rivage&family=Borel&family=Bruno+Ace+SC&family=Cinzel&family=Cinzel+Decorative&family=Dancing+Script:wght@400;600;700&family=Ephesis&family=Lato:wght@300;400;700;900&family=Lobster&family=Macondo&family=Marcellus&family=Molle&family=Monoton&family=Montserrat+Alternates:wght@200;300&family=Pacifico&family=Raleway:wght@200&family=Rubik+Glitch&family=Satisfy&family=Tsukimi+Rounded:wght@300&family=Young+Serif&display=swap"
       rel="stylesheet")
       title Wembox | #{title}
@@ -28,6 +30,7 @@ html(lang='en')
           .signup-prompt.glassmorph
             block main
           block crossCheck
-      section.intro-logo.signup__root-item
+      section.intro-img-container.signup__root-item
+        block intro-img
     footer.footer__signup
       span &copy; Wembox inc. 2023

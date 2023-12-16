@@ -1,6 +1,4 @@
-import appForm from '../appForm.js';
-
-class SignupViews {
+class AuthViews {
   constructor() {
     this.promptContainer = document.querySelector('#prompt-container');
     this.promptHeadBtn = document.querySelectorAll('[data-prompt-btn="head"]');
@@ -29,6 +27,7 @@ class SignupViews {
         name="name"
         value="Nwodoh"
         placeholder="name"
+        max-length="30"
         required
       />
       <label for="name-input">Name</label>
@@ -36,8 +35,9 @@ class SignupViews {
         type="email"
         id="email-input"
         name="email"
-        value="me@me"
+        value="me2@me.com"
         placeholder="email"
+        max-length="320"
         required
       />
       <label for="email-input">Email</label>
@@ -45,9 +45,10 @@ class SignupViews {
         type="text"
         id="username-input"
         name="username"
-        value="me"
+        value="me2"
         placeholder="username"
         pattern="^[A-Za-z_][A-Za-z0-9_]*$"
+        max-length="15"
         required
       />
       <label for="username-input">Username</label>
@@ -83,10 +84,13 @@ class SignupViews {
   signupDialogue2() {
     this.btnResetText = 'Verify';
     const form = `
+      <div><label for="first-otp-input" id="first-otp-input-label"></label></div>
       <div id="otp-container" class="otp-container">
+        <br />
         <input
           type="number"
           data-input-type="OTP"
+          id="first-otp-input"
           name="OTP"
           min="0"
           max="9"
@@ -205,6 +209,7 @@ class SignupViews {
     id="identity-data"
     name="identity-data"
     placeholder="Your email or username"
+    max-length="15"
     required
     />
     <label for="identity-data">Your email or username</label>
@@ -251,7 +256,7 @@ class SignupViews {
     placeholder="Your email or username"
     required
     />
-    <label for="identity-data">What's your registered email or username?</label>
+    <label for="identity-data">your email or username?</label>
     <input
     type="submit"
     id="submit-input"
@@ -295,6 +300,10 @@ class SignupViews {
       this.OTPContainer = document.querySelector('#otp-container');
       this.OTPNodeList = document.querySelectorAll('[data-input-type="OTP"]');
       this.submitBtn = document.querySelector('#submit-input');
+      this.otpLabel = document.querySelector('#first-otp-input-label');
+      this.otpLabelText =
+        'Please input the Six digit token sent to your email - ';
+
       return;
     }
 
@@ -326,4 +335,4 @@ class SignupViews {
   }
 }
 
-export default new SignupViews();
+export default new AuthViews();

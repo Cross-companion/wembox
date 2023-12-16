@@ -1,10 +1,10 @@
 import { Gradient } from './Gradient.js';
 import Config from '../config.js';
 import appForm from '../appForm.js';
-import signupViews from '../views/signupViews.js';
-import signupModel from '../models/signupModel.js';
+import authViews from '../views/authViews.js';
+import authModel from '../models/authModel.js';
 
-const { reCaptchaKey } = Config;
+const { reCaptchaKey, maxAge, minAge } = Config;
 
 class SignupController {
   constructor() {
@@ -16,8 +16,8 @@ class SignupController {
   init() {
     this.tooglePrompt();
     this.gradient();
-    signupViews.promptForm.addEventListener('submit', this.processForm);
-    signupViews.promptContainer.addEventListener('click', (e) => {
+    authViews.promptForm.addEventListener('submit', this.processForm);
+    authViews.promptContainer.addEventListener('click', (e) => {
       const target = e.target;
       if (target.dataset.isPromptBtn !== 'true') return;
       if (target.dataset.state === this.promptStates.active) return;
@@ -30,48 +30,47 @@ class SignupController {
   }
 
   fireOnloadMessage() {
-    if (!signupViews.onLoadMessage) return;
-    const message = signupViews.onLoadMessage.dataset.message;
+    if (!authViews.onLoadMessage) return;
+    const message = authViews.onLoadMessage.dataset.message;
     message && alert(message);
-    signupViews.onLoadMessage.remove();
+    authViews.onLoadMessage.remove();
   }
 
   tooglePrompt(promptType = this.promptTypes[0]) {
-    const { heading, form, crossCheck } =
-      signupViews[`${promptType}Dialogue1`]();
-    signupViews.promptHeading.innerHTML = heading;
-    signupViews.promptForm.innerHTML = form;
-    signupViews.promptCrossCheck.innerHTML = crossCheck;
-    signupViews.promptHeadBtn.forEach((el) => {
+    const { heading, form, crossCheck } = authViews[`${promptType}Dialogue1`]();
+    authViews.promptHeading.innerHTML = heading;
+    authViews.promptForm.innerHTML = form;
+    authViews.promptCrossCheck.innerHTML = crossCheck;
+    authViews.promptHeadBtn.forEach((el) => {
       if (el.dataset.promptType === promptType)
         el.dataset.state = this.promptStates.active;
       else el.dataset.state = this.promptStates.inactive;
     });
     if (promptType === this.promptTypes[0]) {
-      signupViews.redefineElementsAtSignup();
+      authViews.redefineElementsAtSignup();
       this.setMinMaxDOB();
     } else {
-      signupViews.redefineElementsAtLogin();
-      signupViews.forgotPasswordBtn.addEventListener('click', (e) => {
+      authViews.redefineElementsAtLogin();
+      authViews.forgotPasswordBtn.addEventListener('click', (e) => {
         e.preventDefault();
         this.changeDialogue(2, 1);
       });
     }
 
-    signupViews.promptForm.setAttribute('data-form-for', promptType);
-    signupViews.promptForm.setAttribute('data-dialogue', `${promptType}-1`);
+    authViews.promptForm.setAttribute('data-form-for', promptType);
+    authViews.promptForm.setAttribute('data-dialogue', `${promptType}-1`);
   }
 
   resetSubmitBtn(pending = true) {
-    const resetText = signupViews.btnResetText;
-    signupViews.submitBtn.value = pending ? 'Loading...' : resetText;
-    signupViews.submitBtn.style.opacity = pending ? 0.6 : 1;
-    signupViews.submitBtn.dataset.btnStatus = pending ? 'pending' : 'accepted';
+    const resetText = authViews.btnResetText;
+    authViews.submitBtn.value = pending ? 'Loading...' : resetText;
+    authViews.submitBtn.style.opacity = pending ? 0.6 : 1;
+    authViews.submitBtn.dataset.btnStatus = pending ? 'pending' : 'accepted';
   }
 
   processForm = async (e) => {
     e.preventDefault();
-    if (signupViews.submitBtn.dataset.btnStatus == 'pending') return;
+    if (authViews.submitBtn.dataset.btnStatus == 'pending') return;
     this.resetSubmitBtn();
     const positionOfDialogueNum = 1;
     const { formFor, dialogue } = e.target.dataset;
@@ -82,28 +81,29 @@ class SignupController {
 
   async processSignup(dialogueNum) {
     if (dialogueNum === 1) {
-      const name = signupViews.nameInput.value;
-      const email = signupViews.emailInput.value;
-      const username = signupViews.usernameInput.value;
-      const DOB = signupViews.DOBInput.value;
+      const name = authViews.nameInput.value;
+      const email = authViews.emailInput.value;
+      const username = authViews.usernameInput.value;
+      const DOB = authViews.DOBInput.value;
       if (!(name && email && username && DOB)) return;
       try {
-        await signupModel.dataExists({ username, email });
-        await signupModel.storeUserDetails({
+        await authModel.dataExists({ username, email });
+        await authModel.storeUserDetails({
           name,
           email,
           username,
           DOB,
         });
-        const { message } = await signupModel.sendEmailOTP(email);
+        const { message } = await authModel.sendEmailOTP(email);
         alert(message);
         this.changeDialogue(2);
-        signupViews.OTPContainer.addEventListener('keyup', (e) => {
+        authViews.otpLabel.textContent = `${authViews.otpLabelText} ${authModel.userDetails.email}`;
+        authViews.OTPContainer.addEventListener('keyup', (e) => {
           const target = e.target;
           if (target.dataset.inputType !== 'OTP') return;
           appForm.watchOTPInput(e.target);
         });
-        signupViews.OTPContainer.addEventListener('paste', (e) => {
+        authViews.OTPContainer.addEventListener('paste', (e) => {
           e.preventDefault();
           const target = e.target;
           if (target.dataset.inputType !== 'OTP') return;
@@ -111,11 +111,7 @@ class SignupController {
             'text'
           );
           pastedText.length &&
-            appForm.formatPastedOTP(
-              signupViews.OTPNodeList,
-              pastedText,
-              target
-            );
+            appForm.formatPastedOTP(authViews.OTPNodeList, pastedText, target);
         });
         this.resetSubmitBtn(false);
         return;
@@ -128,8 +124,8 @@ class SignupController {
 
     if (dialogueNum === 2) {
       try {
-        const OTP = appForm.getOTPInput(signupViews.OTPNodeList);
-        const { message } = await signupModel.verifyOTP(OTP);
+        const OTP = appForm.getOTPInput(authViews.OTPNodeList);
+        const { message } = await authModel.verifyOTP(OTP);
         alert(message);
         this.changeDialogue(3);
         this.recaptcha();
@@ -142,12 +138,12 @@ class SignupController {
     }
 
     if (dialogueNum === 3) {
-      const password = signupViews.passwordInput.value;
-      const passwordConfirm = signupViews.passwordConfirmInput.value;
+      const password = authViews.passwordInput.value;
+      const passwordConfirm = authViews.passwordConfirmInput.value;
       const recaptcha = document.querySelector('#g-recaptcha-response').value;
 
       try {
-        await signupModel.signup({
+        await authModel.signup({
           password,
           passwordConfirm,
           recaptcha,
@@ -165,26 +161,26 @@ class SignupController {
   changeDialogue(dialogueNum = 1, promptTypeIndex = 0) {
     const promptType = this.promptTypes[promptTypeIndex];
     const dialogueDataFunction = `${promptType}Dialogue${dialogueNum}`;
-    const { heading, form, crossCheck } = signupViews[dialogueDataFunction]();
-    heading && (signupViews.promptHeading.innerHTML = heading);
-    form && (signupViews.promptForm.innerHTML = form);
-    crossCheck && (signupViews.promptCrossCheck.innerHTML = crossCheck);
-    signupViews.promptForm.setAttribute(
+    const { heading, form, crossCheck } = authViews[dialogueDataFunction]();
+    heading && (authViews.promptHeading.innerHTML = heading);
+    form && (authViews.promptForm.innerHTML = form);
+    crossCheck && (authViews.promptCrossCheck.innerHTML = crossCheck);
+    authViews.promptForm.setAttribute(
       'data-dialogue',
       `${promptType}-${dialogueNum}`
     );
     const capitalisedPromptType = `${promptType
       .charAt(0)
       .toUpperCase()}${promptType.slice(1)}`;
-    signupViews[`redefineElementsAt${capitalisedPromptType}`](dialogueNum);
+    authViews[`redefineElementsAt${capitalisedPromptType}`](dialogueNum);
   }
 
   async processLogin(dialogueNum) {
     if (dialogueNum === 1) {
-      const identity = signupViews.identityDataInput.value;
-      const password = signupViews.passwordInput.value;
+      const identity = authViews.identityDataInput.value;
+      const password = authViews.passwordInput.value;
       try {
-        await signupModel.login(identity, password);
+        await authModel.login(identity, password);
         this.resetSubmitBtn(false);
         location.reload();
       } catch (err) {
@@ -195,8 +191,8 @@ class SignupController {
 
     if (dialogueNum === 2) {
       try {
-        const identity = signupViews.identityDataInput.value;
-        await signupModel.sendResetPasswordEmail(identity);
+        const identity = authViews.identityDataInput.value;
+        await authModel.sendResetPasswordEmail(identity);
         alert('reset password link sent 🎉🎉');
         this.resetSubmitBtn(false);
         this.changeDialogue(3, 1);
@@ -208,7 +204,7 @@ class SignupController {
 
     if (dialogueNum === 3) {
       this.changeDialogue(1, 1);
-      signupViews.forgotPasswordBtn.addEventListener('click', (e) => {
+      authViews.forgotPasswordBtn.addEventListener('click', (e) => {
         e.preventDefault();
         this.changeDialogue(2, 1);
       });
@@ -220,7 +216,7 @@ class SignupController {
     gradient.initGradient(canvas);
   }
 
-  setMinMaxDOB(DOBInput = signupViews.DOBInput) {
+  setMinMaxDOB(DOBInput = authViews.DOBInput) {
     const { maxDOB, minDOB } = this.getMinMaxDOB();
     // Set the min and max attributes
     DOBInput.setAttribute('min', maxDOB);
@@ -237,10 +233,10 @@ class SignupController {
       return number <= 9 ? '0' + number : number;
     }
 
-    const maxDOB = `${todaysYear - Config.maxAge}-${formatForZero(
+    const maxDOB = `${todaysYear - maxAge}-${formatForZero(
       todaysMonth
     )}-${formatForZero(todaysDate)}`;
-    const minDOB = `${todaysYear - Config.minAge}-${formatForZero(
+    const minDOB = `${todaysYear - minAge}-${formatForZero(
       todaysMonth
     )}-${formatForZero(todaysDate)}`;
 
@@ -248,7 +244,7 @@ class SignupController {
   }
 
   async recaptcha() {
-    const captchaContainer = signupViews.captchaContainer;
+    const captchaContainer = authViews.captchaContainer;
     captchaContainer.innerHTML = '';
 
     grecaptcha.render(captchaContainer, {

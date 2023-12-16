@@ -30,10 +30,11 @@
   --gradient-color-10: #fffce6;
   --gradient-color-11: #f24d16;
   --gradient-color-12: #edd834;
-  // --gradient-color-1: #d1d5d8;
-  // --gradient-color-2: #3498db;
-  // --gradient-color-3: #e74c3c;
-  // --gradient-color-4: #f1c40f;
+  //
+  // --gradient-color-1: #4cd4b0;
+  // --gradient-color-2: #fffce6;
+  // --gradient-color-3: #f24d16;
+  // --gradient-color-4: #edd834;
   //
   // --gradient-color-1: #d1d5d8;
   // --gradient-color-2: #3498db;
@@ -97,11 +98,10 @@ main {
 
   &.main {
     &__signup {
-      padding: 1.2rem 2.5rem;
+      padding: 1.2rem 2.5rem 0rem 2.5rem;
+      @media (min-width: 53.15em) {
+        flex-direction: row;
+      }
     }
-  }
-
-  @media (min-width: 850px) {
-    flex-direction: row;
   }
 }

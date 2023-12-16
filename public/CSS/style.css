@@ -47,10 +47,10 @@ main {
   flex-direction: column;
   padding: 0.5rem 1rem; }
   main.main__signup {
-    padding: 1.2rem 2.5rem; }
-  @media (min-width: 850px) {
-    main {
-      flex-direction: row; } }
+    padding: 1.2rem 2.5rem 0rem 2.5rem; }
+    @media (min-width: 53.15em) {
+      main.main__signup {
+        flex-direction: row; } }
 
 .app-form {
   display: flex;
@@ -160,6 +160,10 @@ main {
     top: -2rem;
     margin-left: 1rem;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; }
+  .app-form label#first-otp-input-label {
+    display: block;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: grey; }
 
 .btn {
   border: none;
@@ -231,9 +235,21 @@ main {
   border-radius: 10px;
   border: 1px solid white; }
 
-@media (min-width: 83em) {
-  .signup__root-item {
-    flex: 1; } }
+.signup__root-item {
+  margin-bottom: 2rem; }
+  .signup__root-item.intro-img-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .signup__root-item.intro-img-container img {
+      width: 100%; }
+      @media (min-width: 53.15em) {
+        .signup__root-item.intro-img-container img {
+          width: 86%; } }
+  @media (min-width: 53.15em) {
+    .signup__root-item {
+      flex: 1; } }
 
 .signup-prompt {
   display: flex;

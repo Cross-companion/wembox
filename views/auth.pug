@@ -1,7 +1,8 @@
 extends baseAuth
 
 block append head
-  script(src="/js/controllers/signupController.js" type="module" defer)
+  script(src="/js/controllers/authController.js" type="module" defer)
+  script(src="https://www.google.com/recaptcha/api.js" async defer)
 
 block main
   if onloadMessage 
@@ -25,3 +26,6 @@ block crossCheck
     div Already have an account?
     button.btn.btn__main.btn__main--red(type='button', data-is-prompt-btn='true', data-prompt-type='login')
       | login
+
+block intro-img 
+  img(src="/Imgs/logos/Dall-E/OIG_auto_x2.jpg")

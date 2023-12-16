@@ -10,7 +10,7 @@ const Reader = require('@maxmind/geoip2-node').Reader;
 const User = require('../models/user/userModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
-const sendEmail = require('../utilities/email');
+const Email = require('../utilities/email');
 const {
   generateRandomToken,
   getIPAddress,
@@ -66,7 +66,7 @@ exports.dataExists = catchAsync(async (req, res, next) => {
       : `username '${username}'`;
     return next(
       new AppError(
-        `This ${contradictingData} already exist in the data base.`,
+        `The ${contradictingData} already exist in our data base. Try login if it's yours.`,
         400
       )
     );
@@ -103,14 +103,18 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
 
   const token = generateRandomToken();
   const emailKey = process.env.EMAIL_CACHE_KEY + email;
-  redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
-  const message = `Hello ${name}, \nYour email verification token is: ${token}.\n Please do not share this with anyone. Thanks.\nNwodoh Daniel\nLead-member`;
+  await redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
 
-  await sendEmail({
-    email,
-    subject: 'Wembox verification token. (Expires in 10 minutes)',
-    message,
-  });
+  console.log(email, name, 'email, name');
+  await new Email({
+    user: { email, name },
+    otp: token,
+  }).sendEmailVerificationOTP();
+  // await sendEmail({
+  //   email,
+  //   subject: 'Wembox verification token. (Expires in 10 minutes)',
+  //   message,
+  // });
 
   res.status(200).json({
     status: 'success',
@@ -169,13 +173,10 @@ exports.signup = catchAsync(async (req, res, next) => {
     IPGeoLocation: userLocation,
   });
 
-  const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
+  const homeUrl = `${req.protocol}://${req.get('host')}/`;
+  // const message = `Hello ${req.body.name}, \nIt is with great pleasure that we welcome you to wembee, A place where you can meet your people and build new memories together.\nNwodoh Daniel\nLead-member`;
 
-  await sendEmail({
-    email: req.body.email,
-    subject: 'Welcome to WEMBOX!!',
-    message,
-  });
+  await new Email({ user: newUser, url: homeUrl }).sendWelcome();
 
   createSendToken(res, newUser, 200);
 });
@@ -300,19 +301,20 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetToken = user.createPasswordResetToken();
 
   try {
-    const resetUrl = `${req.protocol}//${req.get(
+    const resetUrl = `${req.protocol}://${req.get(
       'host'
-    )}/api/v1/users/reset-password/${resetToken}`;
+    )}/reset-password/${resetToken}`;
 
     const message = `Hello ${
       user.name?.split(' ')[0] || 'dear user'
     } you can reset your password at ${resetUrl}.\n Copy and paste the link into you browser into your favourite browser.`;
 
-    await sendEmail({
-      email: user.email,
-      subject: 'Reset Your wembox password (Expires in 10 minutes).',
-      message,
-    });
+    await new Email({ user, url: resetUrl }).sendPasswordReset();
+    // await sendEmail({
+    //   email: user.email,
+    //   subject: 'Reset Your wembox password (Expires in 10 minutes).',
+    //   message,
+    // });
 
     await user.save({ validateBeforeSave: false });
 
@@ -321,10 +323,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'The email has been sent',
     });
   } catch (err) {
+    console.log(err);
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpire = undefined;
     await user.save({ validateBeforeSave: false });
-
     return next(
       new AppError(
         'There was an error sending the email. Please try again',
@@ -332,11 +334,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       )
     );
   }
-});
-
-exports.showResetPasswordPage = catchAsync(async (req, res, next) => {
-  console.log(__dirname);
-  res.sendFile(__dirname + '/../public/html/reset-password.html');
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
