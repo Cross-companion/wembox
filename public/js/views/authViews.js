@@ -27,7 +27,7 @@ class AuthViews {
         name="name"
         value="Nwodoh"
         placeholder="name"
-        max-length="30"
+        maxlength="30"
         required
       />
       <label for="name-input">Name</label>
@@ -37,7 +37,7 @@ class AuthViews {
         name="email"
         value="me2@me.com"
         placeholder="email"
-        max-length="320"
+        maxlength="320"
         required
       />
       <label for="email-input">Email</label>
@@ -48,7 +48,7 @@ class AuthViews {
         value="me2"
         placeholder="username"
         pattern="^[A-Za-z_][A-Za-z0-9_]*$"
-        max-length="15"
+        maxlength="15"
         required
       />
       <label for="username-input">Username</label>
@@ -209,7 +209,7 @@ class AuthViews {
     id="identity-data"
     name="identity-data"
     placeholder="Your email or username"
-    max-length="15"
+    maxlength="15"
     required
     />
     <label for="identity-data">Your email or username</label>

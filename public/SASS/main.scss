@@ -4,11 +4,15 @@
 @import 'base/utilities';
 
 @import 'components/app-form';
+@import 'components/app-modal';
 @import 'components/btn';
 @import 'components/footer';
+@import 'components/icons';
 @import 'components/intro-head';
 @import 'components/logo';
+@import 'components/suggestion';
 
 @import 'layouts/glassmorph';
 
+@import 'pages/interest';
 @import 'pages/signup';

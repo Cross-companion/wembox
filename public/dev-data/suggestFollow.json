@@ -1,0 +1,106 @@
+{
+  "status": "success",
+  "results": 5,
+  "users": [
+    {
+      "_id": "65691f27eeb5df3324ac666b",
+      "profileImage": "../Imgs/users/leo.jpg",
+      "accountType": "user",
+      "wems": [],
+      "IPGeoLocation": {
+        "country": "nigeria",
+        "city": "lagos",
+        "continent": "africa",
+        "region": "western africa"
+      },
+      "name": "volunteer",
+      "frontEndUsername": "VolunteeR6",
+      "contentTypeMatched": {
+        "engagements": 2,
+        "_id": "65691f27eeb5df3324ac666e",
+        "topic": "software",
+        "interest": "technology"
+      }
+    },
+    {
+      "_id": "65691f30eeb5df3324ac6689",
+      "profileImage": "../Imgs/users/monica.jpg",
+      "accountType": "user",
+      "wems": [],
+      "IPGeoLocation": {
+        "country": "nigeria",
+        "city": "lagos",
+        "continent": "africa",
+        "region": "western africa"
+      },
+      "name": "volunteer",
+      "frontEndUsername": "VolunteeR9",
+      "contentTypeMatched": {
+        "engagements": 0,
+        "_id": "65691f30eeb5df3324ac668c",
+        "topic": "software",
+        "interest": "technology"
+      }
+    },
+    {
+      "_id": "65691f25eeb5df3324ac6660",
+      "profileImage": "default-user.jpg",
+      "accountType": "user",
+      "wems": [],
+      "IPGeoLocation": {
+        "country": "france",
+        "city": "paris",
+        "continent": "europe",
+        "region": "western europe"
+      },
+      "name": "volunteer",
+      "frontEndUsername": "VolunteeR5",
+      "contentTypeMatched": {
+        "engagements": 7,
+        "_id": "65691f25eeb5df3324ac6663",
+        "topic": "software",
+        "interest": "technology"
+      }
+    },
+    {
+      "_id": "65691f24eeb5df3324ac664b",
+      "profileImage": "default-user.jpg",
+      "accountType": "user",
+      "wems": [],
+      "IPGeoLocation": {
+        "country": "united states",
+        "city": "washington, d.c.",
+        "continent": "north america",
+        "region": "north america"
+      },
+      "name": "volunteer",
+      "frontEndUsername": "VolunteeR3",
+      "contentTypeMatched": {
+        "engagements": 2,
+        "_id": "65691f24eeb5df3324ac664e",
+        "topic": "software",
+        "interest": "technology"
+      }
+    },
+    {
+      "_id": "65691f25eeb5df3324ac6656",
+      "profileImage": "default-user.jpg",
+      "accountType": "user",
+      "wems": [],
+      "IPGeoLocation": {
+        "country": "russia",
+        "city": "moscow",
+        "continent": "europe",
+        "region": "eastern europe"
+      },
+      "name": "volunteer",
+      "frontEndUsername": "VolunteeR4",
+      "contentTypeMatched": {
+        "engagements": 2,
+        "_id": "65691f25eeb5df3324ac6658",
+        "topic": "software",
+        "interest": "technology"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+svg {
+  &.interest__topics__follow-icon {
+    fill: #ffffff;
+    background: #00ddeb;
+    background: -webkit-linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+    background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 50%;
+    padding: 0.3rem;
+  }
+}

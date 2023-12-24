@@ -1,0 +1,202 @@
+{
+  "status": "success",
+  "results": 16,
+  "interests": [
+    {
+      "_id": "sports",
+      "count": 10,
+      "topics": [
+        "football (soccer)",
+        "golf",
+        "rugby",
+        "cricket",
+        "esports",
+        "basketball",
+        "american football",
+        "formula 1",
+        "tennis",
+        "baseball"
+      ]
+    },
+    {
+      "_id": "animation and comics",
+      "count": 6,
+      "topics": [
+        "comic artists",
+        "comic books",
+        "animation techniques",
+        "animation films",
+        "comic conventions",
+        "animation studios"
+      ]
+    },
+    {
+      "_id": "food",
+      "count": 6,
+      "topics": [
+        "recipes",
+        "food trends",
+        "cooking",
+        "culinary techniques",
+        "food reviews",
+        "restaurant reviews"
+      ]
+    },
+    {
+      "_id": "careers",
+      "count": 6,
+      "topics": [
+        "workplace tips",
+        "job search",
+        "professional growth",
+        "career development",
+        "job interviews",
+        "freelancing"
+      ]
+    },
+    {
+      "_id": "science",
+      "count": 8,
+      "topics": [
+        "astronomy",
+        "scientific discoveries",
+        "research breakthroughs",
+        "history",
+        "mathematics",
+        "psychology",
+        "environment",
+        "education"
+      ]
+    },
+    {
+      "_id": "family and relationships",
+      "count": 6,
+      "topics": [
+        "marriage",
+        "family activities",
+        "parenting tips",
+        "parenting",
+        "family health",
+        "relationship advice"
+      ]
+    },
+    {
+      "_id": "music",
+      "count": 6,
+      "topics": [
+        "music artists",
+        "music history",
+        "music genres",
+        "music festivals",
+        "music production",
+        "music reviews"
+      ]
+    },
+    {
+      "_id": "fitness",
+      "count": 6,
+      "topics": [
+        "workouts",
+        "fitness challenges",
+        "fitness nutrition",
+        "exercise routines",
+        "fitness trends",
+        "fitness equipment"
+      ]
+    },
+    {
+      "_id": "technology",
+      "count": 6,
+      "topics": [
+        "smartphones",
+        "tech news",
+        "gadgets",
+        "software",
+        "artificial intelligence",
+        "virtual reality"
+      ]
+    },
+    {
+      "_id": "gaming",
+      "count": 5,
+      "topics": [
+        "video games",
+        "gaming news",
+        "gaming communities",
+        "gaming consoles",
+        "game reviews"
+      ]
+    },
+    {
+      "_id": "travel",
+      "count": 6,
+      "topics": [
+        "adventure travel",
+        "backpacking",
+        "travel tips",
+        "travel adventures",
+        "cultural experiences",
+        "destinations"
+      ]
+    },
+    {
+      "_id": "outdoors",
+      "count": 6,
+      "topics": [
+        "wildlife",
+        "nature exploration",
+        "outdoor gear",
+        "hiking",
+        "camping",
+        "outdoor activities"
+      ]
+    },
+    {
+      "_id": "fashion and beauty",
+      "count": 6,
+      "topics": [
+        "makeup",
+        "fashion designers",
+        "fashion shows",
+        "beauty products",
+        "beauty tips",
+        "fashion trends"
+      ]
+    },
+    {
+      "_id": "business and finance",
+      "count": 6,
+      "topics": [
+        "entrepreneurship",
+        "business trends",
+        "cryptocurrency",
+        "personal finance",
+        "startups",
+        "stock market"
+      ]
+    },
+    {
+      "_id": "entertainment",
+      "count": 5,
+      "topics": [
+        "award shows",
+        "theater",
+        "tv shows",
+        "celebrities",
+        "movies"
+      ]
+    },
+    {
+      "_id": "arts and culture",
+      "count": 6,
+      "topics": [
+        "cultural heritage",
+        "art history",
+        "literature",
+        "cultural events",
+        "visual arts",
+        "performing arts"
+      ]
+    }
+  ]
+}

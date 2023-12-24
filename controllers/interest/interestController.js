@@ -24,13 +24,32 @@ exports.createInterests = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllInterests = factory.findAll(
-  Interest,
-  {
-    populateData: ['chosenAtSignUp interest -_id'],
-  },
-  {
-    paginate: false,
-  }
-);
+// exports.getAllInterests = factory.findAll(
+//   Interest,
+//   {
+//     populateData: ['chosenAtSignUp interest -_id'],
+//   },
+//   {
+//     paginate: false,
+//   }
+// );
+
+exports.getAllInterests = catchAsync(async (req, res, next) => {
+  const groupedInterests = await Interest.aggregate([
+    {
+      $group: {
+        _id: '$interest',
+        count: { $sum: 1 },
+        topics: { $addToSet: '$topic' },
+      },
+    },
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    results: groupedInterests.length,
+    interests: groupedInterests,
+  });
+});
+
 exports.deleteInterest = catchAsync(async (req, res, next) => {});

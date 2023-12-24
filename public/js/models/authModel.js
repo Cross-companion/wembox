@@ -3,7 +3,9 @@ const { userRoute } = Config;
 
 class SignupModel {
   constructor() {
-    this.userDetails = {};
+    this.userDetails = {
+      interests: [],
+    };
   }
 
   async storeUserDetails({ name, email, username, DOB } = {}) {
@@ -171,6 +173,32 @@ class SignupModel {
     const recaptchaResponse = grecaptcha.getResponse();
     if (recaptchaResponse.length !== 0) return true;
     else return false;
+  }
+
+  async getInterests() {
+    const interests = await fetch('../dev-data/interests.json')
+      .then((res) => res.json())
+      .then((data) => data);
+
+    return interests;
+  }
+
+  async updateAfterSignup() {
+    const dataObject = {
+      interests: this.userDetails.interests,
+      contentType: this.userDetails.contentType,
+      profileImage: this.userDetails.profileImage,
+      profileCoverImage: this.userDetails.profileCoverImage,
+      geoLocation: this.userDetails.geoLocation,
+    };
+
+    await fetch(`${userRoute}/signup`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataObject),
+    });
   }
 }
 

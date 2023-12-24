@@ -1,6 +1,6 @@
-import { Gradient } from './Gradient.js';
 import Config from '../config.js';
-import appForm from '../appForm.js';
+import { Gradient } from './Gradient.js';
+import appForm from './appForm.js';
 import authViews from '../views/authViews.js';
 import authModel from '../models/authModel.js';
 
