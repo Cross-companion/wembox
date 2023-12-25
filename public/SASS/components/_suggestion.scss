@@ -20,17 +20,22 @@
   }
 
   &__container {
+    padding: 0.5rem 0.7rem;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 1rem;
+    max-height: 52rem;
+    overflow: auto;
 
-    @media (min-width: 31.31em) {
+    @media (min-width: 31.41em) {
       grid-template-columns: repeat(2, 1fr);
+      max-height: 31.5rem;
     }
-    @media (min-width: 51em) {
+    @media (min-width: 52em) {
       grid-template-columns: repeat(3, 1fr);
+      max-height: 21.5rem;
     }
-    @media (min-width: 67em) {
+    @media (min-width: 68em) {
       grid-template-columns: repeat(4, 1fr);
     }
   }

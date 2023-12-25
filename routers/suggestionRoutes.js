@@ -19,7 +19,7 @@ router
 
 router
   .route('/creator/:timeSpan?')
-  .get(
+  .post(
     suggestionController.getSuggestions,
     suggestionController.suggestCreator
   );

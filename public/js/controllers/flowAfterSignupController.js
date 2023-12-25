@@ -7,12 +7,12 @@ import suggestionView from '../views/suggestionView.js';
 
 class signUpFlowController {
   constructor() {
-    this.gradient();
-    this.displayInterest();
     this.init();
   }
 
   init() {
+    this.gradient();
+    this.displayInterest();
     flowAfterSignupView.interestMainContainer.addEventListener('click', (e) => {
       const target = e.target;
       const { type } = target.dataset;
@@ -65,12 +65,16 @@ class signUpFlowController {
   }
 
   async suggestFollows(target) {
-    const { topic } = target.previousElementSibling.dataset;
-    const { users } = await suggestionModel.suggestFollow(topic);
-    modal.showModal(
-      suggestionView.modalHTML(topic, users),
-      'app-modal__modal--topic-suggestion'
-    );
+    try {
+      const { topic } = target.previousElementSibling.dataset;
+      const { users } = await suggestionModel.suggestFollow(topic);
+      modal.showModal(
+        suggestionView.modalHTML(topic, users),
+        'app-modal__modal--topic-suggestion'
+      );
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   toogleSubmitBtnState(numberOfInterests) {
@@ -95,4 +99,4 @@ class signUpFlowController {
   }
 }
 
-new signUpFlowController();
+export default new signUpFlowController();

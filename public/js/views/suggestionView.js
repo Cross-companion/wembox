@@ -32,10 +32,10 @@ class suggestionView {
   modalHTML(topic, users = []) {
     return `
     <div class="suggestion__topic-heading">
-          <span class="suggestion__topic-heading__text">
-            ${topic}
-          </span>
-        </div>
+      <span class="suggestion__topic-heading__text">
+        ${topic}
+      </span>
+    </div>
     <div class="suggestion__container">
         ${this.buildSuggestion(users)}      
     </div>`;

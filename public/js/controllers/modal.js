@@ -26,24 +26,23 @@ class Modal {
   }
   documentHandler(e) {
     const { key } = e;
-    console.log(key);
     if (key !== 'Escape') return;
     document.removeEventListener('keydown', this.documentHandler.bind(this));
     this.closeModal();
   }
 
   listenForClose() {
-    this.handles = [
+    this.handlers = [
       this.overlayHandler.bind(this),
       this.documentHandler.bind(this),
     ];
-    this.overlay.addEventListener('click', this.handles[0]);
-    document.addEventListener('keydown', this.handles[1]);
+    this.overlay.addEventListener('click', this.handlers[0]);
+    document.addEventListener('keydown', this.handlers[1]);
   }
 
   closeModal() {
-    this.overlay.removeEventListener('click', this.handles[0]);
-    document.removeEventListener('keydown', this.handles[1]);
+    this.overlay.removeEventListener('click', this.handlers[0]);
+    document.removeEventListener('keydown', this.handlers[1]);
     this.appModal.remove();
   }
 }

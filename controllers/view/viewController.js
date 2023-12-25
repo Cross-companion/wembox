@@ -7,7 +7,7 @@ exports.showResetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.showChats = catchAsync(async (req, res, next) => {
-  return res.status(200).render('chats', {
-    title: 'Reset password',
+  return res.status(200).render('afterSignup', {
+    title: 'Authentication',
   });
 });

@@ -1,5 +1,6 @@
 class AuthViews {
   constructor() {
+    this.htmlBody = document.querySelector('body');
     this.promptContainer = document.querySelector('#prompt-container');
     this.promptHeadBtn = document.querySelectorAll('[data-prompt-btn="head"]');
     this.promptHeading = document.querySelector('#prompt-heading');

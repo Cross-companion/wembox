@@ -6,10 +6,44 @@ class suggestionModel {
   constructor() {}
 
   async suggestFollow(topic) {
-    // const users = fetch(`${suggestionRoute}/creator`);
-    const data = await fetch('../dev-data/suggestFollow.json').then((res) =>
-      res.json()
-    );
+    const reqObject = {
+      topics: [topic],
+      page: 1,
+      numberOfSuggestions: 10,
+      // ,"countryWeight": 1
+    };
+
+    const data = await fetch(`${suggestionRoute}/creator/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqObject),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
+    return data;
+  }
+
+  async follow() {
+    const reqObject = {
+      topics: [topic],
+      page: 1,
+      numberOfSuggestions: 10,
+      // ,"countryWeight": 1
+    };
+
+    const data = await fetch(`${suggestionRoute}/creator/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqObject),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
 
     if (data.status !== 'success') throw new Error(data.message);
     return data;

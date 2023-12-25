@@ -5,7 +5,30 @@ class flowAfterSignupView {
     this.defineElements();
   }
 
+  mainHTML() {
+    return `
+    <canvas id="gradient-canvas" data-transition-in></canvas>
+    <button
+      type="submit"
+      id="submit-btn"
+      data-state="inactive"
+      class="btn__main interest__submit-btn"
+      >
+      Next
+      </button>
+      <main id="interest-main" class="main__interest glassmorph">
+      <section id="interest-container" class="interest__container">
+      <header>
+      <h1 class="interest__heading">interests</h1>
+      <p>What would you like to see on wembox?</p>
+      </header>
+      </section>
+      </main>
+      `;
+  }
+
   defineElements() {
+    this.htmlBody = document.querySelector('body');
     this.interestContainer = document.querySelector('#interest-container');
     this.interestMainContainer = document.querySelector('#interest-main');
     this.submitBtn = document.querySelector('#submit-btn');
@@ -59,97 +82,6 @@ class flowAfterSignupView {
 
     const assignedTopics = this.topicsContainerHTML(slotElements);
     return assignedTopics;
-  }
-
-  modalHTML(topic, user) {
-    return `
-    <div class="suggestion__topic-heading">
-          <span class="suggestion__topic-heading__text">
-            ${topic}
-          </span>
-        </div>
-    <div class="suggestion__container">
-          <div class="suggestion__person">
-            <img
-              src="../Imgs/users/upwork-profile_edited.jpg"
-              alt=""
-              class="suggestion__person__img"
-            />
-            <div class="suggestion__person__details">
-              <div>
-                <div class="suggestion__person__name">Nwodoh Izuchukwu</div>
-                <div class="suggestion__person__username">@me</div>
-              </div>
-              <button
-                type="button"
-                data-type="follow"
-                class="suggestion__btn-main"
-              >
-                follow
-              </button>
-            </div>
-          </div>
-          <div class="suggestion__person">
-            <img
-              src="../Imgs/users/leo.jpg"
-              alt=""
-              class="suggestion__person__img"
-            />
-            <div class="suggestion__person__details">
-              <div>
-                <div class="suggestion__person__name">Leo Juvere</div>
-                <div class="suggestion__person__username">@LeoJuvy</div>
-              </div>
-              <button
-                type="button"
-                data-type="follow"
-                class="suggestion__btn-main"
-              >
-                follow
-              </button>
-            </div>
-          </div>
-          <div class="suggestion__person">
-            <img
-              src="../Imgs/users/monica.jpg"
-              alt=""
-              class="suggestion__person__img"
-            />
-            <div class="suggestion__person__details">
-              <div>
-                <div class="suggestion__person__name">Monica long</div>
-                <div class="suggestion__person__username">@monicalong</div>
-              </div>
-              <button
-                type="button"
-                data-type="follow"
-                class="suggestion__btn-main"
-              >
-                follow
-              </button>
-            </div>
-          </div>
-          <div class="suggestion__person">
-            <img
-              src="../Imgs/users/upwork-profile_edited.jpg"
-              alt=""
-              class="suggestion__person__img"
-            />
-            <div class="suggestion__person__details">
-              <div>
-                <div class="suggestion__person__name">Nwodoh Daniel</div>
-                <div class="suggestion__person__username">@_longboy</div>
-              </div>
-              <button
-                type="button"
-                data-type="follow"
-                class="suggestion__btn-main"
-              >
-                follow
-              </button>
-            </div>
-          </div>
-        </div>`;
   }
 }
 

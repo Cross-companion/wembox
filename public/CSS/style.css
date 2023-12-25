@@ -291,16 +291,21 @@ svg.interest__topics__follow-icon {
         max-width: 30rem; } }
 
 .suggestion__container {
+  padding: 0.5rem 0.7rem;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
-  grid-gap: 1rem; }
-  @media (min-width: 31.31em) {
+  grid-gap: 1rem;
+  max-height: 52rem;
+  overflow: auto; }
+  @media (min-width: 31.41em) {
     .suggestion__container {
-      grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 51em) {
+      grid-template-columns: repeat(2, 1fr);
+      max-height: 31.5rem; } }
+  @media (min-width: 52em) {
     .suggestion__container {
-      grid-template-columns: repeat(3, 1fr); } }
-  @media (min-width: 67em) {
+      grid-template-columns: repeat(3, 1fr);
+      max-height: 21.5rem; } }
+  @media (min-width: 68em) {
     .suggestion__container {
       grid-template-columns: repeat(4, 1fr); } }
 
@@ -367,10 +372,10 @@ svg.interest__topics__follow-icon {
   text-transform: capitalize; }
 
 .interest__group {
-  --theme-color: var(--gradient-color-6);
+  --theme-color: #af40ff;
   margin-top: 1.3rem;
   background-color: rgba(0, 0, 0, 0.048);
-  border: 1px solid var(--gradient-color-6);
+  border: 1px solid #af40ff;
   border-radius: 1rem; }
   .interest__group > div:first-child {
     display: flex;
@@ -385,7 +390,7 @@ svg.interest__topics__follow-icon {
     text-transform: uppercase;
     font-size: 2.2rem;
     font-weight: 600;
-    color: var(--gradient-color-6); }
+    color: #af40ff; }
 
 .interest__topics--container {
   overflow: scroll;
@@ -414,8 +419,9 @@ svg.interest__topics__follow-icon {
   max-width: max-content;
   font-size: 1.6rem;
   letter-spacing: 1px;
-  border: 1px solid var(--gradient-color-6);
-  background-color: #61616150;
+  border: 1px solid #af40ff;
+  background-color: #a5a5a550;
+  color: #58465a;
   padding: 0.2rem 2rem 0.4rem 1rem;
   border-radius: 5rem;
   text-transform: capitalize;
@@ -439,7 +445,7 @@ svg.interest__topics__follow-icon {
   text-wrap: nowrap;
   height: min-content;
   border-radius: 50rem;
-  background-color: var(--gradient-color-6);
+  background-color: #af40ff;
   color: white;
   padding: 0.3rem 1rem; }
 
