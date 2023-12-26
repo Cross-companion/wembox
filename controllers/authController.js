@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const Reader = require('@maxmind/geoip2-node').Reader;
 
 const User = require('../models/user/userModel');
+const Follow = require('../models/follow/followModel');
 const catchAsync = require('../utilities/catchAsync');
 const AppError = require('../utilities/AppError');
 const Email = require('../utilities/email');
@@ -257,6 +258,23 @@ exports.protect = async (req, res, next) => {
       );
     }
 
+    // const userID = user._id;
+    // const follows = await Follow.find({
+    //   $or: [{ follower: userID }, { following: userID }],
+    // });
+    // const { followers, followings } = follows.reduce(
+    //   (acc, follow) => {
+    //     if (follow.follower == userID) acc.followings.push(follow);
+    //     if (follow.following == userID) acc.followers.push(follow);
+    //     return acc;
+    //   },
+    //   { followers: [], followings: [] }
+    // );
+
+    // user.followers = followers;
+    // user.following = followings;
+
+    // console.log(user);
     if (!cachedUser) {
       await redis.set(
         userKey,

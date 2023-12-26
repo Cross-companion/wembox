@@ -4,7 +4,7 @@ class suggestionView {
     return `
         <div class="suggestion__person">
             <img
-                src="${profileImage}"
+                src="images/${profileImage}"
                 alt=""
                 class="suggestion__person__img"
             />

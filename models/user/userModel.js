@@ -70,11 +70,11 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
-      default: 'default-user.jpg',
+      default: 'user-images/default-profile-image.jpg',
     },
     profileCoverImage: {
       type: String,
-      default: 'default-user-bkg.jpg',
+      default: 'user-images/default-profile-cover-image.jpg',
     },
     accountType: {
       type: String,

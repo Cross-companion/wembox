@@ -1,8 +1,11 @@
+const mongoose = require('mongoose');
+
 const { DEFAULT_LOCATION } = require('../../config/userConfig');
 const User = require('./userModel');
 
 class UserAggregations {
   constructor(
+    currentUser,
     topics,
     userLocation,
     numberOfSuggestions,
@@ -12,6 +15,7 @@ class UserAggregations {
     paginationKey,
     paginationData
   ) {
+    this.currentUser = mongoose.Types.ObjectId(currentUser);
     this.topics = topics;
     this.city = userLocation?.city || 'global';
     this.country = userLocation?.country || 'global';
@@ -110,6 +114,7 @@ class UserAggregations {
     return [
       {
         $match: {
+          _id: { $ne: this.currentUser },
           contentType: {
             $elemMatch: {
               topic: { $in: this.topics },
@@ -206,9 +211,11 @@ class UserAggregations {
     const skipAlignment = isActivatedPage ? 0 : usersReturnedAtActivation;
     // For seeking users using any particular `geoArea`, after the first `isActivatedPage`, all the required `this.remainingUsers` from thence would have the same amount.
     const skipBy = pageForCalculating * this.remainingUsers + skipAlignment;
+
     return [
       {
         $match: {
+          _id: { $ne: this.currentUser },
           contentType: {
             $not: {
               $elemMatch: {
