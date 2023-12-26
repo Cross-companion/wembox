@@ -75,8 +75,8 @@ class SignupController {
     const positionOfDialogueNum = 1;
     const { formFor, dialogue } = e.target.dataset;
     const dialogueNum = +dialogue.split('-')[positionOfDialogueNum];
-    if (formFor === this.promptTypes[0]) this.processSignup(dialogueNum);
-    else this.processLogin(dialogueNum);
+    if (formFor === this.promptTypes[0]) await this.processSignup(dialogueNum);
+    else await this.processLogin(dialogueNum);
   };
 
   async processSignup(dialogueNum) {

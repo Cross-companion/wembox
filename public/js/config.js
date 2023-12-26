@@ -5,6 +5,7 @@ const Config = {
   homeRoute: '/',
   userRoute: '/api/v1/users',
   suggestionRoute: '/api/v1/suggest',
+  followRoute: '/api/v1/follow',
 };
 
 export default Config;

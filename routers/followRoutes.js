@@ -13,7 +13,8 @@ router
   .get(
     authController.restrictTo('admin', 'senior-admin'),
     followController.getAllFollows
-  );
+  )
+  .delete(followController.unfollow);
 router.route('/unfollow').delete(followController.unfollow);
 router.route('/followers/:user_id?').get(followController.getFollowers);
 router.route('/followings/:user_id?').get(followController.getFollowings);

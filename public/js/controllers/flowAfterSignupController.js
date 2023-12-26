@@ -68,11 +68,42 @@ class signUpFlowController {
     try {
       const { topic } = target.previousElementSibling.dataset;
       const { users } = await suggestionModel.suggestFollow(topic);
-      modal.showModal(
+      console.log(users[0]);
+      const appModal = modal.showModal(
         suggestionView.modalHTML(topic, users),
         'app-modal__modal--topic-suggestion'
       );
+      appModal.addEventListener('click', (e) => {
+        const { target } = e;
+        const { value, type, userId } = target.dataset;
+        if (value !== 'action-btn') return;
+        this.follow(target, userId);
+      });
     } catch (err) {
+      alert(err.message);
+    }
+  }
+
+  async follow(btn, userId) {
+    const newBtnText = 'unfollow';
+    try {
+      btn.textContent = 'following...';
+      await suggestionModel.follow(userId);
+      btn.textContent = newBtnText;
+    } catch (err) {
+      btn.textContent = newBtnText;
+      alert(err.message);
+    }
+  }
+
+  async unfollow(btn, userId) {
+    const newBtnText = 'follow';
+    try {
+      btn.textContent = 'unfollowing...';
+      await suggestionModel.follow(userId, { follow: false });
+      btn.textContent = newBtnText;
+    } catch (err) {
+      btn.textContent = newBtnText;
       alert(err.message);
     }
   }

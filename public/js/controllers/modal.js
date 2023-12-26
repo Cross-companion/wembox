@@ -19,6 +19,8 @@ class Modal {
     this.appModal = document.querySelector('#app-modal');
     this.overlay = document.querySelector('#app-modal-overlay');
     this.listenForClose();
+
+    return this.appModal;
   }
 
   overlayHandler() {

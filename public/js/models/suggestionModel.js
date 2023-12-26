@@ -1,6 +1,6 @@
 import Config from '../config.js';
 
-const { suggestionRoute } = Config;
+const { suggestionRoute, followRoute } = Config;
 
 class suggestionModel {
   constructor() {}
@@ -27,16 +27,13 @@ class suggestionModel {
     return data;
   }
 
-  async follow() {
+  async follow(userID, { follow = true } = {}) {
     const reqObject = {
-      topics: [topic],
-      page: 1,
-      numberOfSuggestions: 10,
-      // ,"countryWeight": 1
+      following: userID,
     };
 
-    const data = await fetch(`${suggestionRoute}/creator/`, {
-      method: 'POST',
+    const data = await fetch(`${followRoute}`, {
+      method: follow ? 'POST' : 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -46,6 +43,7 @@ class suggestionModel {
       .then((data) => data);
 
     if (data.status !== 'success') throw new Error(data.message);
+    console.log(data);
     return data;
   }
 }

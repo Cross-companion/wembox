@@ -1,6 +1,6 @@
 class suggestionView {
   createPerson(user, type = 'follow') {
-    const { name, profileImage, frontEndUsername } = user;
+    const { _id, name, profileImage, frontEndUsername } = user;
     return `
         <div class="suggestion__person">
             <img
@@ -15,7 +15,9 @@ class suggestionView {
                 </div>
                 <button
                 type="button"
+                data-value="action-btn"
                 data-type="${type}"
+                data-user-id="${_id}"
                 class="suggestion__btn-main"
                 >
                 ${type}

@@ -12,7 +12,6 @@ exports.follow = catchAsync(async (req, res, next) => {
   // 1. create a new follow document with the appropriate parameters
   const follower = req.user._id;
   const { following } = req.body;
-  console.log(follower, following);
   if (!follower || !following) {
     return next(
       new AppError(
@@ -30,19 +29,23 @@ exports.follow = catchAsync(async (req, res, next) => {
     );
   }
 
-  const createFollow = await Follow.create({ follower, following });
+  console.log('here');
+  try {
+    const createFollow = await Follow.create({ follower, following });
 
-  // 2. add an increment to the appropriate fields of both the follower and the following
-  await User.findByIdAndUpdate(
-    { _id: follower },
-    { $inc: { numberOfFollowing: 1 } }
-  );
-  await User.findByIdAndUpdate(
-    { _id: following },
-    { $inc: { numberOfFollowers: 1 } }
-  );
+    await User.findByIdAndUpdate(
+      { _id: follower },
+      { $inc: { numberOfFollowing: 1 } }
+    );
+    await User.findByIdAndUpdate(
+      { _id: following },
+      { $inc: { numberOfFollowers: 1 } }
+    );
 
-  res.status(200).json({ status: 'success', follow: createFollow });
+    res.status(200).json({ status: 'success', follow: createFollow });
+  } catch (err) {
+    return next(new AppError(err, 403));
+  }
 });
 
 exports.getFollowers = catchAsync(async (req, res, next) => {
@@ -57,7 +60,6 @@ exports.getFollowers = catchAsync(async (req, res, next) => {
 
 exports.getFollowings = catchAsync(async (req, res, next) => {
   const findBy = { follower: req.params.user_id || req.user._id };
-  console.log(findBy);
   const populateBy = ['following'];
   factory.findAll(Follow, {
     findBy,
