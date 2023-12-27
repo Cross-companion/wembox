@@ -377,6 +377,8 @@ svg.interest__topics__follow-icon {
   background-color: rgba(0, 0, 0, 0.048);
   border: 1px solid #af40ff;
   border-radius: 1rem; }
+  .interest__group:last-child {
+    margin-bottom: 4rem; }
   .interest__group > div:first-child {
     display: flex;
     justify-content: space-between;
@@ -451,7 +453,7 @@ svg.interest__topics__follow-icon {
 
 .interest__submit-btn {
   z-index: 5;
-  position: absolute;
+  position: fixed;
   bottom: 0.5rem;
   right: 1rem;
   width: 40%;

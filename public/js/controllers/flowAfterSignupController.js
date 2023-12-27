@@ -22,6 +22,7 @@ class signUpFlowController {
         return this.suggestFollows(iconElement);
       return;
     });
+    flowAfterSignupView.submitBtn.addEventListener('click', this.submitTopics);
   }
 
   toogleTopicSelection(target) {
@@ -66,18 +67,17 @@ class signUpFlowController {
 
   async suggestFollows(target) {
     try {
+      const appModal = modal.showModal('app-modal__modal--topic-suggestion');
+      if (!appModal) return;
+
       const { topic } = target.previousElementSibling.dataset;
       const { users } = await suggestionModel.suggestFollow(topic);
-      console.log(users[0]);
-      const appModal = modal.showModal(
-        suggestionView.modalHTML(topic, users),
-        'app-modal__modal--topic-suggestion'
-      );
+      modal.insertContent(suggestionView.modalHTML(topic, users));
       appModal.addEventListener('click', (e) => {
         const { target } = e;
         const { value, type, userId } = target.dataset;
         if (value !== 'action-btn') return;
-        this.follow(target, userId);
+        this[type](target, userId);
       });
     } catch (err) {
       alert(err.message);
@@ -86,26 +86,26 @@ class signUpFlowController {
 
   async follow(btn, userId) {
     const newBtnText = 'unfollow';
+    btn.textContent = 'following...';
     try {
-      btn.textContent = 'following...';
       await suggestionModel.follow(userId);
-      btn.textContent = newBtnText;
     } catch (err) {
-      btn.textContent = newBtnText;
       alert(err.message);
     }
+    btn.dataset.type = newBtnText;
+    btn.textContent = newBtnText;
   }
 
   async unfollow(btn, userId) {
     const newBtnText = 'follow';
+    btn.textContent = 'unfollowing....';
     try {
-      btn.textContent = 'unfollowing...';
       await suggestionModel.follow(userId, { follow: false });
-      btn.textContent = newBtnText;
     } catch (err) {
-      btn.textContent = newBtnText;
       alert(err.message);
     }
+    btn.dataset.type = newBtnText;
+    btn.textContent = newBtnText;
   }
 
   toogleSubmitBtnState(numberOfInterests) {
@@ -114,6 +114,16 @@ class signUpFlowController {
     if (numberOfInterests === minNumberOfInterests)
       return (flowAfterSignupView.submitBtn.dataset.state = 'active');
     else flowAfterSignupView.submitBtn.dataset.state = 'inactive';
+  }
+
+  async submitTopics(e, submitBtn = e.target) {
+    if (submitBtn.dataset.state !== 'active') return;
+    console.log(submitBtn);
+    try {
+      await authModel.setInterests();
+    } catch (err) {
+      alert(err);
+    }
   }
 
   newInterestOBJ(topic, interest) {

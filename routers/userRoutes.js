@@ -19,13 +19,7 @@ router.route('/reset-password/:token').patch(authController.resetPassword);
 router.use(authController.protect);
 router.use(chatController.deliverChats);
 
-router
-  .route('/signup')
-  .patch(
-    usersController.uploadProfileImages,
-    usersController.resizeUserPhoto,
-    usersController.updateAtSignup
-  );
+router.route('/signup').patch(usersController.setInterests);
 
 router
   .route('/')

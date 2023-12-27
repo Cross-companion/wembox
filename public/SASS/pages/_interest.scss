@@ -9,6 +9,10 @@
     border: 1px solid #af40ff;
     border-radius: 1rem;
 
+    &:last-child {
+      margin-bottom: 4rem;
+    }
+
     & > div:first-child {
       display: flex;
       justify-content: space-between;
@@ -119,7 +123,7 @@
 
   &__submit-btn {
     z-index: 5;
-    position: absolute;
+    position: fixed;
     bottom: 0.5rem;
     right: 1rem;
     width: 40%;

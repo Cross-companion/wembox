@@ -47,39 +47,16 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 exports.getAllUsers = factory.findAll(User);
 
 // IMG Handling with AWS or its like would be done before initial organic Advertising.
-exports.updateAtSignup = catchAsync(async (req, res, next) => {
-  let { interests, contentType, profileImage, profileCoverImage, geoLocation } =
-    req.body;
-  const conditionToContinue =
-    interests?.length ||
-    contentType?.length ||
-    profileImage ||
-    profileCoverImage ||
-    geoLocation;
-
-  if (!conditionToContinue)
-    return next(new AppError('No data to update was specified.', 401));
-
-  if (!contentType) contentType = interests;
-
+exports.setInterests = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
-  const fieldsToUpdate = [
-    { name: 'interests', value: interests },
-    { name: 'contentType', value: contentType },
-    { name: 'profileImage', value: profileImage },
-    { name: 'profileCoverImage', value: profileCoverImage },
-    { name: 'geoLocation', value: geoLocation },
-  ];
-  const update = {};
+  let { interests } = req.body;
+  const contentType = interests;
 
-  fieldsToUpdate.forEach((field) => {
-    if (field.value) update[field.name] = field.value;
-  });
+  if (!interests?.length)
+    return next(new AppError('No interests was specified.', 401));
 
-  await User.findOneAndUpdate({ _id: userID }, update, {
-    new: true,
-    runValidators: true,
-  });
+  const update = { interests, contentType };
+  await User.findByIdAndUpdate({ _id: userID }, update);
 
   res.status(200).json({
     status: 'success',

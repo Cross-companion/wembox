@@ -1,23 +1,31 @@
 class Modal {
   constructor() {}
-  modalTemplate(modalContent, modifierClass) {
+  modalTemplate(modifierClass) {
     return `
     <section id="app-modal" class="app-modal">
       <div id="app-modal-overlay" class="app-modal__overlay"></div>
       <div
-        class="app-modal__modal glassmorph ${modifierClass}"
+        id="app-modal-content-container" class="app-modal__modal glassmorph ${modifierClass}"
       >
-      ${modalContent}
+      <div style="margin: 1rem 0.7rem; border-radius: 5px ">Loading....</div>
       </div>
     </section>`;
   }
 
-  showModal(modalContent, modifierClass) {
-    const modalHTML = this.modalTemplate(modalContent, modifierClass);
+  insertContent(modalContent) {
+    this.contentContainer.innerHTML = modalContent;
+  }
+
+  showModal(modifierClass) {
+    if (document.querySelector('#app-modal')) return;
+    const modalHTML = this.modalTemplate(modifierClass);
     const pageBody = document.querySelector('body');
     pageBody.insertAdjacentHTML('afterbegin', modalHTML);
     this.appModal = document.querySelector('#app-modal');
     this.overlay = document.querySelector('#app-modal-overlay');
+    this.contentContainer = document.querySelector(
+      '#app-modal-content-container'
+    );
     this.listenForClose();
 
     return this.appModal;

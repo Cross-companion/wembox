@@ -183,22 +183,25 @@ class SignupModel {
     return interests;
   }
 
-  async updateAfterSignup() {
+  async setInterests() {
     const dataObject = {
       interests: this.userDetails.interests,
-      contentType: this.userDetails.contentType,
-      profileImage: this.userDetails.profileImage,
-      profileCoverImage: this.userDetails.profileCoverImage,
-      geoLocation: this.userDetails.geoLocation,
     };
 
-    await fetch(`${userRoute}/signup`, {
+    const data = await fetch(`${userRoute}/signup`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(dataObject),
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    console.log(data);
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
   }
 }
 
