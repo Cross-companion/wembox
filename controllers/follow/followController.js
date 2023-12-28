@@ -33,6 +33,7 @@ exports.follow = catchAsync(async (req, res, next) => {
 
   try {
     const createFollow = await Follow.create({ follower, following });
+    if (!createFollow) return next(new AppError('Unable to follow.', 500));
 
     const newTopicObj = {
       topic: followBasis.topic,
@@ -107,7 +108,7 @@ exports.getAllFollows = factory.findAll(Follow, {
 });
 
 exports.unfollow = catchAsync(async (req, res, next) => {
-  const { following } = req.body;
+  const { following, followBasis } = req.body;
   const follower = req.user._id;
 
   if (follower === following)
@@ -116,15 +117,49 @@ exports.unfollow = catchAsync(async (req, res, next) => {
   if (!deletedFollow)
     return next(new AppError('You do not yet follow this account.', 404));
 
-  await User.findByIdAndUpdate(
-    { _id: follower },
-    { $inc: { numberOfFollowing: -1 } }
-  );
-  await User.findByIdAndUpdate(
-    { _id: following },
-    { $inc: { numberOfFollowers: -1 } }
-  );
+  const newTopicObj = {
+    topic: followBasis.topic,
+    interest: followBasis.interest,
+  };
+
+  // update person following.
+  (await updateEngagements(
+    User,
+    follower,
+    { 'interests.topic': newTopicObj.topic },
+    undefined,
+    {
+      numberOfFollowing: -1,
+    },
+    { 'interests.$.engagements': -engagementScores.follow },
+    undefined,
+    false
+  )) || // if nModified === 0
+    (await User.findByIdAndUpdate(
+      { _id: follower },
+      { $inc: { numberOfFollowing: -1 } }
+    ));
+
+  // update person being followed.
+  (await updateEngagements(
+    User,
+    following,
+    { 'contentType.topic': newTopicObj.topic },
+    undefined,
+    {
+      numberOfFollowers: -1,
+    },
+    { 'contentType.$.engagements': -engagementScores.follow },
+    undefined,
+    false
+  )) || // if nModified === 0
+    (await User.findByIdAndUpdate(
+      { _id: following },
+      { $inc: { numberOfFollowers: -1 } }
+    ));
+
   res.status(200).json({
     status: 'success',
   });
+  // BUG: currently, if a user is unfollowed, it's number of followers does not decrease if the uses's contentType does not contain the followBasis.topic
 });

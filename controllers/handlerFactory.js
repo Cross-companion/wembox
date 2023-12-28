@@ -92,7 +92,8 @@ exports.updateEngagements = async (
   pushObject,
   increments = {},
   optionalIncrement,
-  optionalUpdates = {}
+  optionalUpdates = {},
+  createsNew = true
 ) => {
   const { nModified } = await Model.updateOne(
     { _id: userID, ...additionalID },
@@ -102,11 +103,12 @@ exports.updateEngagements = async (
     }
   );
 
-  console.log('nModified', nModified);
-  if (nModified) return;
+  if (nModified || !createsNew) return nModified;
 
-  await Model.updateOne(
+  const { nModified: finalnModified } = await Model.updateOne(
     { _id: userID },
     { $push: pushObject, $inc: { ...increments } }
   );
+
+  return finalnModified;
 };

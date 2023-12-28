@@ -99,10 +99,12 @@ class signUpFlowController {
   }
 
   async unfollow(btn, userId) {
+    const { topic, interest } = btn.dataset;
+    const followBasis = { topic, interest };
     const newBtnText = 'follow';
     btn.textContent = 'unfollowing....';
     try {
-      await suggestionModel.follow(userId, { follow: false });
+      await suggestionModel.follow(userId, { followBasis, follow: false });
     } catch (err) {
       alert(err.message);
     }
