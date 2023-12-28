@@ -27,9 +27,10 @@ class suggestionModel {
     return data;
   }
 
-  async follow(userID, { follow = true } = {}) {
+  async follow(userID, { follow = true, followBasis } = {}) {
     const reqObject = {
       following: userID,
+      followBasis,
     };
 
     const data = await fetch(`${followRoute}`, {
@@ -43,7 +44,7 @@ class suggestionModel {
       .then((data) => data);
 
     if (data.status !== 'success') throw new Error(data.message);
-    console.log(data);
+
     return data;
   }
 }

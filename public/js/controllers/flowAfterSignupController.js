@@ -70,9 +70,9 @@ class signUpFlowController {
       const appModal = modal.showModal('app-modal__modal--topic-suggestion');
       if (!appModal) return;
 
-      const { topic } = target.previousElementSibling.dataset;
+      const { topic, interest } = target.previousElementSibling.dataset;
       const { users } = await suggestionModel.suggestFollow(topic);
-      modal.insertContent(suggestionView.modalHTML(topic, users));
+      modal.insertContent(suggestionView.modalHTML(topic, interest, users));
       appModal.addEventListener('click', (e) => {
         const { target } = e;
         const { value, type, userId } = target.dataset;
@@ -85,10 +85,12 @@ class signUpFlowController {
   }
 
   async follow(btn, userId) {
+    const { topic, interest } = btn.dataset;
+    const followBasis = { topic, interest };
     const newBtnText = 'unfollow';
     btn.textContent = 'following...';
     try {
-      await suggestionModel.follow(userId);
+      await suggestionModel.follow(userId, { followBasis });
     } catch (err) {
       alert(err.message);
     }
@@ -118,7 +120,6 @@ class signUpFlowController {
 
   async submitTopics(e, submitBtn = e.target) {
     if (submitBtn.dataset.state !== 'active') return;
-    console.log(submitBtn);
     try {
       await authModel.setInterests();
     } catch (err) {

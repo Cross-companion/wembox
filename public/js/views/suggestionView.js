@@ -40,10 +40,15 @@ class suggestionView {
 
   modalHTML(
     topic,
+    interest,
     users = [],
-    { data = [{ name: 'topic', value: `${topic}` }] } = {}
+    {
+      data = [
+        { name: 'interest', value: `${interest}` },
+        { name: 'topic', value: `${topic}` },
+      ],
+    } = {}
   ) {
-    console.log(data);
     return `
     <div class="suggestion__topic-heading">
       <span class="suggestion__topic-heading__text">

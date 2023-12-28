@@ -3,6 +3,8 @@ const User = require('../../models/user/userModel');
 const factory = require('../handlerFactory');
 const AppError = require('../../utilities/AppError');
 const catchAsync = require('../../utilities/catchAsync');
+const { updateEngagements } = require('../handlerFactory');
+const { engagementScores } = require('../../config/suggestionConfig');
 
 const populateFollowItems = [
   'name frontEndUsername profileImage accountType numberOfFollowers numberOfFollowing',
@@ -11,7 +13,7 @@ const populateFollowItems = [
 exports.follow = catchAsync(async (req, res, next) => {
   // 1. create a new follow document with the appropriate parameters
   const follower = req.user._id;
-  const { following } = req.body;
+  const { following, followBasis } = req.body;
   if (!follower || !following) {
     return next(
       new AppError(
@@ -29,18 +31,49 @@ exports.follow = catchAsync(async (req, res, next) => {
     );
   }
 
-  console.log('here');
   try {
     const createFollow = await Follow.create({ follower, following });
 
-    await User.findByIdAndUpdate(
-      { _id: follower },
-      { $inc: { numberOfFollowing: 1 } }
+    const newTopicObj = {
+      topic: followBasis.topic,
+      interest: followBasis.interest,
+      engagements: engagementScores.follow,
+    };
+
+    // update person following.
+    await updateEngagements(
+      User,
+      follower,
+      { 'interests.topic': newTopicObj.topic },
+      { interests: newTopicObj },
+      {
+        numberOfFollowing: 1,
+      },
+      { 'interests.$.engagements': engagementScores.follow }
     );
-    await User.findByIdAndUpdate(
-      { _id: following },
-      { $inc: { numberOfFollowers: 1 } }
+
+    // update person being followed.
+    await updateEngagements(
+      User,
+      following,
+      { 'contentType.topic': newTopicObj.topic },
+      { contentType: newTopicObj },
+      {
+        numberOfFollowers: 1,
+      },
+      { 'contentType.$.engagements': engagementScores.follow }
     );
+
+    // await User.findByIdAndUpdate(
+    //   { _id: follower },
+    //   {
+    //     $inc: { numberOfFollowing: 1 },
+    //   }
+    // );
+    // await User.findByIdAndUpdate(
+    //   { _id: following },
+    //   { $inc: { numberOfFollowers: 1 } }
+    // );
 
     res.status(200).json({ status: 'success', follow: createFollow });
   } catch (err) {

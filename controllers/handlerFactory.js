@@ -84,3 +84,29 @@ exports.deleteOne = (Model, { findBy = {} } = {}) =>
 
     res.status(200).json({ status: 'success', data });
   });
+
+exports.updateEngagements = async (
+  Model,
+  userID,
+  additionalID = {},
+  pushObject,
+  increments = {},
+  optionalIncrement,
+  optionalUpdates = {}
+) => {
+  const { nModified } = await Model.updateOne(
+    { _id: userID, ...additionalID },
+    {
+      $inc: { ...optionalIncrement, ...increments },
+      ...optionalUpdates,
+    }
+  );
+
+  console.log('nModified', nModified);
+  if (nModified) return;
+
+  await Model.updateOne(
+    { _id: userID },
+    { $push: pushObject, $inc: { ...increments } }
+  );
+};

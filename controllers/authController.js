@@ -287,7 +287,7 @@ exports.protect = async (req, res, next) => {
     req.user = user;
     res.locals.user = user; // Store in response locals for possible rendering
     console.log(
-      `${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`
+      `${req.user.username}: ${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`
     );
     return next();
   } catch (err) {

@@ -19,7 +19,6 @@ class ResetPasswordController {
     try {
       const password = resetPasswordView.passwordInput.value;
       const passwordConfirm = resetPasswordView.passwordConfirmInput.value;
-      console.log(password, passwordConfirm);
       const token = this.extractUrlToken();
       await authModel.resetPassword(password, passwordConfirm, token);
       this.resetSubmitBtn(false);
