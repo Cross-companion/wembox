@@ -1,6 +1,10 @@
 const multer = require('multer');
 const User = require('../../models/user/userModel');
-const { multerStorage, multerFilter } = require('./helpers');
+const {
+  multerStorage,
+  multerFilter,
+  updateChosenAtSignup,
+} = require('./helpers');
 const factory = require('../handlerFactory');
 const ImageFile = require('../../utilities/imageFileManager');
 const AppError = require('../../utilities/AppError');
@@ -57,6 +61,7 @@ exports.setInterests = catchAsync(async (req, res, next) => {
 
   const update = { interests, contentType };
   await User.findByIdAndUpdate({ _id: userID }, update);
+  await updateChosenAtSignup(interests.map((interest) => interest.topic));
 
   res.status(200).json({
     status: 'success',

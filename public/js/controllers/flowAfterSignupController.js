@@ -67,7 +67,12 @@ class signUpFlowController {
 
   async suggestFollows(target) {
     try {
-      const appModal = modal.showModal('app-modal__modal--topic-suggestion');
+      const appModal = modal.showModal('app-modal__modal--topic-suggestion', [
+        {
+          event: suggestionView.closeSuggestion.bind(suggestionView),
+          args: [],
+        },
+      ]);
       if (!appModal) return;
 
       const { topic, interest } = target.previousElementSibling.dataset;
@@ -78,6 +83,10 @@ class signUpFlowController {
         const { value, type, userId } = target.dataset;
         if (value !== 'action-btn') return;
         this[type](target, userId);
+      });
+      suggestionView.setScrollEvent(suggestionModel.suggestFollow, {
+        topic,
+        interest,
       });
     } catch (err) {
       alert(err.message);
@@ -91,6 +100,7 @@ class signUpFlowController {
     btn.textContent = 'following...';
     try {
       await suggestionModel.follow(userId, { followBasis });
+      authModel.reflectEngageMent({ followBasis });
     } catch (err) {
       alert(err.message);
     }
@@ -105,6 +115,7 @@ class signUpFlowController {
     btn.textContent = 'unfollowing....';
     try {
       await suggestionModel.follow(userId, { followBasis, follow: false });
+      authModel.reflectEngageMent({ followBasis, follow: false });
     } catch (err) {
       alert(err.message);
     }

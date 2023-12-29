@@ -6,6 +6,9 @@ const Config = {
   userRoute: '/api/v1/users',
   suggestionRoute: '/api/v1/suggest',
   followRoute: '/api/v1/follow',
+  engagementScores: {
+    follow: 6,
+  },
 };
 
 export default Config;

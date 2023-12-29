@@ -16,7 +16,10 @@ class Modal {
     this.contentContainer.innerHTML = modalContent;
   }
 
-  showModal(modifierClass) {
+  showModal(
+    modifierClass,
+    onCloseEvents = [{ event: console.log, args: [''] }]
+  ) {
     if (document.querySelector('#app-modal')) return;
     const modalHTML = this.modalTemplate(modifierClass);
     const pageBody = document.querySelector('body');
@@ -26,31 +29,32 @@ class Modal {
     this.contentContainer = document.querySelector(
       '#app-modal-content-container'
     );
-    this.listenForClose();
+    this.listenForClose(onCloseEvents);
 
     return this.appModal;
   }
 
-  overlayHandler() {
-    this.closeModal();
+  overlayHandler(onCloseEvents) {
+    this.closeModal(onCloseEvents);
   }
-  documentHandler(e) {
+  documentHandler(onCloseEvents, e) {
     const { key } = e;
     if (key !== 'Escape') return;
     document.removeEventListener('keydown', this.documentHandler.bind(this));
-    this.closeModal();
+    this.closeModal(onCloseEvents);
   }
 
-  listenForClose() {
+  listenForClose(onCloseEvents) {
     this.handlers = [
-      this.overlayHandler.bind(this),
-      this.documentHandler.bind(this),
+      this.overlayHandler.bind(this, onCloseEvents),
+      this.documentHandler.bind(this, onCloseEvents),
     ];
     this.overlay.addEventListener('click', this.handlers[0]);
     document.addEventListener('keydown', this.handlers[1]);
   }
 
-  closeModal() {
+  closeModal(onCloseEvents) {
+    onCloseEvents.forEach((event) => event.event(...event.args));
     this.overlay.removeEventListener('click', this.handlers[0]);
     document.removeEventListener('keydown', this.handlers[1]);
     this.appModal.remove();

@@ -1,5 +1,5 @@
 import Config from '../config.js';
-const { userRoute } = Config;
+const { userRoute, suggestionRoute, engagementScores } = Config;
 
 class SignupModel {
   constructor() {
@@ -175,11 +175,11 @@ class SignupModel {
   }
 
   async getInterests() {
-    const interests = await fetch('../dev-data/interests.json')
+    const data = await fetch(`${suggestionRoute}/interests`)
       .then((res) => res.json())
       .then((data) => data);
 
-    return interests;
+    return data;
   }
 
   async setInterests() {
@@ -199,7 +199,19 @@ class SignupModel {
 
     if (data.status !== 'success') throw new Error(data.message);
 
+    this.userDetails = undefined;
     return data;
+  }
+
+  reflectEngageMent({ follow = true, followBasis = {} } = {}) {
+    const { topic } = followBasis;
+    if (!topic) return;
+    const interest = this.userDetails.interests.forEach((interest, i, arr) => {
+      if (arr[i].topic !== topic) return;
+      arr[i].engagements += engagementScores.follow * (follow ? 1 : -1);
+    });
+
+    console.log(this.userDetails.interests);
   }
 }
 

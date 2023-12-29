@@ -5,10 +5,10 @@ const { suggestionRoute, followRoute } = Config;
 class suggestionModel {
   constructor() {}
 
-  async suggestFollow(topic) {
+  async suggestFollow(topic, page = 1) {
     const reqObject = {
       topics: [topic],
-      page: 1,
+      page,
       numberOfSuggestions: 10,
       // ,"countryWeight": 1
     };
@@ -27,7 +27,7 @@ class suggestionModel {
     return data;
   }
 
-  async follow(userID, { follow = true, followBasis } = {}) {
+  async follow(userID, { follow = true, followBasis = {} } = {}) {
     const reqObject = {
       following: userID,
       followBasis,
