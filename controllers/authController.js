@@ -185,6 +185,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
 
+  console.log(email, username, password);
   if (!password || !(username || email))
     return next(
       new AppError(
@@ -217,7 +218,7 @@ exports.logout = (req, res) => {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
-  res.status(200).json({ status: 'success' });
+  return res.redirect('/');
 };
 
 exports.restrictTo = (...roles) => {
@@ -258,23 +259,6 @@ exports.protect = async (req, res, next) => {
       );
     }
 
-    // const userID = user._id;
-    // const follows = await Follow.find({
-    //   $or: [{ follower: userID }, { following: userID }],
-    // });
-    // const { followers, followings } = follows.reduce(
-    //   (acc, follow) => {
-    //     if (follow.follower == userID) acc.followings.push(follow);
-    //     if (follow.following == userID) acc.followers.push(follow);
-    //     return acc;
-    //   },
-    //   { followers: [], followings: [] }
-    // );
-
-    // user.followers = followers;
-    // user.following = followings;
-
-    // console.log(user);
     if (!cachedUser) {
       await redis.set(
         userKey,

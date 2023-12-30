@@ -22,7 +22,7 @@ class ResetPasswordController {
       const token = this.extractUrlToken();
       await authModel.resetPassword(password, passwordConfirm, token);
       this.resetSubmitBtn(false);
-      window.location.href = '/';
+      window.location.replace('/');
     } catch (err) {
       alert(err.message);
       this.resetSubmitBtn(false);
@@ -37,7 +37,7 @@ class ResetPasswordController {
 
   resetSubmitBtn(pending = true) {
     const resetText = resetPasswordView.btnResetText;
-    resetPasswordView.submitBtn.value = pending ? 'Loading...' : resetText;
+    resetPasswordView.submitBtn.value = pending ? 'Loading....' : resetText;
     resetPasswordView.submitBtn.style.opacity = pending ? 0.6 : 1;
     resetPasswordView.submitBtn.dataset.btnStatus = pending
       ? 'pending'

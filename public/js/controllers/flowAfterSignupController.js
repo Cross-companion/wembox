@@ -133,8 +133,11 @@ class signUpFlowController {
 
   async submitTopics(e, submitBtn = e.target) {
     if (submitBtn.dataset.state !== 'active') return;
+    submitBtn.dataset.state = 'inactive';
     try {
       await authModel.setInterests();
+      window.location.replace('/');
+      submitBtn.dataset.state = 'active';
     } catch (err) {
       alert(err);
     }

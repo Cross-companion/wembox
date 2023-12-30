@@ -63,7 +63,7 @@ class SignupController {
 
   resetSubmitBtn(pending = true) {
     const resetText = authViews.btnResetText;
-    authViews.submitBtn.value = pending ? 'Loading...' : resetText;
+    authViews.submitBtn.value = pending ? 'Loading....' : resetText;
     authViews.submitBtn.style.opacity = pending ? 0.6 : 1;
     authViews.submitBtn.dataset.btnStatus = pending ? 'pending' : 'accepted';
   }
@@ -149,7 +149,7 @@ class SignupController {
           recaptcha,
         });
         this.resetSubmitBtn(false);
-        location.reload();
+        window.location.replace('/pick-interests');
       } catch (err) {
         alert(err.message);
         this.resetSubmitBtn(false);

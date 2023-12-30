@@ -61,13 +61,13 @@ app.use((req, res, next) => {
 });
 
 // MOUNTING ROUTERS
-app.use('/', viewRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/images', imageRouter);
 app.use('/api/v1/suggest', suggestionRouter);
 app.use('/api/v1/follow', followRouter);
 app.use('/api/v1/contacts', contactRouter);
 app.use('/api/v1/chat', chatRouter);
+app.use('/', viewRouter);
 
 app.all('*', (req, res, next) => {
   const errMessage = `Can't find ${req.originalUrl} on this server`;
