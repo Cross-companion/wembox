@@ -1,6 +1,6 @@
 const Redis = require('ioredis');
 
-const { REDIS_HOST, REDIS_PORT, NODE_ENV, REDIS_URL } = process.env;
+const { REDIS_PORT, REDIS_HOST, NODE_ENV, REDIS_URL } = process.env;
 const redis = new Redis(
   NODE_ENV === 'production'
     ? {
