@@ -17,7 +17,7 @@ class UserConfig {
     this.ADMIN_TYPES = { normalAdmin: 'admin', seniorAdmin: 'senior-admin' };
     this.INTEREST_TYPES = [];
     this.DEFAULT_INTEREST_ARRAY = [];
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV !== 'production'
       ? this._testInitialise()
       : this._initialise();
   }

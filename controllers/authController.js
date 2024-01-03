@@ -37,7 +37,7 @@ const createSendToken = (res, user, statusCode) => {
     secure: true,
     httpOnly: true,
   };
-  if (process.env.NODE_ENV === 'development') cookieOptions.secure = false;
+  if (process.env.NODE_ENV !== 'production') cookieOptions.secure = false;
 
   res.cookie('jwt', token, cookieOptions);
 
@@ -107,10 +107,20 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
   await redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
 
   console.log(email, name, 'email, name');
-  await new Email({
-    user: { email, name },
-    otp: token,
-  }).sendEmailVerificationOTP();
+  try {
+    await new Email({
+      user: { email, name },
+      otp: token,
+    }).sendEmailVerificationOTP();
+  } catch (err) {
+    console.log(err);
+    return next(
+      new AppError(
+        'There was a short server error, please try again and if problem persist, contact the wembox customer service.'
+      )
+    );
+  }
+
   // await sendEmail({
   //   email,
   //   subject: 'Wembox verification token. (Expires in 10 minutes)',

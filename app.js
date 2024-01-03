@@ -40,7 +40,7 @@ app.use(cookieParser());
 app.use(express.json()); // Limits to datacan be added
 
 // Use morgan on dev only
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
