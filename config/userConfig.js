@@ -19,7 +19,9 @@ class UserConfig {
     this.DEFAULT_INTEREST_ARRAY = [];
     process.env.NODE_ENV !== 'production'
       ? this._testInitialise()
-      : this._initialise();
+      : setTimeout(() => {
+          this._initialise();
+        }, 10000);
   }
 
   // INTEREST_TYPES: Array containing all the possible interest that a user can chose from.
