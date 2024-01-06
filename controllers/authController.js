@@ -104,7 +104,10 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
 
   const token = generateRandomToken();
   const emailKey = process.env.EMAIL_CACHE_KEY + email;
+  console.log(token);
+  console.log(emailKey);
   await redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
+  console.log('after set');
 
   console.log(email, name, 'email, name');
   try {

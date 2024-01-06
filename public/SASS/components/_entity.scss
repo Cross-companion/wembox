@@ -1,0 +1,35 @@
+.entity {
+  display: flex;
+  align-items: center;
+
+  &__img {
+    margin-right: 0.5rem;
+  }
+
+  &__content {
+    flex-grow: 1;
+  }
+
+  &__title {
+    margin-bottom: 0.5rem;
+    font-weight: 900;
+    font-size: 1.8rem;
+    line-height: 0.8;
+    color: black;
+  }
+
+  &__message {
+    display: flex;
+    justify-content: space-between;
+
+    &__message {
+      //   line
+    }
+
+    &__time {
+      //   position: absolute;
+      //   bottom: -0.5rem;
+      //   right: 0;
+    }
+  }
+}

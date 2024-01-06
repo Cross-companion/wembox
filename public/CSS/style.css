@@ -220,11 +220,34 @@ main {
   .btn__signup[data-state='active'] {
     text-decoration: underline; }
 
+.entity {
+  display: flex;
+  align-items: center; }
+  .entity__img {
+    margin-right: 0.5rem; }
+  .entity__content {
+    flex-grow: 1; }
+  .entity__title {
+    margin-bottom: 0.5rem;
+    font-weight: 900;
+    font-size: 1.8rem;
+    line-height: 0.8;
+    color: black; }
+  .entity__message {
+    display: flex;
+    justify-content: space-between; }
+
 .footer__signup {
   color: var(--color-white);
   background-color: var(--color-dark);
   padding: 2rem;
   text-align: center; }
+
+svg.app__header__notifications-icon {
+  fill: #ffffff;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.3rem; }
 
 svg.interest__topics__follow-icon {
   fill: #ffffff;
@@ -273,6 +296,40 @@ svg.interest__topics__follow-icon {
     color: #000000; }
     .logo__phrase > span {
       opacity: 0.5; }
+
+.person__img {
+  --person-img-width: 6rem;
+  width: var(--person-img-width);
+  height: var(--person-img-width);
+  border-radius: 50%;
+  border: 2px solid transparent; }
+  .person__img--me {
+    width: calc(var(--person-img-width) + -1.5rem) !important;
+    height: calc(var(--person-img-width) + -1.5rem) !important; }
+  .person__img__container {
+    width: min-content; }
+    .person__img__container--decorated {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 0.1rem;
+      color: white; }
+      .person__img__container--decorated::before {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 100%;
+        border-radius: 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        height: 100%;
+        background: #00ddeb;
+        background: -webkit-linear-gradient(144deg, #af40ff, #5b42f3 30%, #00ddeb);
+        background-image: linear-gradient(144deg, #af40ff, #5b42f3 30%, #00ddeb);
+        color: #ffffff;
+        z-index: -1; }
 
 .suggestion__topic-heading {
   width: 100%;
@@ -367,6 +424,45 @@ svg.interest__topics__follow-icon {
   -webkit-backdrop-filter: blur(20px);
   border-radius: 10px;
   border: 1px solid white; }
+
+.app__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.7rem 0.7rem;
+  height: 6.5rem; }
+  .app__header > div {
+    display: flex;
+    align-items: center; }
+  .app__header__notifications {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0rem 1rem;
+    border-radius: 2rem;
+    color: #ffffff;
+    border: 1px solid black;
+    border: 1px solid #00ddeb;
+    background: #00ddeb;
+    background: -webkit-linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+    background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb); }
+    .app__header__notifications > span:not(:last-child) {
+      margin-right: 1rem; }
+
+.app__nav {
+  display: flex;
+  justify-content: center;
+  box-shadow: white 0px -10px 12px, rgba(0, 0, 0, 0.1) 0px 0px 12px;
+  padding: 0rem 1rem 1rem 1rem; }
+  .app__nav > span {
+    text-transform: capitalize;
+    font-size: 2.3rem; }
+    .app__nav > span.active {
+      color: #5b42f3; }
+
+.app__main {
+  padding-top: 2rem;
+  overflow: hidden; }
 
 .interest__heading {
   text-transform: capitalize; }
