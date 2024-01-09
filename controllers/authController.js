@@ -30,7 +30,7 @@ const signToken = (claims) => {
 const createSendToken = (res, user, statusCode) => {
   const token = signToken({ id: user._id, username: user.username });
 
-  const cookieOptions = {
+  const cookieOptions = { 
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 1000 * 60 * 60 * 24
     ),

@@ -10,13 +10,4 @@ const redis = new Redis(
       }
 );
 
-console.log(
-  NODE_ENV === 'production'
-    ? REDIS_URL
-    : {
-        host: REDIS_HOST,
-        port: REDIS_PORT,
-      }
-);
-
 module.exports = redis;

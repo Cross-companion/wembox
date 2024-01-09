@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const dotenv = require('dotenv');
-dotenv.config({ path: './config.env' });
+const envFile =
+  process.env.NODE_ENV === 'production'
+    ? './config.env'
+    : './Research files/secrets/.env';
+dotenv.config({ path: envFile });
 
 // process.on('uncaughtException', (err) => {
 //   console.log(err);
