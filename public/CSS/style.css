@@ -223,6 +223,8 @@ main {
 .entity {
   display: flex;
   align-items: center; }
+  .entity:not(:last-child) {
+    margin-bottom: 1rem; }
   .entity__img {
     margin-right: 0.5rem; }
   .entity__content {
