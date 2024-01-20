@@ -1,14 +1,14 @@
 .person {
   &__img {
-    --person-img-width: 6rem;
+    --person-img-width: 5rem;
     width: var(--person-img-width);
     height: var(--person-img-width);
     border-radius: 50%;
     border: 2px solid transparent;
 
     &--me {
-      width: calc(var(--person-img-width) + -1.5rem) !important;
-      height: calc(var(--person-img-width) + -1.5rem) !important;
+      width: calc(var(--person-img-width) + -1rem) !important;
+      height: calc(var(--person-img-width) + -1rem) !important;
     }
 
     &__container {

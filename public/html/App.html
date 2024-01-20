@@ -4,10 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../CSS/style.css" />
+    <script src="../js/controllers/appController.js" type="module"></script>
     <title>Wembox Inc</title>
   </head>
   <body id="app" class="app">
-    <header class="app__header">
+    <header class="app__header" id="app-header">
       <div class="person__img__container person__img__container--decorated">
         <img
           src="../Imgs/users/upwork-profile_edited.jpg"
@@ -17,27 +18,45 @@
       </div>
       <div>
         <span class="app__header__notifications">
-          <span>Notifications</span>
-          <span
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24"
-              class="app__header__notifications-icon"
-              data-type="person-add"
-            >
-              <path
-                d="M720-520h-80q-17 0-28.5-11.5T600-560q0-17 11.5-28.5T640-600h80v-80q0-17 11.5-28.5T760-720q17 0 28.5 11.5T800-680v80h80q17 0 28.5 11.5T920-560q0 17-11.5 28.5T880-520h-80v80q0 17-11.5 28.5T760-400q-17 0-28.5-11.5T720-440v-80Zm-360 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-240v-32q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v32q0 33-23.5 56.5T600-160H120q-33 0-56.5-23.5T40-240Zm80 0h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"
-              />
-            </svg>
-          </span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+            class="app__header__notifications-icon"
+            data-type="person-add"
+          >
+            <path
+              d="M720-520h-80q-17 0-28.5-11.5T600-560q0-17 11.5-28.5T640-600h80v-80q0-17 11.5-28.5T760-720q17 0 28.5 11.5T800-680v80h80q17 0 28.5 11.5T920-560q0 17-11.5 28.5T880-520h-80v80q0 17-11.5 28.5T760-400q-17 0-28.5-11.5T720-440v-80Zm-360 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-240v-32q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v32q0 33-23.5 56.5T600-160H120q-33 0-56.5-23.5T40-240Zm80 0h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"
+            />
+          </svg>
         </span>
       </div>
     </header>
-    <nav id="app-nav" class="app__nav"><span class="active">chats</span></nav>
+    <nav id="app-nav" class="app__nav fixed">
+      <span class="active">chats</span>
+    </nav>
     <main class="app__main">
-      <div class="entity">
+      <div class="glassmorph app__no-contacts">
+        <div class="app__no-contacts__logo">
+          <svg class="app__no-contacts__logo-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            height="90"
+            viewBox="0 -960 960 960"
+            width="90"
+          >
+            <path
+              d="m438-452-58-57q-11-11-27.5-11T324-508q-11 11-11 28t11 28l86 86q12 12 28 12t28-12l170-170q12-12 11.5-28T636-592q-12-12-28.5-12.5T579-593L438-452ZM326-90l-58-98-110-24q-15-3-24-15.5t-7-27.5l11-113-75-86q-10-11-10-26t10-26l75-86-11-113q-2-15 7-27.5t24-15.5l110-24 58-98q8-13 22-17.5t28 1.5l104 44 104-44q14-6 28-1.5t22 17.5l58 98 110 24q15 3 24 15.5t7 27.5l-11 113 75 86q10 11 10 26t-10 26l-75 86 11 113q2 15-7 27.5T802-212l-110 24-58 98q-8 13-22 17.5T584-74l-104-44-104 44q-14 6-28 1.5T326-90Zm52-72 102-44 104 44 56-96 110-26-10-112 74-84-74-86 10-112-110-24-58-96-102 44-104-44-56 96-110 24 10 112-74 86 74 84-10 114 110 24 58 96Zm102-318Z"
+            />
+          </svg>
+          <h3>You have no contacts yet!.</h1>
+        </div>
+        <h5>
+          You can Send a contact request below to people you might know or find
+          interesting.
+        </h4>
+      </div>
+      <!-- <div class="entity">
         <div>
           <img
             src="../Imgs/users/leo.jpg"
@@ -48,244 +67,95 @@
         <div class="entity__content">
           <div class="entity__title">Leo Conan</div>
           <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
+            <p class="entity__message__message">
+              hello bro, any update jnaerg sgwejokerg awerfonre awerfonre
+              awerfonre awerfonre
+            </p>
             <span class="entity__message__time">12:30am</span>
           </div>
         </div>
-      </div>
-      <div class="entity">
-        <div>
+      </div> -->
+
+      <div id="suggestion-container" data-type="contact-request" class="suggestion__container glassmorph">
+        <div
+          id="suggestion-item"
+          data-type="contact-request"
+          class="suggestion__person"
+        >
           <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
+            src="../Imgs/users/monica.jpg"
+            alt=""
+            class="suggestion__person__img"
           />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
+          <div class="suggestion__person__details">
+            <div>
+              <div class="suggestion__person__name">Leo C</div>
+              <div class="suggestion__person__username">@leoConan</div>
+            </div>
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="${type}"
+              data-user-id="${_id}"
+              class="suggestion__btn-main"
             >
-            <span class="entity__message__time">12:30am</span>
+              Contact Request
+            </button>
           </div>
         </div>
-      </div>
-      <div class="entity">
-        <div>
+        <div
+          id="suggestion-item"
+          data-type="contact-request"
+          class="suggestion__person"
+        >
           <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
+            src="../Imgs/users/monica.jpg"
+            alt=""
+            class="suggestion__person__img"
           />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
+          <div class="suggestion__person__details">
+            <div>
+              <div class="suggestion__person__name">Leo C</div>
+              <div class="suggestion__person__username">@leoConan</div>
+            </div>
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="${type}"
+              data-user-id="${_id}"
+              class="suggestion__btn-main"
             >
-            <span class="entity__message__time">12:30am</span>
+              Contact Request
+            </button>
           </div>
         </div>
-      </div>
-      <div class="entity">
-        <div>
+        <div
+          id="suggestion-item"
+          data-type="contact-request"
+          class="suggestion__person"
+        >
           <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
+            src="../Imgs/users/monica.jpg"
+            alt=""
+            class="suggestion__person__img"
           />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
+          <div class="suggestion__person__details">
+            <div>
+              <div class="suggestion__person__name">Leo C</div>
+              <div class="suggestion__person__username">@leoConan</div>
+            </div>
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="${type}"
+              data-user-id="${_id}"
+              class="suggestion__btn-main"
             >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
-          </div>
-        </div>
-      </div>
-      <div class="entity">
-        <div>
-          <img
-            src="../Imgs/users/leo.jpg"
-            alt="profile image of Leo Conan"
-            class="person__img entity__img"
-          />
-        </div>
-        <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-            <span class="entity__message__message"
-              >hello bro, any update commands...</span
-            >
-            <span class="entity__message__time">12:30am</span>
+              Contact Request
+            </button>
           </div>
         </div>
       </div>

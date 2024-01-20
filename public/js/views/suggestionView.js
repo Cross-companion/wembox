@@ -6,11 +6,12 @@ class suggestionView {
   createPerson(user, dataset = '', type = 'follow') {
     const { _id, name, profileImage, frontEndUsername } = user;
     return `
-        <div id="suggestion-item" class="suggestion__person">
+        <div id="suggestion-item-${_id}" ${dataset} class="suggestion__person">
             <img
                 src="images/${profileImage}"
                 alt=""
                 class="suggestion__person__img"
+                data-user-id="${_id}"
             />
             <div class="suggestion__person__details">
                 <div>
@@ -31,10 +32,10 @@ class suggestionView {
         </div>`;
   }
 
-  buildSuggestion(users = [], data) {
+  buildSuggestion(users = [], data, type) {
     let dataset = '';
     if (data) dataset = this.arrangeDatasets(data);
-    const html = users.map((user) => this.createPerson(user, dataset));
+    const html = users.map((user) => this.createPerson(user, dataset, type));
     return html.join('');
   }
 

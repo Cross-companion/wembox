@@ -16,8 +16,8 @@
 
   &__title {
     margin-bottom: 0.5rem;
-    font-weight: 900;
-    font-size: 1.8rem;
+    font-weight: 700;
+    font-size: 1.6rem;
     line-height: 0.8;
     color: black;
   }
@@ -25,9 +25,26 @@
   &__message {
     display: flex;
     justify-content: space-between;
+    font-size: 1.5rem;
 
     &__message {
-      //   line
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 30rem;
+
+      @media (min-width: 35em) {
+        max-width: 35rem;
+      }
+      @media (max-width: 30em) {
+        max-width: 25rem;
+      }
+      @media (max-width: 25em) {
+        max-width: 20rem;
+      }
+      @media (max-width: 22em) {
+        max-width: 17rem;
+      }
     }
 
     &__time {

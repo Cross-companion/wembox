@@ -231,13 +231,31 @@ main {
     flex-grow: 1; }
   .entity__title {
     margin-bottom: 0.5rem;
-    font-weight: 900;
-    font-size: 1.8rem;
+    font-weight: 700;
+    font-size: 1.6rem;
     line-height: 0.8;
     color: black; }
   .entity__message {
     display: flex;
-    justify-content: space-between; }
+    justify-content: space-between;
+    font-size: 1.5rem; }
+    .entity__message__message {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 30rem; }
+      @media (min-width: 35em) {
+        .entity__message__message {
+          max-width: 35rem; } }
+      @media (max-width: 30em) {
+        .entity__message__message {
+          max-width: 25rem; } }
+      @media (max-width: 25em) {
+        .entity__message__message {
+          max-width: 20rem; } }
+      @media (max-width: 22em) {
+        .entity__message__message {
+          max-width: 17rem; } }
 
 .footer__signup {
   color: var(--color-white);
@@ -300,14 +318,14 @@ svg.interest__topics__follow-icon {
       opacity: 0.5; }
 
 .person__img {
-  --person-img-width: 6rem;
+  --person-img-width: 5rem;
   width: var(--person-img-width);
   height: var(--person-img-width);
   border-radius: 50%;
   border: 2px solid transparent; }
   .person__img--me {
-    width: calc(var(--person-img-width) + -1.5rem) !important;
-    height: calc(var(--person-img-width) + -1.5rem) !important; }
+    width: calc(var(--person-img-width) + -1rem) !important;
+    height: calc(var(--person-img-width) + -1rem) !important; }
   .person__img__container {
     width: min-content; }
     .person__img__container--decorated {
@@ -367,6 +385,9 @@ svg.interest__topics__follow-icon {
   @media (min-width: 68em) {
     .suggestion__container {
       grid-template-columns: repeat(4, 1fr); } }
+  .suggestion__container[data-type='contact-request'] {
+    display: flex;
+    flex-direction: row; }
 
 .suggestion__person {
   display: flex;
@@ -375,6 +396,8 @@ svg.interest__topics__follow-icon {
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
   overflow: hidden;
   width: 23.5rem; }
+  .suggestion__person[data-type='contact-request'] {
+    min-width: 25rem; }
   @media (min-width: 35em) {
     .suggestion__person {
       width: 25.5rem; } }
@@ -384,6 +407,7 @@ svg.interest__topics__follow-icon {
     width: 9rem;
     height: 9rem;
     border-radius: 50%;
+    cursor: pointer;
     border: 2px solid transparent; }
     @media (max-width: 35em) {
       .suggestion__person__img {
@@ -410,6 +434,7 @@ svg.interest__topics__follow-icon {
 .suggestion__btn-main {
   border: none;
   border-radius: 5rem;
+  cursor: pointer;
   color: white;
   font-weight: 600;
   text-transform: capitalize;
@@ -431,8 +456,7 @@ svg.interest__topics__follow-icon {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.7rem 0.7rem;
-  height: 6.5rem; }
+  padding: 0.7rem 0.7rem 0 0.7rem; }
   .app__header > div {
     display: flex;
     align-items: center; }
@@ -443,28 +467,39 @@ svg.interest__topics__follow-icon {
     padding: 0rem 1rem;
     border-radius: 2rem;
     color: #ffffff;
-    border: 1px solid black;
     border: 1px solid #00ddeb;
     background: #00ddeb;
     background: -webkit-linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
     background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb); }
-    .app__header__notifications > span:not(:last-child) {
-      margin-right: 1rem; }
 
 .app__nav {
   display: flex;
   justify-content: center;
   box-shadow: white 0px -10px 12px, rgba(0, 0, 0, 0.1) 0px 0px 12px;
-  padding: 0rem 1rem 1rem 1rem; }
+  padding: 1rem 1rem 1rem 1rem; }
   .app__nav > span {
     text-transform: capitalize;
-    font-size: 2.3rem; }
+    font-size: 2rem; }
     .app__nav > span.active {
       color: #5b42f3; }
+  .app__nav.fixed {
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.521);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px); }
 
 .app__main {
-  padding-top: 2rem;
-  overflow: hidden; }
+  padding-top: 2rem; }
+
+.app__no-contacts {
+  margin-bottom: 5rem;
+  text-align: center;
+  padding: 1rem; }
+  .app__no-contacts__logo {
+    margin-bottom: 1rem;
+    text-align: center; }
 
 .interest__heading {
   text-transform: capitalize; }

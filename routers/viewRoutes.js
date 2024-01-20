@@ -11,7 +11,7 @@ router.get('/reset-password/:token', viewController.showResetPassword);
 router.use(authController.protect);
 router.use(chatController.deliverChats);
 
-router.get('/', viewController.showChats);
+router.get('/', viewController.showApp);
 router.get('/pick-interests', viewController.showInterestPage);
 // router.get('/me', authController.protect, viewController.getMe);
 

@@ -3,8 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.7rem 0.7rem;
-    height: 6.5rem;
+    padding: 0.7rem 0.7rem 0 0.7rem;
 
     & > div {
       display: flex;
@@ -18,7 +17,6 @@
       padding: 0rem 1rem;
       border-radius: 2rem;
       color: #ffffff;
-      border: 1px solid black;
       border: 1px solid #00ddeb;
       // background-color: rgba(0, 0, 0, 0.452);
       background: #00ddeb;
@@ -29,13 +27,6 @@
         #00ddeb
       );
       background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
-
-      & > span:not(:last-child) {
-        margin-right: 1rem;
-      }
-
-      & > span > svg {
-      }
     }
   }
 
@@ -43,20 +34,39 @@
     display: flex;
     justify-content: center;
     box-shadow: white 0px -10px 12px, rgba(0, 0, 0, 0.1) 0px 0px 12px;
-    padding: 0rem 1rem 1rem 1rem;
+    padding: 1rem 1rem 1rem 1rem;
 
     & > span {
       text-transform: capitalize;
-      font-size: 2.3rem;
+      font-size: 2rem;
 
       &.active {
         color: #5b42f3;
       }
     }
+
+    &.fixed {
+      position: sticky;
+      top: 0;
+      left: 0;
+      background: rgba(255, 255, 255, 0.521);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
   }
 
   &__main {
     padding-top: 2rem;
-    overflow: hidden;
+  }
+
+  &__no-contacts {
+    margin-bottom: 5rem;
+    text-align: center;
+    padding: 1rem;
+
+    &__logo {
+      margin-bottom: 1rem;
+      text-align: center;
+    }
   }
 }

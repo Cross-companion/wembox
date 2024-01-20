@@ -38,6 +38,11 @@
     @media (min-width: 68em) {
       grid-template-columns: repeat(4, 1fr);
     }
+
+    &[data-type='contact-request'] {
+      display: flex;
+      flex-direction: row;
+    }
   }
 
   &__person {
@@ -47,6 +52,10 @@
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     overflow: hidden;
     width: 23.5rem;
+
+    &[data-type='contact-request'] {
+      min-width: 25rem;
+    }
 
     @media (min-width: 35em) {
       width: 25.5rem;
@@ -60,6 +69,7 @@
       width: 9rem;
       height: 9rem;
       border-radius: 50%;
+      cursor: pointer;
       border: 2px solid transparent;
 
       @media (max-width: 35em) {
@@ -100,6 +110,7 @@
   &__btn-main {
     border: none;
     border-radius: 5rem;
+    cursor: pointer;
     color: white;
     font-weight: 600;
     text-transform: capitalize;

@@ -59,7 +59,9 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
     return next(new AppError('Page number cannot be less than 1', 401));
   if (!topics) return next(new AppError('No topic was specified.', 401));
   if (interestTypes.length < 1)
-    return next(new AppError('No Interest was found for the given topic(s)'));
+    return next(
+      new AppError('No Interest was found for the given topic(s)', 404)
+    );
   if (
     numberOfSuggestions > maxSuggestions ||
     numberOfSuggestions < minSuggestions

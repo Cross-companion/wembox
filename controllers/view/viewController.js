@@ -7,8 +7,8 @@ exports.showResetPassword = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.showChats = catchAsync(async (req, res, next) => {
-  return res.status(200).render('chats');
+exports.showApp = catchAsync(async (req, res, next) => {
+  return res.status(200).render('app/app');
 });
 
 exports.showInterestPage = catchAsync(async (req, res, next) => {
