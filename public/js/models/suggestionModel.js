@@ -1,9 +1,26 @@
 import Config from '../config.js';
 
-const { suggestionRoute, followRoute } = Config;
+const { suggestionRoute, followRoute, contactRoute, userRoute } = Config;
 
 class suggestionModel {
-  constructor() {}
+  constructor() {
+    this.getCurrentUser();
+  }
+
+  async getCurrentUser() {
+    const data = await fetch(`${userRoute}/me`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
 
   async suggestFollow(topic, page = 1) {
     const reqObject = {
@@ -48,9 +65,31 @@ class suggestionModel {
       .then((res) => res.json())
       .then((data) => data);
 
-    console.log(data);
+    if (data.status !== 'success') throw new Error(data.message);
+    return data;
+  }
+
+  async sendContactRequest(
+    receiverID,
+    { message = undefined, isContactRequest = true, requestBasis = {} } = {}
+  ) {
+    const reqObject = {
+      receiverID,
+      message,
+    };
+
+    const data = await fetch(`${contactRoute}`, {
+      method: isContactRequest ? 'POST' : 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reqObject),
+    })
+      .then((res) => res.json())
+      .then((data) => data);
 
     if (data.status !== 'success') throw new Error(data.message);
+
     return data;
   }
 

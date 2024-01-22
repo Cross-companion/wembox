@@ -4,22 +4,29 @@ import suggestionModel from '../models/suggestionModel.js';
 
 class AppController {
   constructor() {
-    this.contactSuggestions = document.querySelector('#suggestion-container');
+    this.contactSuggestions = suggestionView.defineSuggestionContainer();
+    this.currentUser = {};
     this.suggestContacts();
   }
 
   async suggestContacts() {
-    const { topics } = {
-      topics: ['software'],
-    };
+    const { currentUser } = await suggestionModel.getCurrentUser();
+    this.currentUser = currentUser;
+    const itemsDataClass = [{ name: 'type', value: 'contact-request' }];
+    const suggestionType = 'contact request';
+    const topics = suggestionView.abstractTopics(this.currentUser.contentType);
     const { users } = await suggestionModel.suggestContactRequest(topics);
-    const suggestions = suggestionView.buildSuggestion(
-      users,
-      [{ name: 'type', value: 'contact-request' }],
-      'contact request'
+    suggestionView.insertNewPage(users, itemsDataClass, suggestionType, {
+      clear: true,
+    });
+    suggestionView.setScrollEvent(
+      suggestionModel.suggestContactRequest,
+      topics,
+      {
+        data: itemsDataClass,
+        type: 'contact request',
+      }
     );
-    this.contactSuggestions.innerHTML = '';
-    this.contactSuggestions.insertAdjacentHTML('afterbegin', suggestions);
   }
 }
 

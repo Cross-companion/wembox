@@ -3,10 +3,15 @@ class suggestionView {
     this.page = 1;
   }
 
+  defineSuggestionContainer() {
+    this.suggestionContainer = document.querySelector('#suggestion-container');
+    return this.suggestionContainer;
+  }
+
   createPerson(user, dataset = '', type = 'follow') {
     const { _id, name, profileImage, frontEndUsername } = user;
     return `
-        <div id="suggestion-item-${_id}" ${dataset} class="suggestion__person">
+        <div id="suggestion-item-${_id}" data-class="suggestion-item" ${dataset} class="suggestion__person">
             <img
                 src="images/${profileImage}"
                 alt=""
@@ -32,7 +37,7 @@ class suggestionView {
         </div>`;
   }
 
-  buildSuggestion(users = [], data, type) {
+  buildSuggestion(users = [], data = [], type) {
     let dataset = '';
     if (data) dataset = this.arrangeDatasets(data);
     const html = users.map((user) => this.createPerson(user, dataset, type));
@@ -68,25 +73,25 @@ class suggestionView {
     </div>`;
   }
 
-  IntersectionObserver(topic, interest) {
-    this.suggestionContainer = document.querySelector('#suggestion-container');
+  IntersectionObserver(topic, data, type) {
+    this.defineSuggestionContainer();
     let options = {
       root: this.suggestionContainer,
       threshold: 0.7,
     };
     this.observer = new IntersectionObserver(
-      this.observerCallback.bind(this, topic, interest),
+      this.observerCallback.bind(this, topic, data, type),
       options
     );
   }
 
-  async observerCallback(topic, interest, entries, observer) {
+  async observerCallback(topic, data, type, entries, observer) {
     for (let i = 0; i < entries.length; i++) {
       const { isIntersecting } = entries[0];
       if (!isIntersecting) break;
       const { users } = await this.suggestionHandler(topic, (this.page += 1));
       if (!users.length) return this.closeObserver();
-      this.insertNewPage(users, topic, interest);
+      this.insertNewPage(users, data, type);
       this.setNewObserverTarget();
     }
   }
@@ -99,7 +104,9 @@ class suggestionView {
     if (this.scrollTarget) {
       this.closeObserver();
     }
-    this.suggestionNodeList = document.querySelectorAll('#suggestion-item');
+    this.suggestionNodeList = document.querySelectorAll(
+      '[data-class="suggestion-item"]'
+    );
     const lengthOfNodeList = this.suggestionNodeList.length;
     const targetInversePosition = 3;
     this.scrollTarget =
@@ -107,23 +114,36 @@ class suggestionView {
     this.scrollTarget && this.observer.observe(this.scrollTarget);
   }
 
-  setScrollEvent(suggestionHandler, { topic, interest } = {}) {
+  setScrollEvent(
+    suggestionHandler,
+    topic,
+    { data = [], type = 'follow' } = {}
+  ) {
     this.suggestionHandler = suggestionHandler;
-    this.IntersectionObserver(topic, interest);
+    this.IntersectionObserver(topic, data, type);
     this.setNewObserverTarget();
   }
 
-  insertNewPage(users, topic, interest) {
-    const pageHTML = this.buildSuggestion(users, [
-      { name: 'interest', value: `${interest}` },
-      { name: 'topic', value: `${topic}` },
-    ]);
+  insertNewPage(users, data, type, { clear = false } = {}) {
+    clear ? (this.suggestionContainer.innerHTML = '') : null;
+    const pageHTML = this.buildSuggestion(
+      users,
+      data.length ? data : undefined,
+      type
+    );
     this.suggestionContainer.insertAdjacentHTML('beforeend', pageHTML);
   }
 
   closeSuggestion() {
     this.page = 1;
     this.closeObserver();
+  }
+
+  abstractTopics(baseArray = []) {
+    const topics = baseArray.map((interest) => {
+      return interest.topic;
+    });
+    return topics;
   }
 }
 

@@ -50,6 +50,14 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 
 exports.getAllUsers = factory.findAll(User);
 
+exports.getCurrentUser = catchAsync(async (req, res, next) => {
+  const currentUser = req.user;
+  res.status(200).json({
+    status: 'success',
+    currentUser,
+  });
+});
+
 // IMG Handling with AWS or its like would be done before initial organic Advertising.
 exports.setInterests = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
