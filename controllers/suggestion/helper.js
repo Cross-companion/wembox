@@ -1,11 +1,19 @@
 const { DEFAULT_LOCATION } = require('../../config/userConfig');
 const { getCountryWeight } = require('../../utilities/helpers');
 
+function extractTopics(baseArray = []) {
+  const topics = baseArray.map((interest) => {
+    return interest.topic;
+  });
+  return topics;
+}
+
 exports.extractSuggestCreatorData = (req) => {
   const timeSpan = req.params.timeSpan || undefined;
   const userLocation = req.user.IPGeoLocation; // userRegion can be added later
   const numberOfSuggestions = +req.body.numberOfSuggestions || 10;
-  let topics = req.body.topics || undefined;
+  let topics =
+    req.body.topics || extractTopics(req.user.interests) || undefined;
   if (typeof topics === 'string') topics = [topics]; // Topics is a string.
 
   const interests = req.userInterests.filter((interest) =>

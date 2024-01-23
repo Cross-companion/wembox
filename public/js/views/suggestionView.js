@@ -48,17 +48,7 @@ class suggestionView {
     return data.map((data) => `data-${data.name}="${data.value}"`).join(' ');
   }
 
-  modalHTML(
-    topic,
-    interest,
-    users = [],
-    {
-      data = [
-        { name: 'interest', value: `${interest}` },
-        { name: 'topic', value: `${topic}` },
-      ],
-    } = {}
-  ) {
+  modalHTML(topic, interest, users = [], { data = [] } = {}) {
     return `
     <div class="suggestion__topic-heading">
       <span class="suggestion__topic-heading__text">

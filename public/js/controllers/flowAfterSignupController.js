@@ -77,16 +77,23 @@ class signUpFlowController {
 
       const { topic, interest } = target.previousElementSibling.dataset;
       const { users } = await suggestionModel.suggestFollow(topic);
-      modal.insertContent(suggestionView.modalHTML(topic, interest, users));
+      const itemsDataClass = [
+        { name: 'interest', value: interest },
+        { name: 'topic', value: topic },
+      ];
+      modal.insertContent(
+        suggestionView.modalHTML(topic, interest, users, {
+          data: itemsDataClass,
+        })
+      );
       appModal.addEventListener('click', (e) => {
         const { target } = e;
         const { value, type, userId } = target.dataset;
         if (value !== 'action-btn') return;
         this[type](target, userId);
       });
-      suggestionView.setScrollEvent(suggestionModel.suggestFollow, {
-        topic,
-        interest,
+      suggestionView.setScrollEvent(suggestionModel.suggestFollow, topic, {
+        data: itemsDataClass,
       });
     } catch (err) {
       alert(err.message);

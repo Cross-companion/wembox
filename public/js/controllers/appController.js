@@ -14,14 +14,14 @@ class AppController {
     this.currentUser = currentUser;
     const itemsDataClass = [{ name: 'type', value: 'contact-request' }];
     const suggestionType = 'contact request';
-    const topics = suggestionView.abstractTopics(this.currentUser.contentType);
-    const { users } = await suggestionModel.suggestContactRequest(topics);
+    console.log(this.currentUser);
+    const { users } = await suggestionModel.suggestContactRequest();
     suggestionView.insertNewPage(users, itemsDataClass, suggestionType, {
       clear: true,
     });
     suggestionView.setScrollEvent(
       suggestionModel.suggestContactRequest,
-      topics,
+      undefined,
       {
         data: itemsDataClass,
         type: 'contact request',

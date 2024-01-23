@@ -44,13 +44,14 @@ class suggestionModel {
     return data;
   }
 
-  async suggestContactRequest(topic, page = 1) {
+  async suggestContactRequest(topics, page = 1) {
     const reqObject = {
-      topics: topic,
       page,
       numberOfSuggestions: 10,
       // ,"countryWeight": 1
     };
+
+    if (topics) reqObject.topics = topics;
 
     // const data = await fetch(`/public/dev-data/suggestFollow.json`)
     //   .then((res) => res.json())

@@ -237,6 +237,7 @@ const userSchema = new mongoose.Schema(
         },
       ],
       default: [],
+      select: false,
     },
     IPGeoLocation: {
       type: {

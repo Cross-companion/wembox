@@ -30,7 +30,7 @@ const signToken = (claims) => {
 const createSendToken = (res, user, statusCode) => {
   const token = signToken({ id: user._id, username: user.username });
 
-  const cookieOptions = { 
+  const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 1000 * 60 * 60 * 24
     ),
@@ -263,7 +263,9 @@ exports.protect = async (req, res, next) => {
 
     const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
     const cachedUser = JSON.parse(await redis.get(userKey));
-    const user = cachedUser || (await User.findById(decoded.id));
+    const user =
+      cachedUser ||
+      (await User.findById(decoded.id).select('+interests +contentType'));
     if (!user) throw new Error('Sorry, this User no longer exits.');
 
     if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
