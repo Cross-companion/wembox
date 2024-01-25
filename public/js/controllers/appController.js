@@ -1,3 +1,4 @@
+import modal from './modal.js';
 import appView from '../views/appView.js';
 import suggestionView from '../views/suggestionView.js';
 import suggestionModel from '../models/suggestionModel.js';
@@ -10,11 +11,8 @@ class AppController {
   }
 
   async suggestContacts() {
-    const { currentUser } = await suggestionModel.getCurrentUser();
-    this.currentUser = currentUser;
     const itemsDataClass = [{ name: 'type', value: 'contact-request' }];
     const suggestionType = 'contact request';
-    console.log(this.currentUser);
     const { users } = await suggestionModel.suggestContactRequest();
     suggestionView.insertNewPage(users, itemsDataClass, suggestionType, {
       clear: true,
@@ -27,6 +25,22 @@ class AppController {
         type: 'contact request',
       }
     );
+    this.handleProfileVisits(suggestionView.suggestionContainer);
+  }
+
+  handleProfileVisits(suggestionContainer) {
+    suggestionContainer.addEventListener('click', async (e) => {
+      const { type, username } = e.target.dataset;
+      if (type !== 'profile-gateway') return;
+      await this.visitProfile(username);
+    });
+  }
+
+  async visitProfile(username) {
+    this.profileModal = modal.showModal();
+    const { user } = await suggestionModel.getUser(username);
+    modal.insertContent(suggestionView.createProfile(user));
+    console.log(user);
   }
 }
 

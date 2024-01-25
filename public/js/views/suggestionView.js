@@ -8,6 +8,38 @@ class suggestionView {
     return this.suggestionContainer;
   }
 
+  createProfile(user) {
+    const {
+      name,
+      username,
+      profileImage,
+      profileCoverImage,
+      numberOfFollowing,
+      numberOfFollowers,
+    } = user;
+    return `
+    <div id="app-modal-overlay" class="app-modal__overlay"></div>
+      <div
+        id="app-modal-content-container" class="profile app-modal__modal app-modal__modal--no-padding glassmorph profile">
+        <div class="profile__images">
+          <img class="profile__images__cover" src="/images/${profileCoverImage}" alt="">
+          <img class="profile__images__profile" src="/images/${profileImage}" alt="">
+        </div>
+        <div class="profile__details">
+          <div class="profile__details__identity">
+            <div class="profile__details__name">${name}</div>
+            <div class="profile__details__username"><span>@</span>${username}</div>
+          </div>
+          <div class="profile__details__note">Gratittude is a must ♥</div>
+          <div class="profile__details__following">
+            <div><span>${numberOfFollowers}</span> followers</div>
+            <div><span>${numberOfFollowing}</span> following</div>
+          </div>
+          <div><span></span><span></span></div>
+        </div>
+      </div>`;
+  }
+
   createPerson(user, dataset = '', type = 'follow') {
     const { _id, name, profileImage, frontEndUsername } = user;
     return `
@@ -16,6 +48,8 @@ class suggestionView {
                 src="images/${profileImage}"
                 alt=""
                 class="suggestion__person__img"
+                data-type="profile-gateway"
+                data-username="${frontEndUsername}"
                 data-user-id="${_id}"
             />
             <div class="suggestion__person__details">
@@ -135,6 +169,8 @@ class suggestionView {
     });
     return topics;
   }
+
+  visitProfile(id) {}
 }
 
 export default new suggestionView();

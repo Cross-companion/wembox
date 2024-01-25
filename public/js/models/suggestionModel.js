@@ -3,9 +3,7 @@ import Config from '../config.js';
 const { suggestionRoute, followRoute, contactRoute, userRoute } = Config;
 
 class suggestionModel {
-  constructor() {
-    this.getCurrentUser();
-  }
+  constructor() {}
 
   async getCurrentUser() {
     const data = await fetch(`${userRoute}/me`, {
@@ -13,6 +11,28 @@ class suggestionModel {
       headers: {
         'Content-Type': 'application/json',
       },
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
+  async getUser(username) {
+    if (!this.getUserController) this.setAbortController('getUser');
+    this.getUserController.abort();
+    // Create a new controller for the current request
+    this.getUserController = new AbortController();
+    this.signal = this.getUserController.signal;
+
+    const data = await fetch(`${userRoute}/${username}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: this.signal,
     })
       .then((res) => res.json())
       .then((data) => data);
@@ -113,6 +133,11 @@ class suggestionModel {
     if (data.status !== 'success') throw new Error(data.message);
 
     return data;
+  }
+
+  setAbortController(name) {
+    this[`${name}Controller`] = new AbortController();
+    this[`${name}Signal`] = this[`${name}Controller`].signal;
   }
 }
 

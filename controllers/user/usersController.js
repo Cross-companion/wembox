@@ -50,7 +50,20 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 
 exports.getAllUsers = factory.findAll(User);
 
-exports.getCurrentUser = catchAsync(async (req, res, next) => {
+exports.getUser = catchAsync(async (req, res, next) => {
+  const username = req.params.username.toLowerCase();
+  const user = await User.findOne({ username });
+  // .select(
+  //   'name frontEndUsername accountType numberOfFollowers numberOfFollowing profileImage profileCoverImage'
+  // );
+
+  res.status(200).json({
+    status: 'success',
+    user,
+  });
+});
+
+exports.getMe = catchAsync(async (req, res, next) => {
   const currentUser = req.user;
   res.status(200).json({
     status: 'success',

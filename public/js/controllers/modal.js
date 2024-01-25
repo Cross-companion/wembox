@@ -18,7 +18,12 @@ class Modal {
 
   showModal(
     modifierClass,
-    onCloseEvents = [{ event: console.log, args: [''] }]
+    onCloseEvents = [
+      {
+        event: () => {},
+        args: [''],
+      },
+    ]
   ) {
     if (document.querySelector('#app-modal')) return;
     const modalHTML = this.modalTemplate(modifierClass);

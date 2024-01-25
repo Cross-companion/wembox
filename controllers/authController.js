@@ -43,6 +43,7 @@ const createSendToken = (res, user, statusCode) => {
 
   user.password = undefined;
 
+  console.log(`createSendToken`);
   res.status(statusCode).json({
     status: 'success',
     user,
@@ -226,7 +227,8 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(res, user, 200);
 });
 
-exports.logout = (req, res) => {
+exports.logout = (req, res, next) => {
+  console.log('new logout //');
   res.cookie('jwt', '', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
