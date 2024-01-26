@@ -381,6 +381,18 @@ svg.interest__topics__follow-icon {
       height: var(--profile-img-width);
       border-radius: 50%;
       border: 5px solid white; }
+  .profile__social-actions {
+    position: absolute;
+    right: 1rem;
+    bottom: -3rem; }
+    .profile__social-actions__btn {
+      background-color: #050505 !important;
+      background: #050505 !important; }
+      .profile__social-actions__btn--active {
+        background-color: white !important;
+        background: white !important;
+        border: 1px solid black !important;
+        color: black !important; }
   .profile__details {
     margin: 0 1rem 1rem 1rem;
     font-weight: 700; }

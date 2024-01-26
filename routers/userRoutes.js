@@ -22,8 +22,14 @@ router.use(chatController.deliverChats);
 router.route('/signup').patch(usersController.setInterests);
 
 router.route('/:username').get(usersController.getUser);
-router.route('/me').get(usersController.getMe);
-// .patch(usersController.updateMe);
+router
+  .route('/me')
+  .get(usersController.getMe)
+  .patch(
+    usersController.uploadProfileImages,
+    usersController.resizeUserPhoto,
+    usersController.updateMe
+  );
 
 router
   .route('/')

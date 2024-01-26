@@ -37,7 +37,7 @@ class AppController {
   }
 
   async visitProfile(username) {
-    this.profileModal = modal.showModal();
+    this.profileModal = modal.showModal('app-modal__modal--no-padding profile');
     const { user } = await suggestionModel.getUser(username);
     modal.insertContent(suggestionView.createProfile(user));
     console.log(user);

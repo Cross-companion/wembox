@@ -8,8 +8,8 @@ html(lang='en')
     title Wembox Inc
   body#app.app
     header#app-header.app__header
-      .person__img__container.person__img__container--decorated
-        img.person__img.person__img--me(src='../Imgs/users/upwork-profile_edited.jpg', alt='me')
+      .person__img__container.person__img__container
+        img.person__img.person__img--me(src=`/images/${user.profileImage}`, alt='me')
       div
         span.app__header__notifications
           svg.app__header__notifications-icon(xmlns='http://www.w3.org/2000/svg', height='24', viewBox='0 -960 960 960', width='24', data-type='person-add')

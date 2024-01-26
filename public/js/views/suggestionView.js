@@ -8,27 +8,66 @@ class suggestionView {
     return this.suggestionContainer;
   }
 
-  createProfile(user) {
+  modalHTML(topic, interest, users = [], { data = [] } = {}) {
+    return `
+    <div class="suggestion__topic-heading">
+      <span class="suggestion__topic-heading__text">
+        ${topic}
+      </span>
+    </div>
+    <div id="suggestion-container" class="suggestion__container">
+        ${
+          this.buildSuggestion(users, data) ||
+          `<span style="grid-column: span 2; grid-row: span 2">No account to follow under ${topic}.<br/>You are the first 😃🎉</span>`
+        }      
+    </div>`;
+  }
+
+  createProfile(user, dataset = '') {
     const {
+      _id,
       name,
-      username,
+      frontEndUsername,
       profileImage,
       profileCoverImage,
       numberOfFollowing,
       numberOfFollowers,
     } = user;
     return `
-    <div id="app-modal-overlay" class="app-modal__overlay"></div>
-      <div
-        id="app-modal-content-container" class="profile app-modal__modal app-modal__modal--no-padding glassmorph profile">
         <div class="profile__images">
-          <img class="profile__images__cover" src="/images/${profileCoverImage}" alt="">
+          <img class="profile__images__cover" src="${
+            profileCoverImage
+              ? `/images/${profileCoverImage}`
+              : '/Imgs/users/mars-spacex-starship-wallpapers.jpg'
+          }" alt="">
           <img class="profile__images__profile" src="/images/${profileImage}" alt="">
+          <div class="profile__social-actions">
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="contact-request"
+              data-user-id="${_id}"
+              class="suggestion__btn-main profile__social-actions__btn"
+            >
+              Contact Request
+            </button>
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="follow"
+              data-user-id="${_id}"
+              class="suggestion__btn-main profile__social-actions__btn"
+            >
+              follow
+            </button>
+          </div>
         </div>
         <div class="profile__details">
           <div class="profile__details__identity">
             <div class="profile__details__name">${name}</div>
-            <div class="profile__details__username"><span>@</span>${username}</div>
+            <div class="profile__details__username"><span>@</span>${frontEndUsername}</div>
           </div>
           <div class="profile__details__note">Gratittude is a must ♥</div>
           <div class="profile__details__following">
@@ -36,8 +75,7 @@ class suggestionView {
             <div><span>${numberOfFollowing}</span> following</div>
           </div>
           <div><span></span><span></span></div>
-        </div>
-      </div>`;
+        </div>`;
   }
 
   createPerson(user, dataset = '', type = 'follow') {
@@ -80,21 +118,6 @@ class suggestionView {
 
   arrangeDatasets(data) {
     return data.map((data) => `data-${data.name}="${data.value}"`).join(' ');
-  }
-
-  modalHTML(topic, interest, users = [], { data = [] } = {}) {
-    return `
-    <div class="suggestion__topic-heading">
-      <span class="suggestion__topic-heading__text">
-        ${topic}
-      </span>
-    </div>
-    <div id="suggestion-container" class="suggestion__container">
-        ${
-          this.buildSuggestion(users, data) ||
-          `<span style="grid-column: span 2; grid-row: span 2">No account to follow under ${topic}.<br/>You are the first 😃🎉</span>`
-        }      
-    </div>`;
   }
 
   IntersectionObserver(topic, data, type) {

@@ -8,7 +8,7 @@ exports.showResetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.showApp = catchAsync(async (req, res, next) => {
-  return res.status(200).render('app/app');
+  return res.status(200).render('app/app', { user: req.user });
 });
 
 exports.showInterestPage = catchAsync(async (req, res, next) => {

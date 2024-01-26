@@ -35,7 +35,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
     image: profileCoverImage[0],
     uniqueID: userID,
     prefix: PROFILE_COVER_IMAGE_PREFIX,
-    resize: [2000, 1333],
+    resize: [2000, 650],
   });
 
   await Promise.all([
@@ -52,10 +52,9 @@ exports.getAllUsers = factory.findAll(User);
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const username = req.params.username.toLowerCase();
-  const user = await User.findOne({ username });
-  // .select(
-  //   'name frontEndUsername accountType numberOfFollowers numberOfFollowing profileImage profileCoverImage'
-  // );
+  const user = await User.findOne({ username }).select(
+    'name frontEndUsername accountType numberOfFollowers numberOfFollowing profileImage profileCoverImage'
+  );
 
   res.status(200).json({
     status: 'success',
@@ -68,6 +67,38 @@ exports.getMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     currentUser,
+  });
+});
+
+exports.updateMe = catchAsync(async (req, res, next) => {
+  const userID = req.user._id;
+  let { profileImage, profileCoverImage, username, name, note } = req.body;
+  console.log(profileImage, profileCoverImage);
+
+  if (!(profileImage || profileCoverImage || username || name || note))
+    return next(new AppError('No data to update was specified.', 401));
+
+  const updateArray = [
+    { name: 'profileImage', value: profileImage },
+    { name: 'profileCoverImage', value: profileCoverImage },
+    { name: 'username', value: username },
+    { name: 'name', value: name },
+    { name: 'note', value: note },
+  ];
+  const updates = updateArray.reduce((acc, update) => {
+    const { name, value } = update;
+    if (value) acc[name] = value;
+    return acc;
+  }, {});
+
+  const newUser = await User.findByIdAndUpdate({ _id: userID }, updates, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    user: newUser,
   });
 });
 
