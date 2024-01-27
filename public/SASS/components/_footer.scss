@@ -1,20 +1,17 @@
 footer {
   position: absolute;
   bottom: 0;
-  max-width: 100%;
+  width: 100%;
+}
 
-  .footer {
-    &__signup {
-      // position: fixed;
-      // left: 0;
-      // bottom: 0;
-      color: var(--color-white);
-      background-color: var(--color-dark);
-      padding: 2rem;
-      text-align: center;
-    }
+.footer {
+  &__signup {
+    color: var(--color-white);
+    background-color: var(--color-dark);
+    padding: 2rem;
+    text-align: center;
+  }
 
-    &__chat {
-    }
+  &__chat {
   }
 }

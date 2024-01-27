@@ -16,6 +16,8 @@
 
   --person-img-width: 5rem;
 
+  --footer-height-signup: 6rem;
+
   --z-index-lowest: -10;
   --z-index-heighest: 10;
 
@@ -88,6 +90,7 @@
 
 html {
   //   Aligning the rem size to 10px makes for a more easy calculation and implementation thereofs (font-size of 1rem = 10px)
+  position: relative;
   min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary);
@@ -110,7 +113,8 @@ main {
   &.main {
     &__signup {
       font-family: 'Marcellus';
-      padding: 1.2rem 2.5rem 0rem 2.5rem;
+      padding: 1.2rem 2.5rem 0 2.5rem;
+      margin-bottom: calc(var(--footer-height-signup) + 1.5rem);
       @media (min-width: 53.15em) {
         flex-direction: row;
       }

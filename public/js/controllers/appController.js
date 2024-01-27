@@ -33,7 +33,9 @@ class AppController {
   async suggestContacts() {
     const itemsDataClass = [{ name: 'type', value: 'contact-request' }];
     const suggestionType = 'contact request';
-    const { users } = await suggestionModel.suggestContactRequest();
+    const data = await suggestionModel.suggestContactRequest();
+    console.log(data);
+    const { users } = data;
     suggestionView.insertNewPage(users, itemsDataClass, suggestionType, {
       clear: true,
     });

@@ -10,6 +10,7 @@
   --color-tertiary-light: rgba(255, 255, 255, 0.5);
   --theme-blue: #5b42f3;
   --person-img-width: 5rem;
+  --footer-height-signup: 6rem;
   --z-index-lowest: -10;
   --z-index-heighest: 10;
   --default-font: 'lato', system-ui, -apple-system, BlinkMacSystemFont,
@@ -38,6 +39,7 @@
   box-sizing: border-box; }
 
 html {
+  position: relative;
   min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary); }
@@ -56,7 +58,8 @@ main {
   padding: 0.5rem 1rem; }
   main.main__signup {
     font-family: 'Marcellus';
-    padding: 1.2rem 2.5rem 0rem 2.5rem; }
+    padding: 1.2rem 2.5rem 0 2.5rem;
+    margin-bottom: calc(var(--footer-height-signup) + 1.5rem); }
     @media (min-width: 53.15em) {
       main.main__signup {
         flex-direction: row; } }
@@ -148,6 +151,7 @@ main {
       background-color: transparent;
       font-size: 2rem;
       color: inherit;
+      width: 5.3rem;
       /* Hide the up and down arrows of the number input */ }
       .app-form .otp-container input[data-input-type='OTP']:not(:last-child) {
         margin-right: 1rem; }
@@ -167,17 +171,21 @@ main {
         border-color: var(--gradient-color-2); }
       @media (max-width: 28em) {
         .app-form .otp-container input[data-input-type='OTP'] {
-          font-size: 1.6rem; } }
+          font-size: 1.6rem;
+          width: 4.3rem; } }
       @media (max-width: 25em) {
         .app-form .otp-container input[data-input-type='OTP'] {
-          font-size: 1.4rem; } }
+          font-size: 1.4rem;
+          width: 3.7rem; } }
       @media (max-width: 21em) {
         .app-form .otp-container input[data-input-type='OTP'] {
-          font-size: 1.2rem; } }
+          font-size: 1.2rem;
+          width: 3.2rem; } }
       @media (max-width: 18.5em) {
         .app-form .otp-container input[data-input-type='OTP'] {
           font-size: 1rem;
-          height: 50%; } }
+          height: 50%;
+          width: 2.6rem; } }
     @media (max-width: 18.5em) {
       .app-form .otp-container {
         margin: 0; } }
@@ -314,12 +322,13 @@ main {
 footer {
   position: absolute;
   bottom: 0;
-  max-width: 100%; }
-  footer .footer__signup {
-    color: var(--color-white);
-    background-color: var(--color-dark);
-    padding: 2rem;
-    text-align: center; }
+  width: 100%; }
+
+.footer__signup {
+  color: var(--color-white);
+  background-color: var(--color-dark);
+  padding: 2rem;
+  text-align: center; }
 
 svg.app__header__notifications-icon {
   fill: #ffffff;
@@ -467,8 +476,8 @@ svg.interest__topics__follow-icon {
 
 .suggestion__topic-heading {
   width: 100%;
-  background: #00ddeb;
   background: -webkit-linear-gradient(144deg, #af40ff, #5b42f3 70%, #00ddeb);
+  background: #00ddeb;
   background-image: linear-gradient(144deg, #af40ff, #5b42f3 70%, #00ddeb);
   padding: 0.5rem 1rem; }
   .suggestion__topic-heading__text {
