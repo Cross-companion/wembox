@@ -25,7 +25,8 @@
     }
   }
 
-  & > input:not([type='submit']):not([data-input-type='OTP']) {
+  & > input:not([type='submit']):not([data-input-type='OTP']),
+  & > textarea {
     height: 6rem;
     border-radius: 10px;
     padding: 0.8rem 0 0 0.6rem;
@@ -113,6 +114,7 @@
       }
       &[type='number'] {
         -moz-appearance: textfield; /* Firefox */
+        appearance: textfield; /* Firefox */
       }
 
       &:focus {

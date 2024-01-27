@@ -1,6 +1,5 @@
 .person {
   &__img {
-    --person-img-width: 5rem;
     width: var(--person-img-width);
     height: var(--person-img-width);
     border-radius: 50%;

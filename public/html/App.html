@@ -8,7 +8,28 @@
     <title>Wembox Inc</title>
   </head>
   <body id="app" class="app">
-    <section id="app-modal" class="app-modal">
+    <!-- <section id="app-modal" class="app-modal">
+      <div id="app-modal-overlay" class="app-modal__overlay"></div>
+      <div
+        id="app-modal-content-container" class="app-modal__modal glassmorph">
+        <form class="app-form contact-request__modal">
+        <div class="contact-request__details">
+          <img src="../Imgs/users/leo.jpg" class="contact-request__img person__img person__img--me" alt="">
+          <div class="contact-request__identities">
+            <div>
+              <span class="suggestion__person__name">Nwodoh Daniel</span>
+              <span class="suggestion__person__username">@nwodohDaniel</span>
+            </div>
+            <div class="contact-request__type-tag">contact request</div>
+          </div>
+        </div>
+        <textarea class="contact-request__textarea" placeholder="Optional message..."></textarea>
+        <div class="contact-request__characters-note">max 250 characters</div>
+        <input type="submit" value="Send">
+        </form>
+      </div>
+    </section> -->
+    <!-- <section id="app-modal" class="app-modal">
       <div id="app-modal-overlay" class="app-modal__overlay"></div>
       <div
         id="app-modal-content-container" class="profile app-modal__modal app-modal__modal--no-padding glassmorph profile">
@@ -51,7 +72,7 @@
           <div><span></span><span></span></div>
         </div>
       </div>
-    </section>
+    </section> -->
     <header class="app__header" id="app-header">
       <div class="person__img__container person__img__container--decorated">
         <img
@@ -119,90 +140,89 @@
           </div>
         </div>
       </div> -->
-
-      <div id="suggestion-container" data-type="contact-request" class="suggestion__container glassmorph">
-        <div
-          id="suggestion-item"
-          data-type="contact-request"
-          class="suggestion__person"
-        >
-          <img
-            src="../Imgs/users/monica.jpg"
-            alt=""
-            class="suggestion__person__img"
-          />
-          <div class="suggestion__person__details">
-            <div>
-              <div class="suggestion__person__name">Leo C</div>
-              <div class="suggestion__person__username">@leoConan</div>
-            </div>
-            <button
-              type="button"
-              data-value="action-btn"
-              ${dataset}
-              data-type="${type}"
-              data-user-id="${_id}"
-              class="suggestion__btn-main"
-            >
-              Contact Request
-            </button>
+    </main>
+    <footer id="suggestion-container" data-type="contact-request" class="footer__chat suggestion__container glassmorph">
+      <div
+        id="suggestion-item"
+        data-type="contact-request"
+        class="suggestion__person"
+      >
+        <img
+          src="../Imgs/users/monica.jpg"
+          alt=""
+          class="suggestion__person__img"
+        />
+        <div class="suggestion__person__details">
+          <div>
+            <div class="suggestion__person__name">Leo C</div>
+            <div class="suggestion__person__username">@leoConan</div>
           </div>
-        </div>
-        <div
-          id="suggestion-item"
-          data-type="contact-request"
-          class="suggestion__person"
-        >
-          <img
-            src="../Imgs/users/monica.jpg"
-            alt=""
-            class="suggestion__person__img"
-          />
-          <div class="suggestion__person__details">
-            <div>
-              <div class="suggestion__person__name">Leo C</div>
-              <div class="suggestion__person__username">@leoConan</div>
-            </div>
-            <button
-              type="button"
-              data-value="action-btn"
-              ${dataset}
-              data-type="${type}"
-              data-user-id="${_id}"
-              class="suggestion__btn-main"
-            >
-              Contact Request
-            </button>
-          </div>
-        </div>
-        <div
-          id="suggestion-item"
-          data-type="contact-request"
-          class="suggestion__person"
-        >
-          <img
-            src="../Imgs/users/monica.jpg"
-            alt=""
-            class="suggestion__person__img"
-          />
-          <div class="suggestion__person__details">
-            <div>
-              <div class="suggestion__person__name">Leo C</div>
-              <div class="suggestion__person__username">@leoConan</div>
-            </div>
-            <button
-              type="button"
-              data-value="action-btn"
-              ${dataset}
-              data-type="${type}"
-              data-user-id="${_id}"
-              class="suggestion__btn-main"
-            >
-              Contact Request
-            </button>
-          </div>
+          <button
+            type="button"
+            data-value="action-btn"
+            ${dataset}
+            data-type="${type}"
+            data-user-id="${_id}"
+            class="suggestion__btn-main"
+          >
+            Contact Request
+          </button>
         </div>
       </div>
-    </main>
+      <div
+        id="suggestion-item"
+        data-type="contact-request"
+        class="suggestion__person"
+      >
+        <img
+          src="../Imgs/users/monica.jpg"
+          alt=""
+          class="suggestion__person__img"
+        />
+        <div class="suggestion__person__details">
+          <div>
+            <div class="suggestion__person__name">Leo C</div>
+            <div class="suggestion__person__username">@leoConan</div>
+          </div>
+          <button
+            type="button"
+            data-value="action-btn"
+            ${dataset}
+            data-type="${type}"
+            data-user-id="${_id}"
+            class="suggestion__btn-main"
+          >
+            Contact Request
+          </button>
+        </div>
+      </div>
+      <div
+        id="suggestion-item"
+        data-type="contact-request"
+        class="suggestion__person"
+      >
+        <img
+          src="../Imgs/users/monica.jpg"
+          alt=""
+          class="suggestion__person__img"
+        />
+        <div class="suggestion__person__details">
+          <div>
+            <div class="suggestion__person__name">Leo C</div>
+            <div class="suggestion__person__username">@leoConan</div>
+          </div>
+          <button
+            type="button"
+            data-value="action-btn"
+            ${dataset}
+            data-type="${type}"
+            data-user-id="${_id}"
+            class="suggestion__btn-main"
+          >
+            Contact Request
+          </button>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

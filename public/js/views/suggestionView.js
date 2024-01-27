@@ -27,7 +27,7 @@ class suggestionView {
     const {
       _id,
       name,
-      frontEndUsername,
+      frontEndUsername: username,
       profileImage,
       profileCoverImage,
       numberOfFollowing,
@@ -67,7 +67,7 @@ class suggestionView {
         <div class="profile__details">
           <div class="profile__details__identity">
             <div class="profile__details__name">${name}</div>
-            <div class="profile__details__username"><span>@</span>${frontEndUsername}</div>
+            <div class="profile__details__username"><span>@</span>${username}</div>
           </div>
           <div class="profile__details__note">Gratittude is a must ♥</div>
           <div class="profile__details__following">
@@ -79,7 +79,7 @@ class suggestionView {
   }
 
   createPerson(user, dataset = '', type = 'follow') {
-    const { _id, name, profileImage, frontEndUsername } = user;
+    const { _id, name, profileImage, frontEndUsername: username } = user;
     return `
         <div id="suggestion-item-${_id}" data-class="suggestion-item" ${dataset} class="suggestion__person">
             <img
@@ -87,19 +87,22 @@ class suggestionView {
                 alt=""
                 class="suggestion__person__img"
                 data-type="profile-gateway"
-                data-username="${frontEndUsername}"
+                data-username="${username}"
                 data-user-id="${_id}"
             />
             <div class="suggestion__person__details">
                 <div>
                 <div class="suggestion__person__name">${name}</div>
-                <div class="suggestion__person__username">@${frontEndUsername}</div>
+                <div class="suggestion__person__username">@${username}</div>
                 </div>
                 <button
                 type="button"
                 data-value="action-btn"
                 ${dataset}
                 data-type="${type}"
+                data-profile-image="${profileImage}"
+                data-name="${name}"
+                data-username="${username}"
                 data-user-id="${_id}"
                 class="suggestion__btn-main"
                 >
@@ -107,6 +110,25 @@ class suggestionView {
                 </button>
             </div>
         </div>`;
+  }
+
+  contactRequestModalHTML(name, username, profileImage, userID) {
+    return `
+    <form class="app-form contact-request__modal" data-user-id="${userID}">
+      <div class="contact-request__details">
+        <img src="/images/${profileImage}" class="contact-request__img person__img person__img--me" alt="profile image of ${name}">
+        <div class="contact-request__identities">
+          <div>
+            <span class="suggestion__person__name">${name}</span>
+            <span class="suggestion__person__username">@<span>${username}</span></span>
+          </div>
+          <div class="contact-request__type-tag">contact request</div>
+        </div>
+      </div>
+      <textarea class="contact-request__textarea" placeholder="Optional message..."></textarea>
+      <div class="contact-request__characters-note">max 250 characters</div>
+      <input type="submit" value="Send">
+    </form>`;
   }
 
   buildSuggestion(users = [], data = [], type) {

@@ -12,6 +12,10 @@
   --color-tertiary-custom-light: rgba(255, 255, 255, 0.25);
   --color-tertiary-light: rgba(255, 255, 255, 0.5);
 
+  --theme-blue: #5b42f3;
+
+  --person-img-width: 5rem;
+
   --z-index-lowest: -10;
   --z-index-heighest: 10;
 
@@ -84,6 +88,7 @@
 
 html {
   //   Aligning the rem size to 10px makes for a more easy calculation and implementation thereofs (font-size of 1rem = 10px)
+  min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary);
 }

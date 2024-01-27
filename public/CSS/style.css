@@ -8,6 +8,8 @@
   --color-tertiary-medium-light: rgba(255, 255, 255, 0.09);
   --color-tertiary-custom-light: rgba(255, 255, 255, 0.25);
   --color-tertiary-light: rgba(255, 255, 255, 0.5);
+  --theme-blue: #5b42f3;
+  --person-img-width: 5rem;
   --z-index-lowest: -10;
   --z-index-heighest: 10;
   --default-font: 'lato', system-ui, -apple-system, BlinkMacSystemFont,
@@ -36,6 +38,7 @@
   box-sizing: border-box; }
 
 html {
+  min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary); }
 
@@ -83,23 +86,30 @@ main {
       color: transparent; }
     .app-form > input:not([type='submit'])::-webkit-input-placeholder {
       color: transparent; }
-  .app-form > input:not([type='submit']):not([data-input-type='OTP']) {
+  .app-form > input:not([type='submit']):not([data-input-type='OTP']),
+  .app-form > textarea {
     height: 6rem;
     border-radius: 10px;
     padding: 0.8rem 0 0 0.6rem;
     border: 1px solid gray;
     font-family: inherit; }
-    .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus {
+    .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus,
+    .app-form > textarea:focus {
       outline: none;
       border: 1px solid var(--gradient-color-6); }
-      .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus + label {
+      .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus + label,
+      .app-form > textarea:focus + label {
         color: var(--gradient-color-6); }
-      .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus:invalid {
+      .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus:invalid,
+      .app-form > textarea:focus:invalid {
         border: 1px solid var(--gradient-color-2); }
-        .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus:invalid + label {
+        .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus:invalid + label,
+        .app-form > textarea:focus:invalid + label {
           color: var(--gradient-color-2); }
     .app-form > input:not([type='submit']):not([data-input-type='OTP']):not(:placeholder-shown) + label,
-    .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus + label {
+    .app-form > input:not([type='submit']):not([data-input-type='OTP']):focus + label,
+    .app-form > textarea:not(:placeholder-shown) + label,
+    .app-form > textarea:focus + label {
       font-size: 1.2rem;
       bottom: 6.3rem;
       margin-bottom: 0.5rem; }
@@ -146,6 +156,8 @@ main {
         margin: 0; }
       .app-form .otp-container input[data-input-type='OTP'][type='number'] {
         -moz-appearance: textfield;
+        /* Firefox */
+        appearance: textfield;
         /* Firefox */ }
       .app-form .otp-container input[data-input-type='OTP']:focus {
         outline: none; }
@@ -222,6 +234,46 @@ main {
   .btn__signup[data-state='active'] {
     text-decoration: underline; }
 
+.contact-request__modal {
+  display: flex;
+  flex-direction: column;
+  min-width: 28rem; }
+  .contact-request__modal > textarea.contact-request__textarea {
+    height: 9rem; }
+  .contact-request__modal > input[type='submit'] {
+    display: block;
+    width: 100%;
+    color: white;
+    margin-top: 0.7rem;
+    letter-spacing: 0.2rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #462af1;
+    cursor: pointer;
+    transition: background-color 0.2s; }
+    .contact-request__modal > input[type='submit']:hover {
+      background-color: #3112ef; }
+
+.contact-request__details {
+  display: flex;
+  margin-bottom: 1rem; }
+
+.contact-request__img {
+  display: inline;
+  margin-right: 0.5rem; }
+
+.contact-request__identities {
+  padding-top: 0.2rem; }
+
+.contact-request__type-tag {
+  font-size: 1.2rem;
+  line-height: 1; }
+
+.contact-request__characters-note {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+  line-height: 1; }
+
 .entity {
   display: flex;
   align-items: center; }
@@ -259,11 +311,15 @@ main {
         .entity__message__message {
           max-width: 17rem; } }
 
-.footer__signup {
-  color: var(--color-white);
-  background-color: var(--color-dark);
-  padding: 2rem;
-  text-align: center; }
+footer {
+  position: absolute;
+  bottom: 0;
+  max-width: 100%; }
+  footer .footer__signup {
+    color: var(--color-white);
+    background-color: var(--color-dark);
+    padding: 2rem;
+    text-align: center; }
 
 svg.app__header__notifications-icon {
   fill: #ffffff;
@@ -320,7 +376,6 @@ svg.interest__topics__follow-icon {
       opacity: 0.5; }
 
 .person__img {
-  --person-img-width: 5rem;
   width: var(--person-img-width);
   height: var(--person-img-width);
   border-radius: 50%;
@@ -427,12 +482,15 @@ svg.interest__topics__follow-icon {
         max-width: 30rem; } }
 
 .suggestion__container {
+  --container-margin: 1rem;
+  margin: var(--container-margin) var(--container-margin) 2rem;
   padding: 0.5rem 0.7rem;
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   grid-gap: 1rem;
   max-height: 52rem;
-  overflow: auto; }
+  overflow: auto;
+  width: calc(100% - (var(--container-margin) * 2)); }
   @media (min-width: 31.41em) {
     .suggestion__container {
       grid-template-columns: repeat(2, 1fr);

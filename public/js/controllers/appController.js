@@ -8,6 +8,26 @@ class AppController {
     this.contactSuggestions = suggestionView.defineSuggestionContainer();
     this.currentUser = {};
     this.suggestContacts();
+    this.contactSuggestions.addEventListener(
+      'click',
+      this.openContactRequestModal
+    );
+  }
+
+  openContactRequestModal(e) {
+    const { value, type, name, username, profileImage, userID } =
+      e.target.dataset;
+    if (value !== 'action-btn') return;
+    modal
+      .showModal()
+      .insertContent(
+        suggestionView.contactRequestModalHTML(
+          name,
+          username,
+          profileImage,
+          userID
+        )
+      );
   }
 
   async suggestContacts() {
@@ -37,7 +57,9 @@ class AppController {
   }
 
   async visitProfile(username) {
-    this.profileModal = modal.showModal('app-modal__modal--no-padding profile');
+    this.profileModal = modal.showModal(
+      'app-modal__modal--no-padding profile'
+    ).appModal;
     const { user } = await suggestionModel.getUser(username);
     modal.insertContent(suggestionView.createProfile(user));
     console.log(user);

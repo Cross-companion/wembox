@@ -20,12 +20,15 @@
   }
 
   &__container {
+    --container-margin: 1rem;
+    margin: var(--container-margin) var(--container-margin) 2rem;
     padding: 0.5rem 0.7rem;
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     grid-gap: 1rem;
     max-height: 52rem;
     overflow: auto;
+    width: calc(100% - (var(--container-margin) * 2));
 
     @media (min-width: 31.41em) {
       grid-template-columns: repeat(2, 1fr);

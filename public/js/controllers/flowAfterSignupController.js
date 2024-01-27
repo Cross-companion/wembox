@@ -67,12 +67,15 @@ class signUpFlowController {
 
   async suggestFollows(target) {
     try {
-      const appModal = modal.showModal('app-modal__modal--topic-suggestion', [
-        {
-          event: suggestionView.closeSuggestion.bind(suggestionView),
-          args: [],
-        },
-      ]);
+      const { appModal } = modal.showModal(
+        'app-modal__modal--topic-suggestion',
+        [
+          {
+            event: suggestionView.closeSuggestion.bind(suggestionView),
+            args: [],
+          },
+        ]
+      );
       if (!appModal) return;
 
       const { topic, interest } = target.previousElementSibling.dataset;
