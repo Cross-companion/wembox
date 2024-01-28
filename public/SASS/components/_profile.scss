@@ -42,8 +42,9 @@
     &__btn {
       background-color: rgb(5, 5, 5) !important;
       background: rgb(5, 5, 5) !important;
+      transition: background-color 0.2s, border 0.2s, color 0.2s;
 
-      &--active {
+      &.active {
         background-color: white !important;
         background: white !important;
         border: 1px solid black !important;

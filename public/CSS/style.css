@@ -452,7 +452,7 @@ svg.interest__topics__follow-icon {
     .profile__social-actions__btn {
       background-color: #050505 !important;
       background: #050505 !important; }
-      .profile__social-actions__btn--active {
+      .profile__social-actions__btn.active {
         background-color: white !important;
         background: white !important;
         border: 1px solid black !important;

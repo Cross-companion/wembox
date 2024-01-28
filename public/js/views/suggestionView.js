@@ -41,12 +41,15 @@ class suggestionView {
               : '/Imgs/users/mars-spacex-starship-wallpapers.jpg'
           }" alt="">
           <img class="profile__images__profile" src="/images/${profileImage}" alt="">
-          <div class="profile__social-actions">
+          <div id="social-action-btns" class="profile__social-actions">
             <button
               type="button"
-              data-value="action-btn"
               ${dataset}
+              data-profile-image="${profileImage}"
+              data-name="${name}"
+              data-username="${username}"
               data-type="contact-request"
+              data-value="action-btn"
               data-user-id="${_id}"
               class="suggestion__btn-main profile__social-actions__btn"
             >
@@ -54,10 +57,13 @@ class suggestionView {
             </button>
             <button
               type="button"
-              data-value="action-btn"
               ${dataset}
-              data-type="follow"
+              data-profile-image="${profileImage}"
+              data-name="${name}"
+              data-username="${username}"
               data-user-id="${_id}"
+              data-value="action-btn"
+              data-type="follow"
               class="suggestion__btn-main profile__social-actions__btn"
             >
               follow

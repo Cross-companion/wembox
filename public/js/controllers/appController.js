@@ -8,15 +8,13 @@ class AppController {
     this.contactSuggestions = suggestionView.defineSuggestionContainer();
     this.currentUser = {};
     this.suggestContacts();
-    this.contactSuggestions.addEventListener(
-      'click',
-      this.openContactRequestModal
+    this.contactSuggestions.addEventListener('click', (e) =>
+      this.openContactRequestModal(e.target.dataset)
     );
   }
 
-  openContactRequestModal(e) {
-    const { value, type, name, username, profileImage, userID } =
-      e.target.dataset;
+  openContactRequestModal(dataset) {
+    const { value, type, name, username, profileImage, userID } = dataset;
     if (value !== 'action-btn') return;
     modal
       .showModal()
@@ -28,6 +26,16 @@ class AppController {
           userID
         )
       );
+  }
+
+  async follow(dataset, btn) {
+    const { userId } = dataset;
+    try {
+      btn.classList.add('active');
+      await suggestionModel.follow(userId);
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   async suggestContacts() {
@@ -58,12 +66,23 @@ class AppController {
     });
   }
 
+  handleActionBtns = async (e) => {
+    const dataset = e.target.dataset;
+    const { type, value } = dataset;
+    if (value !== 'action-btn') return;
+    if (type === 'contact-request')
+      return this.openContactRequestModal(dataset);
+    if (type === 'follow') await this.follow(dataset, e.target);
+  };
+
   async visitProfile(username) {
     this.profileModal = modal.showModal(
       'app-modal__modal--no-padding profile'
     ).appModal;
     const { user } = await suggestionModel.getUser(username);
     modal.insertContent(suggestionView.createProfile(user));
+    this.profileSocialActions = document.querySelector('#social-action-btns');
+    this.profileSocialActions.addEventListener('click', this.handleActionBtns);
     console.log(user);
   }
 }
