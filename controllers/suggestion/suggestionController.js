@@ -53,6 +53,10 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
     minSuggestions,
     paginationKey,
     paginationData,
+    excludeByContacts,
+    excludeByFollowing,
+    conditionToExcludeContacts,
+    conditionToExcludeFollowing,
   } = extractSuggestCreatorData(req);
 
   if (page < 1)
@@ -75,6 +79,7 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
   // console.log(countryWeight, ':countryWeight');
 
   console.log(req.user._id);
+
   const USER_AGG = new UserAggregations(
     req.user._id,
     topics,
@@ -84,7 +89,11 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
     countryWeight,
     interestTypes,
     paginationKey,
-    paginationData
+    paginationData,
+    excludeByContacts,
+    excludeByFollowing,
+    conditionToExcludeContacts,
+    conditionToExcludeFollowing
   );
 
   const { users, newPaginationData } = await USER_AGG.SUGGEST_CREATOR_AGG();

@@ -27,7 +27,7 @@ class suggestionModel {
     this.getUserController = new AbortController();
     this.signal = this.getUserController.signal;
 
-    const data = await fetch(`${userRoute}/${username}`, {
+    const data = await fetch(`${userRoute}/user/${username}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ class suggestionModel {
       topics: [topic],
       page,
       numberOfSuggestions: 10,
-      // ,"countryWeight": 1
+      excludeByFollowing: true,
     };
 
     const data = await fetch(`${suggestionRoute}/creator/`, {
@@ -68,6 +68,7 @@ class suggestionModel {
     const reqObject = {
       page,
       numberOfSuggestions: 10,
+      excludeByContacts: true,
       // ,"countryWeight": 1
     };
 

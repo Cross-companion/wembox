@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const { DEFAULT_LOCATION } = require('../../config/userConfig');
+const { declinedStatus } = require('../../config/contactConfig');
 const User = require('./userModel');
 
 class UserAggregations {
@@ -13,7 +14,11 @@ class UserAggregations {
     countryWeight,
     interestTypes,
     paginationKey,
-    paginationData
+    paginationData,
+    excludeByContacts,
+    excludeByFollowing,
+    conditionToExcludeContacts,
+    conditionToExcludeFollowing
   ) {
     this.currentUser = mongoose.Types.ObjectId(currentUser);
     this.topics = topics;
@@ -28,6 +33,10 @@ class UserAggregations {
     this.interestTypes = interestTypes;
     this.paginationKey = paginationKey;
     this.paginationData = paginationData || {};
+    this.excludeByContacts = excludeByContacts === true;
+    this.excludeByFollowing = excludeByFollowing === true;
+    this.conditionToExcludeContacts = conditionToExcludeContacts === true;
+    this.conditionToExcludeFollowing = conditionToExcludeFollowing === true;
     this.isActivatedPage = false;
     this.createdNewPaginationData = false;
     this.sortBy = {
@@ -41,6 +50,8 @@ class UserAggregations {
       name: 1,
       frontEndUsername: 1,
       contentTypeMatched: 1,
+      isFollowed: 1,
+      isInContact: 1,
     };
     this.emptyAggregation = {
       $addFields: {},
@@ -110,6 +121,80 @@ class UserAggregations {
     };
   }
 
+  _getIsFollowing() {
+    return {
+      from: 'follows', // The name of the follow collection
+      let: {
+        userId: this.currentUser,
+        otherUser: '$_id',
+      }, // Define variables for the current user's ID
+      pipeline: [
+        // Match documents where the follower ID matches the current user's ID
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $eq: ['$follower', '$$userId'] }, // Current user is the follower
+                { $eq: ['$following', '$$otherUser'] }, // Document being aggregated is the following
+              ],
+            },
+          },
+        },
+      ],
+      as: 'isFollowing', // Output field to store the results of the join
+    };
+  }
+
+  _setIsFollowed() {
+    return {
+      isFollowed: {
+        $cond: {
+          if: { $gt: [{ $size: '$isFollowing' }, 0] },
+          then: true,
+          else: false,
+        },
+      },
+    };
+  }
+
+  _getIsInContact() {
+    return {
+      from: 'chats', // The name of the chats collection
+      let: {
+        userId: this.currentUser,
+        otherUser: '$_id',
+      }, // Define variables for the user IDs
+      pipeline: [
+        // Match documents where the sender ID matches the current user's ID or the otherUser
+        {
+          $match: {
+            $expr: {
+              $and: [
+                { $in: ['$sender', ['$$userId', '$$otherUser']] },
+                { $in: ['$receiver', ['$$userId', '$$otherUser']] },
+                { $eq: ['$contactRequest.isContactRequest', true] },
+                { $ne: ['$contactRequest.status', declinedStatus] },
+              ],
+            },
+          },
+        },
+      ],
+      as: 'isContacted', // Output field to store the results of the join
+    };
+  }
+
+  _setIsInContact() {
+    return {
+      isInContact: {
+        $cond: {
+          if: { $gt: [{ $size: '$isContacted' }, 0] },
+          then: true,
+          else: false,
+        },
+      },
+    };
+  }
+
   SUGGEST_CREATOR_BY_COUNTRY = () => {
     return [
       {
@@ -125,12 +210,39 @@ class UserAggregations {
       {
         $addFields: this._contentTypeMatched(this.topics, 'topic'),
       },
+      // All exclude fields logic occurs in two places in this code.
+      {
+        $lookup: this._getIsFollowing(),
+      },
+      {
+        $addFields: this._setIsFollowed(),
+      },
+      this.excludeByFollowing
+        ? {
+            $match: {
+              isFollowed: this.conditionToExcludeFollowing,
+            },
+          }
+        : this.emptyAggregation,
+      {
+        $lookup: this._getIsInContact(),
+      },
+      {
+        $addFields: this._setIsInContact(),
+      },
+      this.excludeByContacts
+        ? {
+            $match: {
+              isInContact: this.conditionToExcludeContacts,
+            },
+          }
+        : this.emptyAggregation,
+      //
       {
         $sort: this.sortBy,
       },
-      !this._geoAreaIsUseful()
-        ? this.emptyAggregation
-        : {
+      this._geoAreaIsUseful()
+        ? {
             $facet: {
               differentCountry: [
                 {
@@ -161,36 +273,37 @@ class UserAggregations {
                 },
               ],
             },
-          },
-      !this._geoAreaIsUseful()
-        ? this.emptyAggregation
-        : {
+          }
+        : this.emptyAggregation,
+      this._geoAreaIsUseful()
+        ? {
             $project: {
               users: {
                 $concatArrays: ['$sameCountry', '$differentCountry'],
               },
             },
-          },
-      !this._geoAreaIsUseful()
-        ? this.emptyAggregation
-        : {
-            $unwind: '$users',
-          },
-      !this._geoAreaIsUseful()
-        ? this.emptyAggregation
-        : {
-            $replaceRoot: { newRoot: '$users' },
-          },
-      !this._geoAreaIsUseful()
-        ? this.emptyAggregation
-        : {
-            $sort: this.sortBy,
-          },
+          }
+        : this.emptyAggregation,
       this._geoAreaIsUseful()
-        ? this.emptyAggregation
-        : {
+        ? {
+            $unwind: '$users',
+          }
+        : this.emptyAggregation,
+      this._geoAreaIsUseful()
+        ? {
+            $replaceRoot: { newRoot: '$users' },
+          }
+        : this.emptyAggregation,
+      this._geoAreaIsUseful()
+        ? {
+            $sort: this.sortBy,
+          }
+        : this.emptyAggregation,
+      !this._geoAreaIsUseful()
+        ? {
             $limit: this.numberOfSuggestions, // If the user's country is NOT useful.
-          },
+          }
+        : this.emptyAggregation,
       {
         $project: this.defaultProject,
       },
@@ -226,39 +339,67 @@ class UserAggregations {
           },
         },
       },
-      !this._geoAreaIsUseful(geoArea)
-        ? this.emptyAggregation
-        : {
+      this._geoAreaIsUseful(geoArea)
+        ? {
             $match: {
               [`IPGeoLocation.${geoArea}`]: this[geoArea]
                 ? this[geoArea]
                 : { $exists: false },
             },
-          },
-      !region
-        ? this.emptyAggregation
-        : {
+          }
+        : this.emptyAggregation,
+      region
+        ? {
             $match: {
               [`IPGeoLocation.country`]: { $ne: this.country },
             },
-          },
-      !continent
-        ? this.emptyAggregation
-        : {
+          }
+        : this.emptyAggregation,
+      continent
+        ? {
             $match: {
               [`IPGeoLocation.region`]: { $ne: this.region },
             },
-          },
-      !global
-        ? this.emptyAggregation
-        : {
+          }
+        : this.emptyAggregation,
+      global
+        ? {
             $match: {
               'IPGeoLocation.continent': { $ne: this.continent },
             },
-          },
+          }
+        : this.emptyAggregation,
       {
         $addFields: this._contentTypeMatched(this.interestTypes, 'interest'),
       },
+      // All exclude fields logic occurs in two places in this code.
+      {
+        $lookup: this._getIsFollowing(),
+      },
+      {
+        $addFields: this._setIsFollowed(),
+      },
+      this.excludeByFollowing
+        ? {
+            $match: {
+              isFollowed: this.conditionToExcludeFollowing,
+            },
+          }
+        : this.emptyAggregation,
+      {
+        $lookup: this._getIsInContact(),
+      },
+      {
+        $addFields: this._setIsInContact(),
+      },
+      this.excludeByContacts
+        ? {
+            $match: {
+              isInContact: this.conditionToExcludeContacts,
+            },
+          }
+        : this.emptyAggregation,
+      //
       {
         $sort: this.sortBy,
       },

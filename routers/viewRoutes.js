@@ -13,7 +13,6 @@ router.use(chatController.deliverChats);
 
 router.get('/', viewController.showApp);
 router.get('/pick-interests', viewController.showInterestPage);
-// router.get('/me', authController.protect, viewController.getMe);
 
 //-- <> -- //
 module.exports = router;

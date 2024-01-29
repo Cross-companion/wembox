@@ -22,7 +22,7 @@ router.use(chatController.deliverChats);
 
 router.route('/signup').patch(usersController.setInterests);
 
-router.route('/:username').get(usersController.getUser);
+router.route('/user/:username').get(usersController.getUser);
 router
   .route('/me')
   .get(usersController.getMe)
