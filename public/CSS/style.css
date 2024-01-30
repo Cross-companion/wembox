@@ -255,12 +255,16 @@ main {
     margin-top: 0.7rem;
     letter-spacing: 0.2rem;
     padding: 0.5rem 1rem;
-    border: none;
+    border: 1px solid transparent;
     background-color: #462af1;
     cursor: pointer;
     transition: background-color 0.2s; }
     .contact-request__modal > input[type='submit']:hover {
       background-color: #3112ef; }
+    .contact-request__modal > input[type='submit'].active {
+      background-color: white;
+      border-color: #462af1;
+      color: #462af1; }
 
 .contact-request__details {
   display: flex;
@@ -451,7 +455,8 @@ svg.interest__topics__follow-icon {
     bottom: -3rem; }
     .profile__social-actions__btn {
       background-color: #050505 !important;
-      background: #050505 !important; }
+      background: #050505 !important;
+      transition: background-color 0.2s, border 0.2s, color 0.2s; }
       .profile__social-actions__btn.active {
         background-color: white !important;
         background: white !important;

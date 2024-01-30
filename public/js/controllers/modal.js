@@ -14,6 +14,7 @@ class Modal {
 
   insertContent(modalContent) {
     this.contentContainer.innerHTML = modalContent;
+    return { contentContainer: this.contentContainer };
   }
 
   showModal(
@@ -60,7 +61,8 @@ class Modal {
   }
 
   closeModal(onCloseEvents) {
-    onCloseEvents.forEach((event) => event.event(...event.args));
+    onCloseEvents?.length &&
+      onCloseEvents.forEach((event) => event.event(...event.args));
     this.overlay.removeEventListener('click', this.handlers[0]);
     document.removeEventListener('keydown', this.handlers[1]);
     this.appModal.remove();

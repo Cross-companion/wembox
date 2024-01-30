@@ -91,17 +91,14 @@ class suggestionModel {
     return data;
   }
 
-  async sendContactRequest(
-    receiverID,
-    { message = undefined, isContactRequest = true, requestBasis = {} } = {}
-  ) {
+  async sendContactRequest(receiverID, { message = undefined } = {}) {
     const reqObject = {
       receiverID,
       message,
     };
 
-    const data = await fetch(`${contactRoute}`, {
-      method: isContactRequest ? 'POST' : 'DELETE',
+    const data = await fetch(`${contactRoute}/request`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },

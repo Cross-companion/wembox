@@ -9,32 +9,65 @@ class AppController {
     this.currentUser = {};
     this.suggestContacts();
     this.contactSuggestions.addEventListener('click', (e) =>
-      this.openContactRequestModal(e.target.dataset)
+      this.openContactRequestModal(e.target)
     );
   }
 
-  openContactRequestModal(dataset) {
-    const { value, type, name, username, profileImage, userID } = dataset;
+  openContactRequestModal(btn, initializer) {
+    const { value, type, name, username, profileImage, userId } = btn.dataset;
     if (value !== 'action-btn') return;
-    modal
+    const requestModal = modal
       .showModal()
       .insertContent(
         suggestionView.contactRequestModalHTML(
           name,
           username,
           profileImage,
-          userID
+          userId
         )
-      );
+      ).contentContainer;
+    const parentInitailizer =
+      initializer?.closest('[data-class="suggestion-item"]') ||
+      btn.closest('[data-class="suggestion-item"]');
+    const requestForm = requestModal.children[0];
+    requestForm.addEventListener(
+      'submit',
+      this.sendContactRequest.bind(this, parentInitailizer)
+    );
   }
 
-  async follow(dataset, btn) {
+  async follow(dataset, btn, initializer) {
+    if ([...btn.classList].includes('active')) return;
     const { userId } = dataset;
     try {
       btn.classList.add('active');
+      btn.textContent = 'following';
       await suggestionModel.follow(userId);
+      this.setFollowInitializer(initializer);
     } catch (err) {
       alert(err.message);
+    }
+  }
+
+  async sendContactRequest(parentInitailizer, e) {
+    const submitBtn = document.querySelector('#contact-request-submit-btn');
+    if ([...submitBtn.classList].includes('active') || !submitBtn) return;
+    try {
+      e.preventDefault();
+
+      const { userId: receiverID } = e.srcElement.dataset;
+      submitBtn.classList.add('active');
+      submitBtn.value = 'sending';
+      const message = document.querySelector('#contact-request-message').value;
+      await suggestionModel.sendContactRequest(receiverID, { message });
+      submitBtn.value = 'sent';
+      alert('contact request sent successfully');
+      modal.closeModal();
+      parentInitailizer.remove();
+    } catch (err) {
+      alert(err.message);
+      submitBtn.classList.remove('active');
+      submitBtn.value = 'send';
     }
   }
 
@@ -42,7 +75,6 @@ class AppController {
     const itemsDataClass = [{ name: 'type', value: 'contact-request' }];
     const suggestionType = 'contact request';
     const data = await suggestionModel.suggestContactRequest();
-    console.log(data);
     const { users } = data;
     suggestionView.insertNewPage(users, itemsDataClass, suggestionType, {
       clear: true,
@@ -60,30 +92,43 @@ class AppController {
 
   handleProfileVisits(suggestionContainer) {
     suggestionContainer.addEventListener('click', async (e) => {
-      const { type, username } = e.target.dataset;
+      const { type, username, isFollowed, isInContact } = e.target.dataset;
       if (type !== 'profile-gateway') return;
-      await this.visitProfile(username);
+      await this.visitProfile(username, isFollowed, isInContact, e.target);
     });
   }
 
-  handleActionBtns = async (e) => {
+  handleActionBtns = async (initializer, e) => {
     const dataset = e.target.dataset;
     const { type, value } = dataset;
     if (value !== 'action-btn') return;
     if (type === 'contact-request')
-      return this.openContactRequestModal(dataset);
-    if (type === 'follow') await this.follow(dataset, e.target);
+      return this.openContactRequestModal(e.target, initializer);
+    if (type === 'follow') await this.follow(dataset, e.target, initializer);
   };
 
-  async visitProfile(username) {
+  async visitProfile(username, isFollowed, isInContact, initializer) {
     this.profileModal = modal.showModal(
       'app-modal__modal--no-padding profile'
     ).appModal;
     const { user } = await suggestionModel.getUser(username);
-    modal.insertContent(suggestionView.createProfile(user));
+    modal.insertContent(
+      suggestionView.createProfile(
+        user,
+        JSON.parse(isFollowed),
+        JSON.parse(isInContact)
+      )
+    );
     this.profileSocialActions = document.querySelector('#social-action-btns');
-    this.profileSocialActions.addEventListener('click', this.handleActionBtns);
+    this.profileSocialActions.addEventListener(
+      'click',
+      this.handleActionBtns.bind(this, initializer)
+    );
     console.log(user);
+  }
+
+  setFollowInitializer(initializer) {
+    initializer.dataset.isFollowed = true;
   }
 }
 

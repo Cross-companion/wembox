@@ -23,7 +23,7 @@ class suggestionView {
     </div>`;
   }
 
-  createProfile(user, dataset = '') {
+  createProfile(user, isFollowed, isInContact) {
     const {
       _id,
       name,
@@ -42,9 +42,12 @@ class suggestionView {
           }" alt="">
           <img class="profile__images__profile" src="/images/${profileImage}" alt="">
           <div id="social-action-btns" class="profile__social-actions">
+            ${
+              isInContact
+                ? ''
+                : `
             <button
               type="button"
-              ${dataset}
               data-profile-image="${profileImage}"
               data-name="${name}"
               data-username="${username}"
@@ -54,19 +57,21 @@ class suggestionView {
               class="suggestion__btn-main profile__social-actions__btn"
             >
               Contact Request
-            </button>
+            </button>`
+            }
             <button
               type="button"
-              ${dataset}
               data-profile-image="${profileImage}"
               data-name="${name}"
               data-username="${username}"
               data-user-id="${_id}"
               data-value="action-btn"
               data-type="follow"
-              class="suggestion__btn-main profile__social-actions__btn"
+              class="suggestion__btn-main profile__social-actions__btn ${
+                isFollowed ? 'active' : ''
+              }"
             >
-              follow
+              ${isFollowed ? 'following' : 'follow'}
             </button>
           </div>
         </div>
@@ -85,7 +90,14 @@ class suggestionView {
   }
 
   createPerson(user, dataset = '', type = 'follow') {
-    const { _id, name, profileImage, frontEndUsername: username } = user;
+    const {
+      _id,
+      name,
+      profileImage,
+      frontEndUsername: username,
+      isFollowed,
+      isInContact,
+    } = user;
     return `
         <div id="suggestion-item-${_id}" data-class="suggestion-item" ${dataset} class="suggestion__person">
             <img
@@ -95,6 +107,8 @@ class suggestionView {
                 data-type="profile-gateway"
                 data-username="${username}"
                 data-user-id="${_id}"
+                data-is-followed="${isFollowed}" 
+                data-is-in-contact="${isInContact}"
             />
             <div class="suggestion__person__details">
                 <div>
@@ -131,9 +145,9 @@ class suggestionView {
           <div class="contact-request__type-tag">contact request</div>
         </div>
       </div>
-      <textarea class="contact-request__textarea" placeholder="Optional message..."></textarea>
+      <textarea id="contact-request-message" class="contact-request__textarea" placeholder="Optional message..."></textarea>
       <div class="contact-request__characters-note">max 250 characters</div>
-      <input type="submit" value="Send">
+      <input id="contact-request-submit-btn" type="submit" value="Send">
     </form>`;
   }
 
@@ -220,8 +234,6 @@ class suggestionView {
     });
     return topics;
   }
-
-  visitProfile(id) {}
 }
 
 export default new suggestionView();
