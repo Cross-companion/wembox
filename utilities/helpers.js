@@ -32,9 +32,9 @@ const randomizeString = (str = '0123456789', outputLength = str.length) => {
   return randomStr;
 };
 
-exports.generateRandomToken = (tokenBY = '0123456789', tokenLenght = 6) => {
+exports.generateRandomToken = (tokenBY = '0123456789', tokenLength = 6) => {
   const rearrangedStr = randomizeString(tokenBY);
-  const token = randomizeString(rearrangedStr, tokenLenght);
+  const token = randomizeString(rearrangedStr, tokenLength);
   return token;
 };
 

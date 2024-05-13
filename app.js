@@ -3,6 +3,8 @@ const path = require('path');
 // IMPORTING 3rd party MODULES
 const express = require('express');
 const session = require('express-session');
+const http = require('http');
+const socketIo = require('socket.io');
 const RedisStore = require('connect-redis').default;
 const redisClient = require('./utilities/redisInit');
 const morgan = require('morgan');

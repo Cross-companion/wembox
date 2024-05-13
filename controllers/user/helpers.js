@@ -1,3 +1,9 @@
+// const {
+//   multerStorage,
+//   multerFilter,
+//   updateChosenAtSignup,
+// } = require('./helpers');
+
 const multer = require('multer');
 const Interest = require('../../models/interest/interestModel');
 
