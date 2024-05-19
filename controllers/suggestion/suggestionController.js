@@ -76,9 +76,6 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
         403
       )
     );
-  // console.log(countryWeight, ':countryWeight');
-
-  console.log(req.user._id);
 
   const USER_AGG = new UserAggregations(
     req.user._id,

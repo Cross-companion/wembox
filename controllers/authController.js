@@ -43,7 +43,6 @@ const createSendToken = (res, user, statusCode) => {
 
   user.password = undefined;
 
-  console.log(`createSendToken`);
   res.status(statusCode).json({
     status: 'success',
     user,
@@ -105,12 +104,8 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
 
   const token = generateRandomToken();
   const emailKey = process.env.EMAIL_CACHE_KEY + email;
-  console.log(token);
-  console.log(emailKey);
   await redis.set(emailKey, token, 'ex', process.env.REDIS_VERIFICATION_EXP);
-  console.log('after set');
 
-  console.log(email, name, 'email, name');
   try {
     await new Email({
       user: { email, name },
@@ -199,7 +194,6 @@ exports.signup = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
 
-  console.log(email, username, password);
   if (!password || !(username || email))
     return next(
       new AppError(
@@ -228,7 +222,6 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = (req, res, next) => {
-  console.log('new logout //');
   res.cookie('jwt', '', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,

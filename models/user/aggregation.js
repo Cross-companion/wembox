@@ -20,7 +20,7 @@ class UserAggregations {
     conditionToExcludeContacts,
     conditionToExcludeFollowing
   ) {
-    this.currentUser = mongoose.Types.ObjectId(currentUser);
+    this.currentUser = new mongoose.Types.ObjectId(currentUser);
     this.topics = topics;
     this.city = userLocation?.city || 'global';
     this.country = userLocation?.country || 'global';
