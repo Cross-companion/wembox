@@ -259,8 +259,8 @@ exports.protect = async (req, res, next) => {
       : '';
     console.log('1. jwtParsedByHeader: ', jwtParsedByHeader);
     let token = req.cookies.jwt ?? jwtParsedByHeader;
-    if (!token) throw new Error();
     console.log('2. token: ', token);
+    if (!token) throw new Error();
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
     console.log('3. decoded: ', decoded);
