@@ -210,8 +210,6 @@ class SignupModel {
       if (arr[i].topic !== topic) return;
       arr[i].engagements += engagementScores.follow * (follow ? 1 : -1);
     });
-
-    console.log(this.userDetails.interests);
   }
 }
 

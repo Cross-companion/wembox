@@ -124,7 +124,6 @@ class AppController {
       'click',
       this.handleActionBtns.bind(this, initializer)
     );
-    console.log(user);
   }
 
   setFollowInitializer(initializer) {

@@ -13,7 +13,6 @@ class AppView {
       //     const appNav = document.querySelector('#app-nav');
       //     appNav.classList.add('fixed');
       //   }
-      console.log('fixed');
     };
 
     let options = {

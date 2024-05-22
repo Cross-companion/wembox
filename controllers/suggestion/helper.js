@@ -31,7 +31,6 @@ exports.extractSuggestCreatorData = (req) => {
   const page = +req.body.page || 1;
   const maxSuggestions = 50;
   const minSuggestions = 2; // minsuggestions (!userCountry: 1, userCountry: 1)
-  console.log(interestTypes);
 
   const paginationKey = `${process.env.CREATOR_AGG_PAGINATION_SESSION_KEY}${
     req.user.username

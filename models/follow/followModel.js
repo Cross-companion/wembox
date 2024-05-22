@@ -27,7 +27,6 @@ followSchema.index({ follower: 1, following: 1 }, { unique: true });
 
 followSchema.post('save', function (error, doc, next) {
   if (error.name === 'MongoError' && error.code === 11000) {
-    console.log(error);
     // MongoDB error code 11000 indicates a duplicate key error
     return next(
       new AppError(

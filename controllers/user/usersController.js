@@ -73,7 +73,6 @@ exports.getMe = catchAsync(async (req, res, next) => {
 exports.updateMe = catchAsync(async (req, res, next) => {
   const userID = req.user._id;
   let { profileImage, profileCoverImage, username, name, note } = req.body;
-  console.log(profileImage, profileCoverImage);
 
   if (!(profileImage || profileCoverImage || username || name || note))
     return next(new AppError('No data to update was specified.', 401));

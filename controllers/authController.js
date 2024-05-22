@@ -29,8 +29,6 @@ const signToken = (claims) => {
 
 const createSendToken = (res, user, statusCode) => {
   const token = signToken({ id: user._id, username: user.username });
-  console.log('token: ', token);
-
   const cookieOptions = {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 1000 * 60 * 60 * 24
@@ -40,7 +38,6 @@ const createSendToken = (res, user, statusCode) => {
   };
   if (process.env.NODE_ENV !== 'production') cookieOptions.secure = false;
 
-  console.log('jwt, token, cookieOptions: ', 'jwt', token, cookieOptions);
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
@@ -195,9 +192,7 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
-  console.log('email, username, password: ', email, username, password);
 
-  console.log(!password || !(username || email));
   if (!password || !(username || email))
     return next(
       new AppError(
@@ -212,10 +207,6 @@ exports.login = catchAsync(async (req, res, next) => {
     ? await User.findOne({ email }).select('password username')
     : await User.findOne({ username }).select('password username');
 
-  console.log(
-    '!user || !(await user?.isCorrectPassword(password, user?.password)): ',
-    !user || !(await user?.isCorrectPassword(password, user?.password))
-  );
   if (!user || !(await user?.isCorrectPassword(password, user?.password)))
     return next(
       new AppError(
@@ -257,32 +248,26 @@ exports.protect = async (req, res, next) => {
     const jwtParsedByHeader = req.headers?.authorization?.startsWith('Bearer')
       ? req.headers?.authorization?.split(' ')[1]
       : '';
-    console.log('1. jwtParsedByHeader: ', jwtParsedByHeader);
     let token = req.cookies.jwt ?? jwtParsedByHeader;
-    console.log('2. token: ', token);
-    if (!token) throw new Error();
 
+    if (!token) throw new Error();
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-    console.log('3. decoded: ', decoded);
+
     if (!decoded)
       throw new Error('Your session has exprired. Please login again.');
 
     const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
-    console.log('4. userKey: ', userKey);
     const cachedUser = JSON.parse(await redis.get(userKey));
-    console.log('5. cachedUser: ', cachedUser);
     const user =
       cachedUser ||
       (await User.findById(decoded.id).select('+interests +contentType'));
-    if (!user) throw new Error('Sorry, this User no longer exits.');
 
-    console.log('6. user: ', user);
+    if (!user) throw new Error('Sorry, this User no longer exits.');
     if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
       throw new Error(
         'Looks like you have changed your password. Please login with your new password'
       );
     }
-
     if (!cachedUser) {
       await redis.set(
         userKey,
@@ -299,9 +284,6 @@ exports.protect = async (req, res, next) => {
     );
     return next();
   } catch (err) {
-    console.log('7. err: ', err);
-    console.log('8. err.message: ', err.message);
-    console.log('9. Not protected ///');
     res.redirect('/auth');
   }
 };

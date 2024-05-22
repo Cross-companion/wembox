@@ -86,8 +86,6 @@ class suggestionModel {
     })
       .then((res) => res.json())
       .then((data) => data);
-
-    console.log(data);
     if (data.status !== 'success') throw new Error(data.message);
     return data;
   }
