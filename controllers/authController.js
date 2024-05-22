@@ -257,20 +257,26 @@ exports.protect = async (req, res, next) => {
     const jwtParsedByHeader = req.headers?.authorization?.startsWith('Bearer')
       ? req.headers?.authorization?.split(' ')[1]
       : '';
+    console.log('1. jwtParsedByHeader: ', jwtParsedByHeader);
     let token = req.cookies.jwt ?? jwtParsedByHeader;
     if (!token) throw new Error();
+    console.log('2. token: ', token);
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+    console.log('3. decoded: ', decoded);
     if (!decoded)
       throw new Error('Your session has exprired. Please login again.');
 
     const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
+    console.log('4. userKey: ', userKey);
     const cachedUser = JSON.parse(await redis.get(userKey));
+    console.log('5. cachedUser: ', cachedUser);
     const user =
       cachedUser ||
       (await User.findById(decoded.id).select('+interests +contentType'));
     if (!user) throw new Error('Sorry, this User no longer exits.');
 
+    console.log('6. user: ', user);
     if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
       throw new Error(
         'Looks like you have changed your password. Please login with your new password'
@@ -293,7 +299,9 @@ exports.protect = async (req, res, next) => {
     );
     return next();
   } catch (err) {
-    console.log(err, 'Not protected ///');
+    console.log('7. err: ', err);
+    console.log('8. err.message: ', err.message);
+    console.log('9. Not protected ///');
     return res.status(200).render('auth', {
       title: 'Authentication',
       onloadMessage: err.message || undefined,
