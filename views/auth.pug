@@ -5,8 +5,7 @@ block append head
   script(src="https://www.google.com/recaptcha/api.js" async defer)
 
 block main
-  if onloadMessage 
-    span(data-type="onload-message" data-message=onloadMessage)
+  span(data-type="onload-message" data-message=onloadMessage)
   .signup-prompt__prompt-btns
     span#signup-prompt-btn.signup-prompt__btn.btn__signup(data-is-prompt-btn='true', data-prompt-btn='head', data-prompt-type='signup') Signup
     span#login-prompt-btn.signup-prompt__btn.btn__signup(data-is-prompt-btn='true', data-prompt-btn='head', data-prompt-type='login') Login

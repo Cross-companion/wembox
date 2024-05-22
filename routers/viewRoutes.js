@@ -7,6 +7,7 @@ const chatController = require('../controllers/chat/chatController');
 const router = express.Router();
 
 router.get('/reset-password/:token', viewController.showResetPassword);
+router.get('/auth', viewController.showAuth);
 
 router.use(authController.protect);
 router.use(chatController.deliverChats);

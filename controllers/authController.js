@@ -302,10 +302,7 @@ exports.protect = async (req, res, next) => {
     console.log('7. err: ', err);
     console.log('8. err.message: ', err.message);
     console.log('9. Not protected ///');
-    return res.status(200).render('auth', {
-      title: 'Authentication',
-      onloadMessage: err.message || undefined,
-    });
+    res.redirect('/auth');
   }
 };
 

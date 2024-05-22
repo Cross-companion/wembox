@@ -11,6 +11,12 @@ exports.showApp = catchAsync(async (req, res, next) => {
   return res.status(200).render('app/app', { user: req.user });
 });
 
+exports.showAuth = catchAsync(async (req, res, next) => {
+  return res.status(200).render('auth', {
+    title: 'Authentication',
+  });
+});
+
 exports.showInterestPage = catchAsync(async (req, res, next) => {
   const { user } = req;
   if (!isNew(user.createdAt)) return res.redirect('/');

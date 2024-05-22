@@ -26,10 +26,10 @@ class SignupController {
         throw new Error('Invalid promptType');
       this.tooglePrompt(promptType);
     });
-    this.fireOnloadMessage();
+    this.fireOnLoadMessage();
   }
 
-  fireOnloadMessage() {
+  fireOnLoadMessage() {
     if (!authViews.onLoadMessage) return;
     const message = authViews.onLoadMessage.dataset.message;
     message && alert(message);
@@ -182,7 +182,7 @@ class SignupController {
       try {
         await authModel.login(identity, password);
         this.resetSubmitBtn(false);
-        location.reload();
+        window.location.replace('/');
       } catch (err) {
         alert(err.message);
         this.resetSubmitBtn(false);
