@@ -29,6 +29,7 @@ const signToken = (claims) => {
 
 const createSendToken = (res, user, statusCode) => {
   const token = signToken({ id: user._id, username: user.username });
+  console.log('token: ', token);
 
   const cookieOptions = {
     expires: new Date(
@@ -39,6 +40,7 @@ const createSendToken = (res, user, statusCode) => {
   };
   if (process.env.NODE_ENV !== 'production') cookieOptions.secure = false;
 
+  console.log('jwt, token, cookieOptions: ', 'jwt', token, cookieOptions);
   res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
@@ -193,7 +195,9 @@ exports.signup = catchAsync(async (req, res, next) => {
 
 exports.login = catchAsync(async (req, res, next) => {
   const { email, username, password } = req.body;
+  console.log('email, username, password: ', email, username, password);
 
+  console.log(!password || !(username || email));
   if (!password || !(username || email))
     return next(
       new AppError(
@@ -208,6 +212,10 @@ exports.login = catchAsync(async (req, res, next) => {
     ? await User.findOne({ email }).select('password username')
     : await User.findOne({ username }).select('password username');
 
+  console.log(
+    '!user || !(await user?.isCorrectPassword(password, user?.password)): ',
+    !user || !(await user?.isCorrectPassword(password, user?.password))
+  );
   if (!user || !(await user?.isCorrectPassword(password, user?.password)))
     return next(
       new AppError(
@@ -285,6 +293,7 @@ exports.protect = async (req, res, next) => {
     );
     return next();
   } catch (err) {
+    console.log(err, 'Not protected ///');
     return res.status(200).render('auth', {
       title: 'Authentication',
       onloadMessage: err.message || undefined,
