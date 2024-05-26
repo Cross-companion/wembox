@@ -318,11 +318,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     } you can reset your password at ${resetUrl}.\n Copy and paste the link into you browser into your favourite browser.`;
 
     await new Email({ user, url: resetUrl }).sendPasswordReset();
-    // await sendEmail({
-    //   email: user.email,
-    //   subject: 'Reset Your wembox password (Expires in 10 minutes).',
-    //   message,
-    // });
 
     await user.save({ validateBeforeSave: false });
 
