@@ -7,43 +7,51 @@ html(lang='en')
     script(src='../js/controllers/appController.js', type='module')
     title Wembox Inc
   body#app.app
-    header#app-header.app__header
-      .person__img__container.person__img__container
-        img.person__img.person__img--me(src=`/images/${user.profileImage}`, alt='me')
-      div
-        span.app__header__notifications
-          svg.app__header__notifications-icon(xmlns='http://www.w3.org/2000/svg', height='24', viewBox='0 -960 960 960', width='24', data-type='person-add')
-            path(d='M720-520h-80q-17 0-28.5-11.5T600-560q0-17 11.5-28.5T640-600h80v-80q0-17 11.5-28.5T760-720q17 0 28.5 11.5T800-680v80h80q17 0 28.5 11.5T920-560q0 17-11.5 28.5T880-520h-80v80q0 17-11.5 28.5T760-400q-17 0-28.5-11.5T720-440v-80Zm-360 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-240v-32q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v32q0 33-23.5 56.5T600-160H120q-33 0-56.5-23.5T40-240Zm80 0h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z')
-    nav#app-nav.app__nav.fixed
-      span.active chats
-    main.app__main
-      .glassmorph.app__no-contacts
-        .app__no-contacts__logo
-          svg.app__no-contacts__logo-icon(xmlns='http://www.w3.org/2000/svg', height='90', viewBox='0 -960 960 960', width='90')
-            path(d='m438-452-58-57q-11-11-27.5-11T324-508q-11 11-11 28t11 28l86 86q12 12 28 12t28-12l170-170q12-12 11.5-28T636-592q-12-12-28.5-12.5T579-593L438-452ZM326-90l-58-98-110-24q-15-3-24-15.5t-7-27.5l11-113-75-86q-10-11-10-26t10-26l75-86-11-113q-2-15 7-27.5t24-15.5l110-24 58-98q8-13 22-17.5t28 1.5l104 44 104-44q14-6 28-1.5t22 17.5l58 98 110 24q15 3 24 15.5t7 27.5l-11 113 75 86q10 11 10 26t-10 26l-75 86 11 113q2 15-7 27.5T802-212l-110 24-58 98q-8 13-22 17.5T584-74l-104-44-104 44q-14 6-28 1.5T326-90Zm52-72 102-44 104 44 56-96 110-26-10-112 74-84-74-86 10-112-110-24-58-96-102 44-104-44-56 96-110 24 10 112-74 86 74 84-10 114 110 24 58 96Zm102-318Z')
-          h3 You have no contacts yet!.
-        h5
-          | You can Send a contact request below to people you might know or find
-          | interesting.
-      //
-        <div class="entity">
-        <div>
-        <img
-        src="../Imgs/users/leo.jpg"
-        alt="profile image of Leo Conan"
-        class="person__img entity__img"
-        />
-        </div>
-        <div class="entity__content">
-        <div class="entity__title">Leo Conan</div>
-        <div class="entity__message">
-        <p class="entity__message__message">
-        hello bro, any update jnaerg sgwejokerg awerfonre awerfonre
-        awerfonre awerfonre
-        </p>
-        <span class="entity__message__time">12:30am</span>
-        </div>
-        </div>
-        </div>
-    footer#suggestion-container.suggestion__container.glassmorph(data-type='contact-request')
-      p Contact suggestions are rolling in....
+    section.app__chat-list
+      header#app-header.app__header
+        .person__img__container.person__img__container
+          img.person__img.person__img--me(src=`/images/${user.profileImage}`, alt='me')
+        div
+          span.app__header__notifications
+            svg.app__header__notifications-icon(xmlns='http://www.w3.org/2000/svg', height='24px', viewBox='0 -960 960 960', width='24px')
+              path(d='M200-200q-17 0-28.5-11.5T160-240q0-17 11.5-28.5T200-280h40v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v28q80 20 130 84.5T720-560v280h40q17 0 28.5 11.5T800-240q0 17-11.5 28.5T760-200H200Zm280-300Zm0 420q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM320-280h320v-280q0-66-47-113t-113-47q-66 0-113 47t-47 113v280Z')
+      nav#app-nav.app__nav.fixed
+        span.active chats
+      main.app__main
+        .glassmorph.app__no-contacts
+          .app__no-contacts__logo
+            svg.app__no-contacts__logo-icon(xmlns='http://www.w3.org/2000/svg', height='90', viewBox='0 -960 960 960', width='90')
+              path(d='m438-452-58-57q-11-11-27.5-11T324-508q-11 11-11 28t11 28l86 86q12 12 28 12t28-12l170-170q12-12 11.5-28T636-592q-12-12-28.5-12.5T579-593L438-452ZM326-90l-58-98-110-24q-15-3-24-15.5t-7-27.5l11-113-75-86q-10-11-10-26t10-26l75-86-11-113q-2-15 7-27.5t24-15.5l110-24 58-98q8-13 22-17.5t28 1.5l104 44 104-44q14-6 28-1.5t22 17.5l58 98 110 24q15 3 24 15.5t7 27.5l-11 113 75 86q10 11 10 26t-10 26l-75 86 11 113q2 15-7 27.5T802-212l-110 24-58 98q-8 13-22 17.5T584-74l-104-44-104 44q-14 6-28 1.5T326-90Zm52-72 102-44 104 44 56-96 110-26-10-112 74-84-74-86 10-112-110-24-58-96-102 44-104-44-56 96-110 24 10 112-74 86 74 84-10 114 110 24 58 96Zm102-318Z')
+            h3 You have no contacts yet!.
+          h5
+            | You can Send a contact request below to people you might know or find
+            | interesting.
+        //
+          <div class="entity">
+          <div>
+          <img
+          src="../Imgs/users/leo.jpg"
+          alt="profile image of Leo Conan"
+          class="person__img entity__img"
+          />
+          </div>
+          <div class="entity__content">
+          <div class="entity__title">Leo Conan</div>
+          <div class="entity__message">
+          <p class="entity__message__message">
+          hello bro, any update jnaerg sgwejokerg awerfonre awerfonre
+          awerfonre awerfonre
+          </p>
+          <span class="entity__message__time">12:30am</span>
+          </div>
+          </div>
+          </div>
+      div#suggestion-container.suggestion__container.glassmorph(data-type='contact-request')
+        p Contact suggestions are rolling in....
+    section.app__chat-container.chat__container
+      .chat__container--pre-load
+        img(src='./../Imgs/logos/DALL-E/wembee-logo-v1.jpg', alt='')
+        .logo
+          span.logo__text.logo__text--burn Wembox
+          span inc.
+    

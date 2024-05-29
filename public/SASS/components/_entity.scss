@@ -3,15 +3,20 @@
   align-items: center;
 
   &:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   &__img {
     margin-right: 0.5rem;
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    border: 2px solid transparent;
   }
 
   &__content {
     flex-grow: 1;
+    max-width: calc(100% - 65px);
   }
 
   &__title {
@@ -19,7 +24,7 @@
     font-weight: 700;
     font-size: 1.6rem;
     line-height: 0.8;
-    color: black;
+    color: var(--color-dark);
   }
 
   &__message {
@@ -48,9 +53,45 @@
     }
 
     &__time {
-      //   position: absolute;
-      //   bottom: -0.5rem;
-      //   right: 0;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 1.3%;
+      color: #aebac7;
+      position: relative;
+      top: -0.3rem;
+
+      & > svg {
+        width: 2rem;
+        height: 2rem;
+        fill: #aebac7;
+      }
     }
+  }
+
+  &.seen &__message {
+    &__time {
+      color: var(--theme-blue);
+
+      & > svg {
+        fill: var(--theme-blue);
+      }
+    }
+  }
+
+  &.received &__message,
+  &.unseen &__message {
+    &__time {
+      top: 0.1rem;
+      & > svg {
+        display: none;
+      }
+    }
+  }
+
+  &.unseen,
+  &.unseen &__title {
+    color: var(--theme-blue);
+    // &.unseen &__message__time,
   }
 }

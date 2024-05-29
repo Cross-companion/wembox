@@ -1,0 +1,176 @@
+.chat {
+  &__container {
+    --height-of-input-container: 7rem;
+    --children-padding: 3rem;
+    position: relative;
+    // margin: 0 3rem;
+
+    &--pre-load {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+
+      & > img {
+        width: 10rem;
+        height: 10rem;
+      }
+    }
+
+    &__header {
+      position: absolute;
+      width: 100%;
+      top: 0rem;
+      left: 0rem;
+      padding: 1.5rem 0 0.5rem var(--children-padding);
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: var(--z-index-header);
+
+      & > div[data-type='profile'] {
+        --profile-gap: 1rem;
+        --img-width: 4rem;
+
+        display: flex;
+        border: 1px solid black;
+        padding: 0.5rem;
+        border-radius: 0.7rem;
+        gap: var(--profile-gap);
+        width: 20rem;
+        overflow: hidden;
+        background-color: var(--color-white);
+
+        & > img {
+          width: var(--img-width);
+          height: var(--img-width);
+          border-radius: 0.5rem;
+        }
+
+        & > div[data-type='details'] {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+
+          & > p[data-type='name'] {
+            color: black;
+            max-width: calc(
+              100% - (var(--img-width) + var(--profile-gap) + 3rem)
+            );
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+
+          & > p[data-type='online-status'] {
+            color: gray;
+            font-size: 1.1rem;
+            font-family: monospace;
+            text-transform: capitalize;
+
+            &.active {
+              color: var(--gradient-color-6);
+            }
+          }
+        }
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      overflow: auto;
+      height: calc(100% - var(--height-of-input-container));
+
+      & > div {
+        overflow: auto;
+        // padding-right: 0.5rem;
+        // padding-top: 9.2rem;
+        padding: 9.2rem var(--children-padding) 0;
+        display: flex;
+        flex-direction: column-reverse;
+
+        & > div {
+          margin-bottom: 2.4rem;
+        }
+      }
+    }
+
+    &__inputs {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background-color: white;
+      height: var(--height-of-input-container);
+      padding-top: 0.5rem;
+      width: 100%;
+
+      & > form {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+
+        & > div {
+          background-color: var(--color-white);
+          border: 2px solid var(--theme-blue);
+          width: 4rem;
+          height: 4rem;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: background-color 0.2s border-color 0.2s;
+
+          &:hover {
+            background-color: var(--theme-blue);
+
+            & > svg {
+              fill: var(--color-white);
+            }
+          }
+
+          & > svg {
+            fill: var(--theme-blue);
+            position: relative;
+            transition: fill 0.2s;
+
+            &[data-type='send-chat-icon'] {
+              left: 0.15rem;
+              bottom: -0.12rem;
+            }
+          }
+        }
+
+        & > textarea {
+          background-color: transparent;
+          border: 2px solid var(--theme-blue);
+          border-radius: 1.3rem;
+          height: 4rem;
+          outline: transparent;
+          padding: 1rem 0.5rem 0.5rem 1rem;
+          max-height: 6.5rem;
+          max-width: 27rem;
+          font-family: inherit;
+        }
+      }
+    }
+  }
+}
+
+// &::-webkit-scrollbar {
+//   width: auto;
+// }
+// &::-webkit-scrollbar-track {
+//   background: #fafafa;
+// }
+// &::-webkit-scrollbar-thumb {
+//   background: #f3f3f3;
+// }
+// &::-webkit-scrollbar-thumb:hover {
+//   background: #d8d8d8;
+// }

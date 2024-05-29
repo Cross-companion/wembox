@@ -10,6 +10,7 @@
   --color-tertiary-super-light: rgba(255, 255, 255, 0.05);
   --color-tertiary-medium-light: rgba(255, 255, 255, 0.09);
   --color-tertiary-custom-light: rgba(255, 255, 255, 0.25);
+  --color-tertiary-custom-light: rgba(255, 255, 255, 0.425);
   --color-tertiary-light: rgba(255, 255, 255, 0.5);
 
   --theme-blue: #5b42f3;
@@ -20,6 +21,7 @@
 
   --z-index-lowest: -10;
   --z-index-heighest: 10;
+  --z-index-header: 1;
 
   --default-font: 'lato', system-ui, -apple-system, BlinkMacSystemFont,
     'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
@@ -86,6 +88,23 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+// copyright openai.com - scrollbar
+::-webkit-scrollbar {
+  height: 1rem;
+  width: 0.5rem;
+}
+::-webkit-scrollbar-thumb {
+  --tw-border-opacity: 1;
+  background-color: hsla(0, 0%, 89%, 0.8);
+  border-color: rgba(255, 255, 255, var(--tw-border-opacity));
+  border-radius: 9999px;
+  border-width: 1px;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  border-radius: 9999px;
 }
 
 html {

@@ -1,0 +1,87 @@
+.message {
+  &__group {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-white);
+
+    &.sent {
+      align-items: end;
+    }
+
+    &.received {
+      align-items: start;
+    }
+
+    &__item {
+      display: flex;
+      align-items: center;
+      position: relative;
+      word-wrap: break-word;
+      min-width: 4.8rem;
+      min-height: 4.8rem;
+      border-radius: 2.4rem;
+      padding: 1.2rem 1.6rem;
+      margin-bottom: 0.6rem;
+      max-width: 67%;
+
+      &:last-child {
+        margin-bottom: 2rem;
+      }
+
+      & > span {
+        position: absolute;
+        right: 0.5rem;
+        bottom: -0.2rem;
+
+        & > svg {
+          width: 2rem;
+          height: 2rem;
+          fill: var(--color-tertiary-custom-light);
+        }
+
+        &.seen {
+          & > svg {
+            fill: var(--gradient-color-3);
+          }
+        }
+      }
+    }
+
+    &.sent > &__item {
+      padding-right: 2rem;
+      background-color: var(--theme-blue);
+
+      &:last-child {
+        border-bottom-right-radius: 0.4rem;
+      }
+    }
+
+    &.received > &__item {
+      background-color: var(--gradient-color-1);
+
+      &:last-child {
+        border-bottom-left-radius: 0.4rem;
+      }
+
+      & > span {
+        display: none !important;
+      }
+    }
+
+    & > [data-type='message-time'] {
+      position: absolute;
+      bottom: 0;
+      font-size: 1.2rem;
+      color: var(--color-dark);
+    }
+
+    &.sent > [data-type='message-time'] {
+      right: 0;
+    }
+    &.received > [data-type='message-time'] {
+      left: 0;
+    }
+  }
+}
