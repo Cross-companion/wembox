@@ -1,0 +1,106 @@
+[
+  {
+    "_id": "1",
+    "users": ["65b39b82c4d93b2f5499d80d", "65b6d206a7ff1237d0e5924c"],
+    "lastMessage": {
+      "_id": "65b8c2fd7b99d638c836b1ef",
+      "status": "sent",
+      "sender": "65b39b82c4d93b2f5499d80d",
+      "receiver": "65b6d206a7ff1237d0e5924c",
+      "message": "Odio odit rem blanditiis. Laborum delectus, illo eaque expedita amet ipsum.",
+      "createdAt": "2024-01-30T09:35:57.448Z",
+      "id": "65b8c2fd7b99d638c836b1ef"
+    },
+    "createdAt": "2024-06-01T11:22:38.592Z",
+    "__v": 0,
+    "otherUser": [
+      {
+        "_id": "65b6d206a7ff1237d0e5924c",
+        "name": "me",
+        "username": "me4",
+        "frontEndUsername": "me4",
+        "id": "65b6d206a7ff1237d0e5924c",
+        "profileImage": "monica.jpg"
+      }
+    ],
+    "id": "665b047e35b1779e24e3f751"
+  },
+  {
+    "_id": "2",
+    "users": ["65b39b82c4d93b2f5499d80d", "65b6d206a7ff1237d0e5924c"],
+    "lastMessage": {
+      "_id": "65b8c2fd7b99d638c836b1ef",
+      "status": "seen",
+      "sender": "65b6d206a7ff1237d0e5924c",
+      "receiver": "65b39b82c4d93b2f5499d80d",
+      "message": "Eius hic non mollitia culpa accusantium quibusdam aspernatur optio id nam itaque atque fuga facilis iusto quas, saepe sunt cupiditate explicabo omnis laborum fugiat maxime est. Magni!",
+      "createdAt": "2024-01-30T09:35:57.448Z",
+      "id": "65b8c2fd7b99d638c836b1ef"
+    },
+    "createdAt": "2024-06-01T11:22:38.592Z",
+    "__v": 0,
+    "otherUser": [
+      {
+        "_id": "65b6d206a7ff1237d0e5924c",
+        "name": "Leo Conan",
+        "username": "leoconan",
+        "frontEndUsername": "leoconan",
+        "id": "65b6d206a7ff1237d0e5924c",
+        "profileImage": "leo.jpg"
+      }
+    ],
+    "id": "665b047e35b1779e24e3f751"
+  },
+  {
+    "_id": "3",
+    "users": ["65b39b82c4d93b2f5499d80d", "65b6d206a7ff1237d0e5924c"],
+    "lastMessage": {
+      "_id": "65b8c2fd7b99d638c836b1ef",
+      "status": "seen",
+      "sender": "65b39b82c4d93b2f5499d80d",
+      "receiver": "65b6d206a7ff1237d0e5924c",
+      "message": "nemo quibusdam explicabo quia adipisci, corrupti praesentium provident harum laudantium eaque voluptate et iusto omnis.",
+      "createdAt": "2024-01-30T09:35:57.448Z",
+      "id": "65b8c2fd7b99d638c836b1ef"
+    },
+    "createdAt": "2024-06-01T11:22:38.592Z",
+    "__v": 0,
+    "otherUser": [
+      {
+        "_id": "65b6d206a7ff1237d0e5924c",
+        "name": "Monica",
+        "username": "monica",
+        "frontEndUsername": "Monica",
+        "id": "65b6d206a7ff1237d0e5924c",
+        "profileImage": "monica.jpg"
+      }
+    ],
+    "id": "665b047e35b1779e24e3f751"
+  },
+  {
+    "_id": "4",
+    "users": ["65b39b82c4d93b2f5499d80d", "65b6d206a7ff1237d0e5924c"],
+    "lastMessage": {
+      "_id": "65b8c2fd7b99d638c836b1ef",
+      "status": "delivered",
+      "sender": "65b6d206a7ff1237d0e5924c",
+      "receiver": "65b39b82c4d93b2f5499d80d",
+      "message": "Deleniti veniam reprehenderit quaerat ratione reiciendis asperiores",
+      "createdAt": "2024-01-30T09:35:57.448Z",
+      "id": "65b8c2fd7b99d638c836b1ef"
+    },
+    "createdAt": "2024-06-01T11:22:38.592Z",
+    "__v": 0,
+    "otherUser": [
+      {
+        "_id": "65b6d206a7ff1237d0e5924c",
+        "name": "Mama Monica",
+        "username": "mamamonica",
+        "frontEndUsername": "MAMAMonica",
+        "id": "65b6d206a7ff1237d0e5924c",
+        "profileImage": "monica.jpg"
+      }
+    ],
+    "id": "665b047e35b1779e24e3f751"
+  }
+]

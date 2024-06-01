@@ -18,7 +18,7 @@ exports.getContactsQuery = async (query, { userID, contactsLimit, skipBy }) => {
     .populate({
       path: 'otherUser',
       match: { _id: { $ne: userID } },
-      select: 'username',
+      select: 'name profileImage frontEndUsername username',
     })
     .limit(contactsLimit || contactsPerRequest || 50)
     .skip(skipBy || 0)

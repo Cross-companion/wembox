@@ -77,16 +77,18 @@ class suggestionModel {
     // const data = await fetch(`/public/dev-data/suggestFollow.json`)
     //   .then((res) => res.json())
     //   .then((data) => data);
-    const data = await fetch(`${suggestionRoute}/creator/`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(reqObject),
-    })
-      .then((res) => res.json())
-      .then((data) => data);
-    if (data.status !== 'success') throw new Error(data.message);
+    const data =
+      [] ||
+      (await fetch(`${suggestionRoute}/creator/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reqObject),
+      })
+        .then((res) => res.json())
+        .then((data) => data));
+    // if (data.status !== 'success') throw new Error(data.message);
     return data;
   }
 

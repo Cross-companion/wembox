@@ -1,5 +1,6 @@
 import modal from './modal.js';
 import appView from '../views/appView.js';
+import appModel from '../models/appModel.js';
 import suggestionView from '../views/suggestionView.js';
 import suggestionModel from '../models/suggestionModel.js';
 
@@ -11,6 +12,19 @@ class AppController {
     this.contactSuggestions.addEventListener('click', (e) =>
       this.openContactRequestModal(e.target)
     );
+    this.getContacts();
+  }
+
+  async getContacts() {
+    const contacts = await appModel.getContacts();
+    if (!contacts?.length) return this.insertContacts(appView.noContactsHtml());
+    const contactList = appView.buildContactList(contacts);
+    this.insertContacts(contactList);
+  }
+
+  insertContacts(html) {
+    appView.contactList.innerHTML = '';
+    appView.contactList.insertAdjacentHTML('beforeend', html);
   }
 
   openContactRequestModal(btn, initializer) {

@@ -76,7 +76,7 @@
     border-radius: calc(var(--element-width) / 2);
     background-color: var(--theme-blue);
     color: var(--color-white);
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
   }
@@ -89,9 +89,9 @@
     background-color: var(--theme-blueish-white);
   }
 
-  &.seen &__message {
+  &.sent__seen &__message {
     &__time {
-      color: var(--theme-blue);
+      // color: var(--theme-blue);
 
       & > svg {
         fill: var(--theme-blue);
@@ -99,8 +99,8 @@
     }
   }
 
-  &.received &__message,
-  &.unseen &__message {
+  &.received__seen &__message,
+  &.received__unseen &__message {
     &__time {
       top: 0.1rem;
       & > svg {
@@ -109,9 +109,13 @@
     }
   }
 
-  &.unseen,
-  &.unseen &__title,
-  &.unseen &__message__time {
+  &.received__unseen,
+  &.received__unseen &__title,
+  &.received__unseen &__message__time {
     color: var(--theme-blue);
+  }
+
+  &.received__unseen &__alert-number {
+    display: flex;
   }
 }
