@@ -3,6 +3,7 @@ import TimeManager from '../utils/TimeManager.js';
 
 class AppView {
   constructor() {
+    this.app = document.querySelector('#app');
     this.appNav = document.querySelector('#app-nav');
     this.appHeader = document.querySelector('#app-header');
     this.contactList = document.querySelector('[data-type="contact-list"]');
@@ -30,7 +31,7 @@ class AppView {
 
   appLoader() {
     return `
-    <div class="app__loader">
+    <div class="app__loader" data-loader="loader">
       <div class="app__loader__logo">
         <img src="./../Imgs/logos/DALL-E/wembee-logo-v1.jpg" alt="" />
         <div class="logo">
@@ -67,20 +68,25 @@ class AppView {
   }
 
   contactEntity(contact = {}, userId = '65b39b82c4d93b2f5499d80d') {
-    const { profileImage, name } = contact.otherUser[0];
+    const {
+      _id: otherUserId,
+      profileImage,
+      name,
+      frontEndUsername: username,
+    } = contact.otherUser[0];
     const { status, message, createdAt, receiver } = contact.lastMessage;
     const isReceived = userId === receiver;
     const elementStatus = status !== 'seen' ? 'unseen' : 'seen';
-    console.log(elementStatus);
     const elementClass = isReceived
       ? `received__${elementStatus}`
       : `sent__${elementStatus}`;
-    const isReceivedStr = isReceived ? 'received' : 'sent';
 
     return `
     <div class="entity ${elementClass}">
       <div>
         <img
+          data-type="profile-gateway"
+          data-username="${username}"
           src="../Imgs/users/${profileImage}"
           alt="profile image of ${name}"
           class="entity__img"

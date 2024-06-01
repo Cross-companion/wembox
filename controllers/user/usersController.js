@@ -9,6 +9,7 @@ const factory = require('../handlerFactory');
 const ImageFile = require('../../utilities/imageFileManager');
 const AppError = require('../../utilities/AppError');
 const catchAsync = require('../../utilities/catchAsync');
+const UserAggregations = require('../../models/user/aggregation');
 const { PROFILE_IMAGE_PREFIX, PROFILE_COVER_IMAGE_PREFIX } = process.env;
 
 const upload = multer({
@@ -52,13 +53,38 @@ exports.getAllUsers = factory.findAll(User);
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const username = req.params.username.toLowerCase();
-  const user = await User.findOne({ username }).select(
-    'name frontEndUsername accountType numberOfFollowers numberOfFollowing profileImage profileCoverImage'
-  );
+
+  const USER_AGG = new UserAggregations(req.user._id);
+  const user = await User.aggregate([
+    {
+      $match: {
+        username,
+      },
+    },
+    {
+      $lookup: USER_AGG.getIsFollowing(),
+    },
+    {
+      $addFields: USER_AGG.setIsFollowed(),
+    },
+    {
+      $lookup: USER_AGG.getIsInContact(),
+    },
+    {
+      $addFields: USER_AGG.setIsInContact(),
+    },
+    {
+      $project: {
+        ...USER_AGG.defaultProject,
+        numberOfFollowers: 1,
+        numberOfFollowing: 1,
+      },
+    },
+  ]);
 
   res.status(200).json({
     status: 'success',
-    user,
+    user: user[0],
   });
 });
 

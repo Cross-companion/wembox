@@ -23,7 +23,7 @@ class suggestionView {
     </div>`;
   }
 
-  createProfile(user, isFollowed, isInContact) {
+  createProfile(user) {
     const {
       _id,
       name,
@@ -32,7 +32,10 @@ class suggestionView {
       profileCoverImage,
       numberOfFollowing,
       numberOfFollowers,
+      isFollowed,
+      isInContact,
     } = user;
+    console.log(user);
     return `
         <div class="profile__images">
           <img class="profile__images__cover" src="${
@@ -90,14 +93,7 @@ class suggestionView {
   }
 
   createPerson(user, dataset = '', type = 'follow') {
-    const {
-      _id,
-      name,
-      profileImage,
-      frontEndUsername: username,
-      isFollowed,
-      isInContact,
-    } = user;
+    const { _id, name, profileImage, frontEndUsername: username } = user;
     return `
         <div id="suggestion-item-${_id}" data-class="suggestion-item" ${dataset} class="suggestion__person">
             <img
@@ -107,8 +103,6 @@ class suggestionView {
                 data-type="profile-gateway"
                 data-username="${username}"
                 data-user-id="${_id}"
-                data-is-followed="${isFollowed}" 
-                data-is-in-contact="${isInContact}"
             />
             <div class="suggestion__person__details">
                 <div>

@@ -13,6 +13,21 @@ class AppController {
       this.openContactRequestModal(e.target)
     );
     this.getContacts();
+    this.eventHandler();
+  }
+
+  eventHandler() {
+    const app = appView.app;
+    app.addEventListener('click', this.clickHandlers.bind(this));
+    // app.addEventListener('change', this.changeHandlers.bind(this));
+    // app.addEventListener('submit', this.submitHandlers.bind(this));
+  }
+
+  clickHandlers(e) {
+    const target = e.target;
+    const isProfileGateway = target.dataset.type === 'profile-gateway';
+
+    if (isProfileGateway) return this.handleProfileVisits(target);
   }
 
   async getContacts() {
@@ -20,6 +35,7 @@ class AppController {
     if (!contacts?.length) return this.insertContacts(appView.noContactsHtml());
     const contactList = appView.buildContactList(contacts);
     this.insertContacts(contactList);
+    this.toogleLoader(appView.app, undefined, { remove: true });
   }
 
   insertContacts(html) {
@@ -101,15 +117,15 @@ class AppController {
         type: 'contact request',
       }
     );
-    this.handleProfileVisits(suggestionView.suggestionContainer);
   }
 
-  handleProfileVisits(suggestionContainer) {
-    suggestionContainer.addEventListener('click', async (e) => {
-      const { type, username, isFollowed, isInContact } = e.target.dataset;
-      if (type !== 'profile-gateway') return;
-      await this.visitProfile(username, isFollowed, isInContact, e.target);
-    });
+  handleProfileVisits(profileGateway) {
+    const { type, username } = profileGateway.dataset;
+    if (type !== 'profile-gateway')
+      throw new Error(
+        'Wrong arguement is been passed into handleProfileVisits'
+      );
+    this.visitProfile(username, profileGateway);
   }
 
   handleActionBtns = async (initializer, e) => {
@@ -121,18 +137,12 @@ class AppController {
     if (type === 'follow') await this.follow(dataset, e.target, initializer);
   };
 
-  async visitProfile(username, isFollowed, isInContact, initializer) {
+  async visitProfile(username, initializer) {
     this.profileModal = modal.showModal(
       'app-modal__modal--no-padding profile'
     ).appModal;
     const { user } = await suggestionModel.getUser(username);
-    modal.insertContent(
-      suggestionView.createProfile(
-        user,
-        JSON.parse(isFollowed),
-        JSON.parse(isInContact)
-      )
-    );
+    modal.insertContent(suggestionView.createProfile(user));
     this.profileSocialActions = document.querySelector('#social-action-btns');
     this.profileSocialActions.addEventListener(
       'click',
@@ -142,6 +152,21 @@ class AppController {
 
   setFollowInitializer(initializer) {
     initializer.dataset.isFollowed = true;
+  }
+
+  toogleLoader(parentEl, loader, { remove } = {}) {
+    if (remove) {
+      parentEl.dataset.loadState = 'loaded';
+      const loader = parentEl.querySelector('[data-loader="loader"]');
+      loader.remove();
+      return;
+    }
+    console.log(typeof parentEl);
+    console.log(typeof loader);
+
+    if (parentEl?.dataset.loadState === 'loading') return;
+    parentEl.dataset.loadState = 'loading';
+    parentEl.insertAdjacentHTML('afterbegin', loader);
   }
 }
 

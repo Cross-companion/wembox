@@ -220,13 +220,16 @@ exports.login = catchAsync(async (req, res, next) => {
   createSendToken(res, user, 200);
 });
 
-exports.logout = (req, res, next) => {
+exports.logout = catchAsync(async (req, res, next) => {
+  const userKey = `${process.env.USER_CACHE_KEY}${req.user?._id}`;
+  redis.del(userKey);
+
   res.cookie('jwt', '', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
   return res.redirect('/');
-};
+});
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {

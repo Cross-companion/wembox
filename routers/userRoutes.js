@@ -15,11 +15,11 @@ router.route('/signup').post(authController.recaptcha, authController.signup);
 router.route('/login').post(authController.login);
 router.route('/forgot-password').post(authController.forgotPassword);
 router.route('/reset-password/:token').patch(authController.resetPassword);
-router.route('/logout').get(authController.logout); // the logout route is protected
 
 router.use(authController.protect);
 router.use(chatController.deliverChats);
 
+router.route('/logout').get(authController.logout); // the logout route is protected
 router.route('/signup').patch(usersController.setInterests);
 
 router.route('/user/:username').get(usersController.getUser);

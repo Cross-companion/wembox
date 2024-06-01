@@ -121,7 +121,7 @@ class UserAggregations {
     };
   }
 
-  _getIsFollowing() {
+  getIsFollowing() {
     return {
       from: 'follows', // The name of the follow collection
       let: {
@@ -145,7 +145,7 @@ class UserAggregations {
     };
   }
 
-  _setIsFollowed() {
+  setIsFollowed() {
     return {
       isFollowed: {
         $cond: {
@@ -157,11 +157,11 @@ class UserAggregations {
     };
   }
 
-  _getIsInContact() {
+  getIsInContact(currentUser = this.currentUser) {
     return {
       from: 'chats', // The name of the chats collection
       let: {
-        userId: this.currentUser,
+        userId: currentUser,
         otherUser: '$_id',
       }, // Define variables for the user IDs
       pipeline: [
@@ -183,7 +183,7 @@ class UserAggregations {
     };
   }
 
-  _setIsInContact() {
+  setIsInContact() {
     return {
       isInContact: {
         $cond: {
@@ -212,10 +212,10 @@ class UserAggregations {
       },
       // All exclude fields logic occurs in two places in this code.
       {
-        $lookup: this._getIsFollowing(),
+        $lookup: this.getIsFollowing(),
       },
       {
-        $addFields: this._setIsFollowed(),
+        $addFields: this.setIsFollowed(),
       },
       this.excludeByFollowing
         ? {
@@ -225,10 +225,10 @@ class UserAggregations {
           }
         : this.emptyAggregation,
       {
-        $lookup: this._getIsInContact(),
+        $lookup: this.getIsInContact(),
       },
       {
-        $addFields: this._setIsInContact(),
+        $addFields: this.setIsInContact(),
       },
       this.excludeByContacts
         ? {
@@ -374,10 +374,10 @@ class UserAggregations {
       },
       // All exclude fields logic occurs in two places in this code.
       {
-        $lookup: this._getIsFollowing(),
+        $lookup: this.getIsFollowing(),
       },
       {
-        $addFields: this._setIsFollowed(),
+        $addFields: this.setIsFollowed(),
       },
       this.excludeByFollowing
         ? {
@@ -387,10 +387,10 @@ class UserAggregations {
           }
         : this.emptyAggregation,
       {
-        $lookup: this._getIsInContact(),
+        $lookup: this.getIsInContact(),
       },
       {
-        $addFields: this._setIsInContact(),
+        $addFields: this.setIsInContact(),
       },
       this.excludeByContacts
         ? {
