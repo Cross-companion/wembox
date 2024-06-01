@@ -1,41 +1,12 @@
 .app {
   display: flex;
   height: 100vh;
-  // overflow: hidden;
-  // gap: 2rem;
 
   & > section {
     // display: none;
     // &.active {
     //   display: flex;
     // }
-  }
-
-  &__chat-list {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    max-width: 35%;
-    max-height: 100%;
-    overflow: auto;
-
-    & > :last-child {
-      margin-top: auto;
-      min-height: 12.5rem;
-    }
-
-    &__list {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      padding: 2rem 1.5rem 3rem;
-    }
-  }
-
-  &__chat-container {
-    flex-grow: 1;
-    max-height: 100%;
   }
 
   &__header {
@@ -50,6 +21,7 @@
       & > div {
         display: flex;
         align-items: center;
+        cursor: pointer;
       }
     }
 
@@ -57,12 +29,22 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgb(239, 243, 244);
+      background-color: var(--theme-blueish-white);
       padding: 0.7rem;
       border-radius: 50%;
+      transition: background-color 0.1s;
 
       & > svg {
         fill: var(--theme-blue);
+        transition: fill 0.1s;
+      }
+
+      &:hover {
+        background-color: var(--theme-blue);
+
+        & > svg {
+          fill: var(--color-white);
+        }
       }
     }
   }
@@ -89,6 +71,36 @@
       -webkit-backdrop-filter: blur(10px);
       backdrop-filter: blur(10px);
     }
+  }
+
+  &__chat-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    // flex-grow: 1;
+    // flex-basis: 35%;
+    max-width: 35%;
+    min-width: 35%;
+    max-height: 100%;
+    overflow: auto;
+
+    & > :last-child {
+      margin-top: auto;
+      min-height: 12.5rem;
+    }
+
+    &__list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 0;
+    }
+  }
+
+  &__chat-container {
+    flex-grow: 1;
+    max-height: 100%;
+    // max-width: 7%;
   }
 
   &__no-contacts {

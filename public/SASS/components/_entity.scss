@@ -1,15 +1,13 @@
 .entity {
   display: flex;
   align-items: center;
-
-  &:not(:last-child) {
-    margin-bottom: 1.5rem;
-  }
+  cursor: default;
+  padding: 0.75rem 1.3rem;
 
   &__img {
     margin-right: 0.5rem;
-    width: 6rem;
-    height: 6rem;
+    width: 6.1rem;
+    height: 6.1rem;
     border-radius: 50%;
     border: 2px solid transparent;
   }
@@ -69,6 +67,28 @@
     }
   }
 
+  &__alert-number {
+    --element-width: 1.5rem;
+    height: var(--element-width);
+    min-width: var(--element-width);
+    width: max-content;
+    padding: 0.5rem;
+    border-radius: calc(var(--element-width) / 2);
+    background-color: var(--theme-blue);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &:hover {
+    background-color: var(--theme-blueish-white-2);
+  }
+
+  &.active {
+    background-color: var(--theme-blueish-white);
+  }
+
   &.seen &__message {
     &__time {
       color: var(--theme-blue);
@@ -90,8 +110,8 @@
   }
 
   &.unseen,
-  &.unseen &__title {
+  &.unseen &__title,
+  &.unseen &__message__time {
     color: var(--theme-blue);
-    // &.unseen &__message__time,
   }
 }

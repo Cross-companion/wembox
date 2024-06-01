@@ -16,18 +16,43 @@
 
     &__item {
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      justify-content: center;
       position: relative;
       word-wrap: break-word;
       min-width: 4.8rem;
       min-height: 4.8rem;
       border-radius: 2.4rem;
       padding: 1.2rem 1.6rem;
+      padding: 0.3rem 0.3rem 1.2rem;
       margin-bottom: 0.6rem;
       max-width: 67%;
 
       &:last-child {
         margin-bottom: 2rem;
+      }
+
+      & > div[data-type='image-carrier'] {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        max-height: 35rem;
+        background-color: rgba(0, 0, 0, 0.103);
+        border-radius: 1rem;
+        overflow: hidden;
+
+        & > img {
+          max-width: 100%;
+          max-height: 100%;
+        }
+
+        &:last-child {
+          margin-bottom: 0.6rem;
+        }
+      }
+
+      & > p {
+        padding: 0.8rem 1.2rem 0;
       }
 
       & > span {
@@ -50,8 +75,15 @@
     }
 
     &.sent > &__item {
-      padding-right: 2rem;
       background-color: var(--theme-blue);
+
+      & > p {
+        // padding-right: 2rem;
+      }
+
+      &[data-carrying='image'] {
+        border-radius: 1rem;
+      }
 
       &:last-child {
         border-bottom-right-radius: 0.4rem;
@@ -70,6 +102,7 @@
       }
     }
 
+    // The message-time element is the not the last child as seen in the ui.
     & > [data-type='message-time'] {
       position: absolute;
       bottom: 0;
