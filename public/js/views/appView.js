@@ -67,15 +67,15 @@ class AppView {
   </div>`;
   }
 
-  contactEntity(contact = {}, userId = '65b39b82c4d93b2f5499d80d') {
+  contactEntity(contact = {}) {
     const {
-      _id: otherUserId,
+      _id: otherUser,
       profileImage,
       name,
       frontEndUsername: username,
     } = contact.otherUser[0];
-    const { status, message, createdAt, receiver } = contact.lastMessage;
-    const isReceived = userId === receiver;
+    const { status, message, createdAt, sender } = contact.lastMessage;
+    const isReceived = sender === otherUser;
     const elementStatus = status !== 'seen' ? 'unseen' : 'seen';
     const elementClass = isReceived
       ? `received__${elementStatus}`
@@ -87,8 +87,8 @@ class AppView {
         <img
           data-type="profile-gateway"
           data-username="${username}"
-          src="../Imgs/users/${profileImage}"
-          alt="profile image of ${name}"
+          src="/images/${profileImage}"
+          alt="${name} profile image"
           class="entity__img"
         />
       </div>

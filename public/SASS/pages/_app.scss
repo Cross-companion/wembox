@@ -110,6 +110,8 @@
     background-color: var(--theme-blue);
     border-color: var(--theme-blue);
     color: var(--color-white);
+    max-width: 97%;
+    margin: auto;
 
     &__logo {
       margin-bottom: 1rem;

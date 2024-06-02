@@ -211,15 +211,15 @@ exports.getContacts = catchAsync(async (req, res, next) => {
   if (page < 1)
     return next(new AppError('Invalid page number specified.', 401));
 
-  const contactList = await getContactsQuery(
+  const contacts = await getContactsQuery(
     { users: userID },
     { userID, contactsLimit, skipBy }
   );
 
   res.status(200).json({
     status: 'success',
-    results: contactList.length,
-    contactList,
+    results: contacts.length,
+    contacts,
   });
 });
 

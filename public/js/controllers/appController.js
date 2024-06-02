@@ -31,11 +31,17 @@ class AppController {
   }
 
   async getContacts() {
-    const contacts = await appModel.getContacts();
-    if (!contacts?.length) return this.insertContacts(appView.noContactsHtml());
-    const contactList = appView.buildContactList(contacts);
-    this.insertContacts(contactList);
-    this.toogleLoader(appView.app, undefined, { remove: true });
+    try {
+      const { contacts } = await appModel.getContacts();
+      if (!contacts?.length)
+        return this.insertContacts(appView.noContactsHtml());
+      const contactList = appView.buildContactList(contacts);
+      this.insertContacts(contactList);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      this.toogleLoader(appView.app, undefined, { remove: true });
+    }
   }
 
   insertContacts(html) {
