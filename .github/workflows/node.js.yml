@@ -27,4 +27,4 @@ jobs:
     - run: |
         touch .env
         echo "${{ secrets.WEMBEE_SECRET_KEYS }}" > .env
-    - run: pm2 restart WEMBOXAPP
+    - run: pm2 start server.js --name WEMBOXAPP
