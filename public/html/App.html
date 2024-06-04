@@ -24,6 +24,15 @@
       </div>
       <div class="app__loader__loader"></div>
     </div>
+    <section id="app-modal" class="app-modal">
+      <div id="app-modal-overlay" class="app-modal__overlay"></div>
+      <div
+        id="app-modal-content-container"
+        class="app-modal__modal glassmorph app-modal__modal--no-padding profile"
+      >
+        <div class="app-modal__loader"></div>
+      </div>
+    </section>
     <section class="app__chat-list">
       <header class="app__header" id="app-header">
         <div class="app__header__details">
@@ -32,6 +41,7 @@
               src="../Imgs/users/upwork-profile_edited.jpg"
               data-username="me"
               data-type="profile-gateway"
+              data-me="me"
               class="person__img person__img--me"
               alt="me"
             />

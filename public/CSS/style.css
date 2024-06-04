@@ -1,3 +1,17 @@
+@keyframes l3 {
+  20% {
+    background-position: 0% 0%, 50% 50%, 100% 50%;
+  }
+  40% {
+    background-position: 0% 100%, 50% 0%, 100% 50%;
+  }
+  60% {
+    background-position: 0% 50%, 50% 100%, 100% 0%;
+  }
+  80% {
+    background-position: 0% 50%, 50% 50%, 100% 100%;
+  }
+}
 :root {
   --color-secondary: #d0d6f9;
   --color-secondary-rgb: rgb(208, 214, 249);
@@ -13,6 +27,7 @@
   --theme-blueish-white: rgb(239, 243, 244);
   --theme-blueish-white-2: #fcfbfd;
   --person-img-width: 5rem;
+  --default-icon-fill: #5f6368;
   --footer-height-signup: 6rem;
   --z-index-lowest: -10;
   --z-index-heighest: 10;
@@ -67,6 +82,10 @@ html {
   min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary);
+}
+
+svg {
+  fill: var(--default-icon-fill);
 }
 
 body {
@@ -290,6 +309,17 @@ main.main__interest {
   padding: 0;
   overflow: hidden;
   border: none !important;
+}
+.app-modal__loader {
+  width: 5rem;
+  aspect-ratio: 2;
+  --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+  background: var(--_g) 0% 50%, var(--_g) 50% 50%, var(--_g) 100% 50%;
+  background-size: 33.3333333333% 50%;
+  animation: l3 1s infinite linear;
+}
+.app-modal__loader--modal {
+  margin: 1.5rem 3rem;
 }
 
 .btn {
@@ -875,6 +905,7 @@ svg.interest__topics__follow-icon {
   display: flex;
   flex-direction: column;
   margin-bottom: calc(var(--profile-img-width) / 2);
+  background-color: var(--color-white);
 }
 .profile__images__cover {
   max-width: var(--profile-cover-img-max-width);
@@ -893,17 +924,52 @@ svg.interest__topics__follow-icon {
   position: absolute;
   right: 1rem;
   bottom: -3rem;
+  min-width: 60%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 2%;
 }
 .profile__social-actions__btn {
   background-color: rgb(5, 5, 5) !important;
   background: rgb(5, 5, 5) !important;
+  border: 0.1rem solid transparent !important;
   transition: background-color 0.2s, border 0.2s, color 0.2s;
+}
+.profile__social-actions__btn:hover {
+  background-color: white !important;
+  background: white !important;
+  border: 0.1rem solid black !important;
+  color: black !important;
 }
 .profile__social-actions__btn.active {
   background-color: white !important;
   background: white !important;
   border: 1px solid black !important;
   color: black !important;
+}
+.profile__social-actions__btn--edit {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.profile__social-actions__btn--edit > svg {
+  height: 1.7rem;
+  width: 1.7rem;
+  fill: #5f6368;
+}
+.profile__social-actions__btn--cancel, .profile__social-actions__btn--cancel:hover {
+  color: var(--gradient-color-2) !important;
+  border-color: var(--gradient-color-2) !important;
+  background-color: var(--color-white) !important;
+}
+.profile__social-actions__btn--save {
+  color: var(--color-white) !important;
+  background-color: var(--gradient-color-6) !important;
+}
+.profile__social-actions__btn--save:hover {
+  color: var(--color-white) !important;
+  border-color: var(--gradient-color-6) !important;
+  background-color: var(--gradient-color-6) !important;
 }
 .profile__details {
   margin: 0 1rem 1rem 1rem;
@@ -926,6 +992,58 @@ svg.interest__topics__follow-icon {
 }
 .profile__details__following > div:not(:last-child) {
   margin-right: 1rem;
+}
+.profile--form input {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  border: none;
+  padding: 0rem 0 0.3rem 0.4rem;
+  border-bottom: 0.1rem solid var(--gradient-color-6);
+  background-color: transparent;
+  outline: transparent;
+  margin-bottom: 0.5rem;
+}
+.profile--form input:invalid {
+  border-bottom-color: var(--gradient-color-2);
+}
+.profile--form div[data-type=previewer] {
+  position: relative;
+}
+.profile--form div[data-type=previewer][data-for=profileImage] {
+  position: absolute;
+  overflow: hidden;
+}
+.profile--form div[data-type=previewer][data-for=profileImage] > img {
+  width: 100%;
+  height: 100%;
+}
+.profile--form div[data-type=previewer] > input[type=file] {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.profile--form div[data-type=previewer] > [data-type=edit-icon] {
+  position: absolute;
+  top: 1rem;
+  right: 0.5rem;
+  width: 2.3rem;
+  height: 2.3rem;
+  border-radius: 50%;
+  background-color: var(--color-white);
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  fill: var(--default-icon-fill);
+}
+.profile--form div[data-type=previewer] > [data-type=edit-icon] > svg {
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .suggestion__topic-heading {

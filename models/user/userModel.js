@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 
 const userConfig = require('../../config/userConfig');
-const { setCachedUser } = require('../../utilities/helpers');
+const { setCachedUser, ageLimit } = require('../../utilities/helpers');
 
 const userSchema = new mongoose.Schema(
   {
@@ -87,11 +87,11 @@ const userSchema = new mongoose.Schema(
     dateOfBirth: {
       type: Date,
       min: [
-        new Date(`${new Date().getFullYear() - process.env.AGE_MAXIMUM}-01-01`),
+        ageLimit(),
         'Invalid date: Sorry, the date you specified is above our maximum age limit',
       ],
       max: [
-        new Date(`${new Date().getFullYear() - process.env.AGE_MINIMUM}-01-01`),
+        ageLimit('maximum'),
         'Invalid date: Sorry, the date you specified is below our minimum age limit',
       ],
       required: [

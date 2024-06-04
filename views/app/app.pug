@@ -3,6 +3,10 @@ html(lang='en')
   head
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='preconnect' href='https://fonts.googleapis.com') 
+    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin)  
+    link(href="https://fonts.googleapis.com/css2?family=Acme&family=Beau+Rivage&family=Borel&family=Bruno+Ace+SC&family=Cinzel&family=Cinzel+Decorative&family=Dancing+Script:wght@400;600;700&family=Ephesis&family=Lato:wght@300;400;700;900&family=Lobster&family=Macondo&family=Marcellus&family=Molle&family=Monoton&family=Montserrat+Alternates:wght@200;300&family=Pacifico&family=Raleway:wght@200&family=Rubik+Glitch&family=Satisfy&family=Tsukimi+Rounded:wght@300&family=Young+Serif&display=swap"
+      rel="stylesheet")
     link(rel='stylesheet', href='../CSS/style.css')
     script(src='../js/controllers/appController.js', type='module')
     title Wembox Inc
@@ -18,7 +22,7 @@ html(lang='en')
       header#app-header.app__header
         .app__header__details
           .person__img__container.person__img__container--decorated
-            img.person__img.person__img--me(src=`/images/${user.profileImage}`, alt=`${user.frontEndUsername}`, data-username=`${user.username}`, data-type='profile-gateway')
+            img.person__img.person__img--me(src=`/images/${user.profileImage}`, alt=`${user.frontEndUsername}`, data-username=`${user.username}`, data-me='me', data-type='profile-gateway')
           div
             span.app__header__notifications
               svg.app__header__notifications-icon(xmlns='http://www.w3.org/2000/svg', height='24px', viewBox='0 -960 960 960', width='24px')

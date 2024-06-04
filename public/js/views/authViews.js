@@ -26,7 +26,6 @@ class AuthViews {
         type="text"
         id="name-input"
         name="name"
-        value="Nwodoh"
         placeholder="name"
         maxlength="30"
         required
@@ -36,7 +35,6 @@ class AuthViews {
         type="email"
         id="email-input"
         name="email"
-        value="me2@me.com"
         placeholder="email"
         maxlength="320"
         required
@@ -46,7 +44,6 @@ class AuthViews {
         type="text"
         id="username-input"
         name="username"
-        value="me2"
         placeholder="username"
         pattern="^[A-Za-z_][A-Za-z0-9_]*$"
         maxlength="15"
@@ -57,7 +54,6 @@ class AuthViews {
         type="date"
         placeholder="Date of Birth"
         id="DOB-input"
-        value="2003-06-06"
         name="DOB"
         required
       />

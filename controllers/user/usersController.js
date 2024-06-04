@@ -24,6 +24,8 @@ exports.uploadProfileImages = upload.fields([
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   let { profileImage, profileCoverImage } = req.files;
+  console.log('req.files: ', req.files);
+  console.log('req.body: ', req.body);
   if (!profileImage && !profileCoverImage) return next();
 
   const userID = req.user._id;
@@ -78,6 +80,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
         ...USER_AGG.defaultProject,
         numberOfFollowers: 1,
         numberOfFollowing: 1,
+        profileCoverImage: 1,
       },
     },
   ]);

@@ -7,7 +7,7 @@ class Modal {
       <div
         id="app-modal-content-container" class="app-modal__modal glassmorph ${modifierClass}"
       >
-      <div style="margin: 1rem 0.7rem; border-radius: 5px ">Loading....</div>
+      <div class="app-modal__loader app-modal__loader--modal"></div>
       </div>
     </section>`;
   }
@@ -66,6 +66,20 @@ class Modal {
     this.overlay.removeEventListener('click', this.handlers[0]);
     document.removeEventListener('keydown', this.handlers[1]);
     this.appModal.remove();
+  }
+
+  replaceContentContainer(
+    newContent = 'Hola!',
+    newContentId = '#app-modal-content-container'
+  ) {
+    this.setContentContainer();
+    this.contentContainer?.remove();
+    this.appModal.insertAdjacentHTML('beforeend', newContent);
+    this.contentContainer = document.querySelector(newContentId);
+  }
+
+  setContentContainer(elementId = '#app-modal-content-container') {
+    this.contentContainer = document.querySelector(elementId);
   }
 }
 

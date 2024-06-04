@@ -23,7 +23,7 @@ class suggestionView {
     </div>`;
   }
 
-  createProfile(user) {
+  createProfile(user, isMe) {
     const {
       _id,
       name,
@@ -35,7 +35,17 @@ class suggestionView {
       isFollowed,
       isInContact,
     } = user;
-    console.log(user);
+
+    isMe &&
+      this.setPublicUserData({
+        name,
+        username,
+        profileImage,
+        profileCoverImage,
+      });
+
+    console.log(profileCoverImage);
+
     return `
         <div class="profile__images">
           <img class="profile__images__cover" src="${
@@ -46,9 +56,25 @@ class suggestionView {
           <img class="profile__images__profile" src="/images/${profileImage}" alt="">
           <div id="social-action-btns" class="profile__social-actions">
             ${
-              isInContact
-                ? ''
-                : `
+              isMe
+                ? `
+            <button
+              type="button"
+              data-value="action-btn"
+              data-type="profile-edit"
+              class="suggestion__btn-main profile__social-actions__btn profile__social-actions__btn--edit"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                <path
+                  d="M480-240Zm-320 40v-72q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q37 0 73 4.5t72 14.5l-67 68q-20-3-39-5t-39-2q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32h240v80H200q-17 0-28.5-11.5T160-200Zm400 40v-50q0-16 6.5-30.5T584-266l197-197q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T903-340L706-143q-11 11-25.5 17t-30.5 6h-50q-17 0-28.5-11.5T560-160Zm300-223-37-37 37 37ZM620-180h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19ZM480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm0-80q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Z"
+                />
+              </svg>
+              <span>Edit</span>
+            </button>`
+                : `${
+                    isInContact
+                      ? ''
+                      : `
             <button
               type="button"
               data-profile-image="${profileImage}"
@@ -61,7 +87,7 @@ class suggestionView {
             >
               Contact Request
             </button>`
-            }
+                  }
             <button
               type="button"
               data-profile-image="${profileImage}"
@@ -75,7 +101,8 @@ class suggestionView {
               }"
             >
               ${isFollowed ? 'following' : 'follow'}
-            </button>
+            </button>`
+            }
           </div>
         </div>
         <div class="profile__details">
@@ -227,6 +254,20 @@ class suggestionView {
       return interest.topic;
     });
     return topics;
+  }
+
+  setPublicUserData(
+    publicData = { username, name, profileImage, profileCoverImage }
+  ) {
+    this.PUBLIC_USER_DATA = publicData;
+  }
+
+  setProfileImagePreview(input) {
+    if (!(input.files && input.files[0])) return console.log('nothing');
+    const container = input.closest('[data-type="previewer"]');
+    const imagePreview = container.querySelector('[data-type="preview"]');
+    const imageUrl = URL.createObjectURL(input.files[0]);
+    imagePreview.src = imageUrl;
   }
 }
 

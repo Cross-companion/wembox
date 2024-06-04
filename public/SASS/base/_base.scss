@@ -17,6 +17,7 @@
   --theme-blueish-white: rgb(239, 243, 244);
   --theme-blueish-white-2: #fcfbfd;
   --person-img-width: 5rem;
+  --default-icon-fill: #5f6368;
 
   --footer-height-signup: 6rem;
 
@@ -114,6 +115,10 @@ html {
   min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary);
+}
+
+svg {
+  fill: var(--default-icon-fill);
 }
 
 body {
