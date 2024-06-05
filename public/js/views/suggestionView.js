@@ -34,6 +34,7 @@ class suggestionView {
       numberOfFollowers,
       isFollowed,
       isInContact,
+      note,
     } = user;
 
     isMe &&
@@ -42,9 +43,8 @@ class suggestionView {
         username,
         profileImage,
         profileCoverImage,
+        note,
       });
-
-    console.log(profileCoverImage);
 
     return `
         <div class="profile__images">
@@ -60,7 +60,6 @@ class suggestionView {
                 ? `
             <button
               type="button"
-              data-value="action-btn"
               data-type="profile-edit"
               class="suggestion__btn-main profile__social-actions__btn profile__social-actions__btn--edit"
             >
@@ -110,7 +109,9 @@ class suggestionView {
             <div class="profile__details__name">${name}</div>
             <div class="profile__details__username"><span>@</span>${username}</div>
           </div>
-          <div class="profile__details__note">Gratittude is a must ♥</div>
+          <div class="profile__details__note">${
+            note || 'Gratittude is a must ♥'
+          }</div>
           <div class="profile__details__following">
             <div><span>${numberOfFollowers}</span> followers</div>
             <div><span>${numberOfFollowing}</span> following</div>
@@ -257,17 +258,33 @@ class suggestionView {
   }
 
   setPublicUserData(
-    publicData = { username, name, profileImage, profileCoverImage }
+    publicData = { username, name, profileImage, profileCoverImage, note }
   ) {
-    this.PUBLIC_USER_DATA = publicData;
+    const { username, name, profileImage, profileCoverImage, note } =
+      publicData;
+    this.PUBLIC_USER_DATA = {
+      username,
+      name,
+      profileImage,
+      profileCoverImage,
+      note,
+    };
+    return this.PUBLIC_USER_DATA;
   }
 
   setProfileImagePreview(input) {
-    if (!(input.files && input.files[0])) return console.log('nothing');
+    if (!(input.files && input.files[0])) return;
     const container = input.closest('[data-type="previewer"]');
     const imagePreview = container.querySelector('[data-type="preview"]');
     const imageUrl = URL.createObjectURL(input.files[0]);
     imagePreview.src = imageUrl;
+  }
+
+  updateMyProfiles(newUrl = this.PUBLIC_USER_DATA) {
+    const myProfiles = document.querySelectorAll(
+      '[data-value="my-profile-gateway"]'
+    );
+    myProfiles?.forEach((img) => (img.src = `/images/${newUrl}`));
   }
 }
 

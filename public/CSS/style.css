@@ -889,9 +889,11 @@ svg.interest__topics__follow-icon {
   --profile-img-width: 9.4rem;
   --profile-cover-img-max-width: 40rem;
   --profile-cover-img-max-height: 23rem;
+  --profile-min-width: 35rem;
   overflow: hidden;
   font-weight: 600;
   background-color: white;
+  max-width: 40rem !important;
 }
 @media (max-width: 26.7em) {
   .profile {
@@ -910,6 +912,8 @@ svg.interest__topics__follow-icon {
 .profile__images__cover {
   max-width: var(--profile-cover-img-max-width);
   max-height: var(--profile-cover-img-max-height);
+  min-width: var(--profile-min-width);
+  min-height: 3rem;
 }
 .profile__images__profile {
   position: absolute;
@@ -974,9 +978,10 @@ svg.interest__topics__follow-icon {
 .profile__details {
   margin: 0 1rem 1rem 1rem;
   font-weight: 700;
+  max-width: var(--profile-min-width);
 }
 .profile__details__identity {
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 .profile__details__name {
   font-size: 2rem;
@@ -989,6 +994,7 @@ svg.interest__topics__follow-icon {
 .profile__details__following {
   display: flex;
   flex-direction: row;
+  margin-top: 1rem;
 }
 .profile__details__following > div:not(:last-child) {
   margin-right: 1rem;

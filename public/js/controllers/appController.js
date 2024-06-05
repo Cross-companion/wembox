@@ -28,8 +28,19 @@ class AppController {
   clickHandlers(e) {
     const target = e.target;
     const isProfileGateway = target.dataset.type === 'profile-gateway';
+    const isCancelUpdateMe = target.dataset.type === 'cancel-update-me';
+    const isEditProfile =
+      target.dataset.type === 'profile-edit' ||
+      target.closest('[data-type="profile-edit"]')
+        ? true
+        : false;
 
     if (isProfileGateway) return this.handleProfileVisits(target);
+    if (isEditProfile)
+      return modal.replaceContentContainer(
+        userViews.updateMeForm(this.PUBLIC_USER_DATA)
+      );
+    if (isCancelUpdateMe) return modal.closeModal();
   }
 
   submitHandlers(e) {
@@ -37,7 +48,7 @@ class AppController {
     const form = e.target;
     const isUpdateMeForm = form.dataset.type === 'update-me-form';
 
-    if (isUpdateMeForm) return userModel.updateMe(new FormData(form));
+    if (isUpdateMeForm) return this.updateMe(form);
   }
 
   changeHandlers(e) {
@@ -155,21 +166,13 @@ class AppController {
   handleActionBtns = async (initializer, e) => {
     const target = e.target;
     const dataset = target.dataset;
-    const isEditProfile =
-      dataset.type === 'profile-edit' ||
-      target.closest('[data-type="profile-edit"]')
-        ? true
-        : false;
+
     const isContactRequest = dataset.type === 'contact-request';
     const isFollow = dataset.type === 'follow';
 
     if (isContactRequest)
       return this.openContactRequestModal(target, initializer);
     if (isFollow) return await this.follow(dataset, target, initializer);
-    if (isEditProfile)
-      return modal.replaceContentContainer(
-        userViews.updateMeForm(this.PUBLIC_USER_DATA)
-      );
   };
 
   async visitProfile(username, initializer) {
@@ -204,6 +207,21 @@ class AppController {
     if (parentEl?.dataset.loadState === 'loading') return;
     parentEl.dataset.loadState = 'loading';
     parentEl.insertAdjacentHTML('afterbegin', loader);
+  }
+
+  async updateMe(form) {
+    try {
+      const isMe = true;
+      const formData = new FormData(form);
+      modal.setToDefault();
+      const { user: updatedMe } = await userModel.updateMe(formData);
+      modal.insertContent(suggestionView.createProfile(updatedMe, isMe));
+      this.PUBLIC_USER_DATA = suggestionView.setPublicUserData(updatedMe);
+      suggestionView.updateMyProfiles(this.PUBLIC_USER_DATA.profileImage);
+    } catch (err) {
+      alert(err.message);
+      modal.closeModal();
+    }
   }
 }
 

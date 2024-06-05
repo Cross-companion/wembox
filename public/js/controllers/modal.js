@@ -1,5 +1,8 @@
 class Modal {
-  constructor() {}
+  constructor() {
+    this.defaultContent =
+      '<div class="app-modal__loader app-modal__loader--modal"></div>';
+  }
   modalTemplate(modifierClass, { topLevel = false } = {}) {
     return `
     <section id="app-modal" class="app-modal">
@@ -7,7 +10,7 @@ class Modal {
       <div
         id="app-modal-content-container" class="app-modal__modal glassmorph ${modifierClass}"
       >
-      <div class="app-modal__loader app-modal__loader--modal"></div>
+      ${this.defaultContent}
       </div>
     </section>`;
   }
@@ -15,6 +18,11 @@ class Modal {
   insertContent(modalContent) {
     this.contentContainer.innerHTML = modalContent;
     return { contentContainer: this.contentContainer };
+  }
+
+  modalIsOpen() {
+    const isOpen = document.querySelector('#app-modal') ? true : false;
+    return isOpen;
   }
 
   showModal(
@@ -26,7 +34,7 @@ class Modal {
       },
     ]
   ) {
-    if (document.querySelector('#app-modal')) this.closeModal(onCloseEvents);
+    if (this.modalIsOpen()) this.closeModal(onCloseEvents);
     const modalHTML = this.modalTemplate(modifierClass);
     const pageBody = document.querySelector('body');
     pageBody.insertAdjacentHTML('afterbegin', modalHTML);
@@ -69,9 +77,10 @@ class Modal {
   }
 
   replaceContentContainer(
-    newContent = 'Hola!',
+    newContent = '',
     newContentId = '#app-modal-content-container'
   ) {
+    if (!this.modalIsOpen()) return;
     this.setContentContainer();
     this.contentContainer?.remove();
     this.appModal.insertAdjacentHTML('beforeend', newContent);
@@ -80,6 +89,12 @@ class Modal {
 
   setContentContainer(elementId = '#app-modal-content-container') {
     this.contentContainer = document.querySelector(elementId);
+  }
+
+  setToDefault() {
+    if (!this.modalIsOpen()) return;
+    this.setContentContainer();
+    this.contentContainer.innerHTML = this.defaultContent;
   }
 }
 

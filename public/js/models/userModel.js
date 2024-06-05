@@ -4,9 +4,6 @@ const { userRoute } = Config;
 
 class UserModel {
   async updateMe(formData) {
-    formData.forEach((element) => {
-      console.log(element);
-    });
     const data = await fetch(`${userRoute}/me`, {
       method: 'PATCH',
       body: formData,
@@ -14,7 +11,6 @@ class UserModel {
       .then((res) => res.json())
       .then((data) => data);
 
-    console.log(data);
     if (data.status !== 'success') throw new Error(data.message);
 
     return data;

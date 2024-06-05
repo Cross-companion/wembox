@@ -24,30 +24,35 @@ exports.uploadProfileImages = upload.fields([
 
 exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   let { profileImage, profileCoverImage } = req.files;
-  console.log('req.files: ', req.files);
-  console.log('req.body: ', req.body);
-  if (!profileImage && !profileCoverImage) return next();
 
+  if (!profileImage && !profileCoverImage) return next();
   const userID = req.user._id;
-  profileImage = new ImageFile({
-    image: profileImage[0],
-    uniqueID: userID,
-    prefix: PROFILE_IMAGE_PREFIX,
-  });
-  profileCoverImage = new ImageFile({
-    image: profileCoverImage[0],
-    uniqueID: userID,
-    prefix: PROFILE_COVER_IMAGE_PREFIX,
-    resize: [2000, 650],
-  });
 
   await Promise.all([
-    profileImage.uploadToAWS(),
-    profileCoverImage.uploadToAWS(),
+    (async () => {
+      console.log('Profile Image Does not exist', !profileImage);
+      if (!profileImage) return;
+      profileImage = new ImageFile({
+        image: profileImage[0],
+        uniqueID: userID,
+        prefix: PROFILE_IMAGE_PREFIX,
+      });
+      await profileImage?.uploadToAWS();
+      req.body.profileImage = profileImage.imageName;
+    })(),
+    (async () => {
+      console.log('Profile Cover Image Does not exist', !profileCoverImage);
+      if (!profileCoverImage) return;
+      profileCoverImage = new ImageFile({
+        image: profileCoverImage[0],
+        uniqueID: userID,
+        prefix: PROFILE_COVER_IMAGE_PREFIX,
+        resize: [2000, 650],
+      });
+      await profileCoverImage?.uploadToAWS();
+      req.body.profileCoverImage = profileCoverImage.imageName;
+    })(),
   ]);
-
-  req.body.profileImage = profileImage.imageName;
-  req.body.profileCoverImage = profileCoverImage.imageName;
   next();
 });
 
@@ -81,6 +86,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
         numberOfFollowers: 1,
         numberOfFollowing: 1,
         profileCoverImage: 1,
+        note: 1,
       },
     },
   ]);

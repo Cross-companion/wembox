@@ -1,7 +1,6 @@
 class UserView {
   updateMeForm({ name, username, profileImage, profileCoverImage, note } = {}) {
-    return `
-    <form
+    return `<form
         id="app-modal-content-container"
         class="profile profile--form app-modal__modal app-modal__modal--no-padding glassmorph"
         data-type="update-me-form"
@@ -55,16 +54,13 @@ class UserView {
             <div id="social-action-btns" class="profile__social-actions">
             <button
                 type="button"
-                data-value="action-btn"
-                data-type="profile-edit"
+                data-type="cancel-update-me"
                 class="suggestion__btn-main profile__social-actions__btn profile__social-actions__btn--cancel"
             >
                 cancel
             </button>
             <button
                 type="submit"
-                data-value="action-btn"
-                data-type="profile-edit"
                 class="suggestion__btn-main profile__social-actions__btn profile__social-actions__btn--save"
             >
                 Save
@@ -89,7 +85,6 @@ class UserView {
             value="${note || ''}"
             placeholder="A note or quote"
             maxlength="130"
-            required
             />
         </div>
     </form>`;

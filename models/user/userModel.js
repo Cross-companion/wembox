@@ -76,6 +76,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: 'user-images/default-profile-cover-image.jpg',
     },
+    note: {
+      type: String,
+      maxlength: 130,
+    },
     accountType: {
       type: String,
       enum: {
