@@ -128,7 +128,9 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   const newUser = await User.findByIdAndUpdate({ _id: userID }, updates, {
     new: true,
     runValidators: true,
-  });
+  }).select('+interests');
+  // This is set to undefined because it's only neede in the post middleware
+  newUser.interests = undefined;
 
   res.status(200).json({
     status: 'success',

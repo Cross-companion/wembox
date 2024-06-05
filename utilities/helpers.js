@@ -150,11 +150,6 @@ exports.ageLimit = (type = 'minimum') => {
   if (month < 10) month = '0' + month;
   if (date < 10) date = '0' + date;
 
-  console.log(
-    new Date(
-      `${year - process.env[`AGE_${type.toUpperCase()}`]}-${month}-${date}`
-    )
-  );
   return new Date(
     `${year - process.env[`AGE_${type.toUpperCase()}`]}-${month}-${date}`
   );
