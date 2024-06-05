@@ -25,7 +25,7 @@
     &__cover {
       max-width: var(--profile-cover-img-max-width);
       max-height: var(--profile-cover-img-max-height);
-      min-width: var(--profile-min-width);
+      // min-width: var(--profile-min-width);
       min-height: 3rem;
     }
 
@@ -118,6 +118,10 @@
 
     &__username {
       font-weight: 600;
+    }
+
+    &__note {
+      width: 95%;
     }
 
     &__following {

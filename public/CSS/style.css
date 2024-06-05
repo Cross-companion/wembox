@@ -912,7 +912,6 @@ svg.interest__topics__follow-icon {
 .profile__images__cover {
   max-width: var(--profile-cover-img-max-width);
   max-height: var(--profile-cover-img-max-height);
-  min-width: var(--profile-min-width);
   min-height: 3rem;
 }
 .profile__images__profile {
@@ -990,6 +989,9 @@ svg.interest__topics__follow-icon {
 }
 .profile__details__username {
   font-weight: 600;
+}
+.profile__details__note {
+  width: 95%;
 }
 .profile__details__following {
   display: flex;
