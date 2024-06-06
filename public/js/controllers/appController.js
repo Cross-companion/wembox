@@ -5,6 +5,7 @@ import suggestionView from '../views/suggestionView.js';
 import suggestionModel from '../models/suggestionModel.js';
 import userModel from '../models/userModel.js';
 import userViews from '../views/userViews.js';
+import chatController from './chatController.js';
 
 class AppController {
   constructor() {
@@ -29,13 +30,20 @@ class AppController {
     const target = e.target;
     const isProfileGateway = target.dataset.type === 'profile-gateway';
     const isCancelUpdateMe = target.dataset.type === 'cancel-update-me';
+    const isContactEntity =
+      target.dataset.type === 'contact-entity' ||
+      target.closest('[data-type="contact-entity"]')
+        ? true
+        : false;
     const isEditProfile =
       target.dataset.type === 'profile-edit' ||
       target.closest('[data-type="profile-edit"]')
         ? true
         : false;
 
-    if (isProfileGateway) return this.handleProfileVisits(target);
+    if (isProfileGateway) return this.handleProfileVisits(target); // Imgs in this have a higher prioity than it being part of a contact entity, hence, not needed to bubble up.
+    if (isContactEntity)
+      return this.openChats(target.closest('[data-type="contact-entity"]'));
     if (isEditProfile)
       return modal.replaceContentContainer(
         userViews.updateMeForm(this.PUBLIC_USER_DATA)
@@ -201,8 +209,6 @@ class AppController {
       loader.remove();
       return;
     }
-    console.log(typeof parentEl);
-    console.log(typeof loader);
 
     if (parentEl?.dataset.loadState === 'loading') return;
     parentEl.dataset.loadState = 'loading';
@@ -222,6 +228,29 @@ class AppController {
       alert(err.message);
       modal.closeModal();
     }
+  }
+
+  activatePage(pageName) {
+    if (pageName !== 'chats' && pageName !== 'contacts')
+      throw new Error('Invalid page name');
+
+    appView.pages.forEach((page) => {
+      page.dataset.pageName === pageName
+        ? page.classList.add('active')
+        : page.classList.remove('active');
+    });
+  }
+
+  activateChatEntity(selectedEntity) {
+    appView.currentContactEntity?.classList.remove('active');
+    selectedEntity.classList.add('active');
+    appView.currentContactEntity = selectedEntity;
+  }
+
+  async openChats(entity) {
+    this.activatePage('chats');
+    this.activateChatEntity(entity);
+    chatController.openChats({ ...entity.dataset });
   }
 }
 

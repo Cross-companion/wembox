@@ -18,7 +18,7 @@ html(lang='en')
           span.logo__text.logo__text--burn Wembox
           span inc.
       .app__loader__loader
-    section.app__chat-list
+    section.app__chat-list.active(data-type='page'  data-page-name='contacts')
       header#app-header.app__header
         .app__header__details
           .person__img__container.person__img__container--decorated
@@ -38,29 +38,9 @@ html(lang='en')
           h5
             | You can Send a contact request below to people you might know or find
             | interesting.
-        //
-          <div class="entity">
-          <div>
-          <img
-          src="../Imgs/users/leo.jpg"
-          alt="profile image of Leo Conan"
-          class="person__img entity__img"
-          />
-          </div>
-          <div class="entity__content">
-          <div class="entity__title">Leo Conan</div>
-          <div class="entity__message">
-          <p class="entity__message__message">
-          hello bro, any update jnaerg sgwejokerg awerfonre awerfonre
-          awerfonre awerfonre
-          </p>
-          <span class="entity__message__time">12:30am</span>
-          </div>
-          </div>
-          </div>
       div#suggestion-container.suggestion__container.glassmorph(data-type='contact-request')
         p Contact suggestions are rolling in....
-    section.app__chat-container.chat__container
+    section.app__chat-container.chat__container(data-type='page'  data-page-name='chats')
       .chat__container--pre-load
         img(src='./../Imgs/logos/DALL-E/wembee-logo-v1.jpg', alt='')
         .logo

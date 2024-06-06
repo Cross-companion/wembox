@@ -393,10 +393,11 @@ main.main__interest {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  max-width: 13.5rem;
 }
 .chat__container__header > div[data-type=profile] > div[data-type=details] > p[data-type=name] {
   color: black;
-  max-width: calc(100% - (var(--img-width) + var(--profile-gap) + 3rem));
+  max-width: 100%;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -472,7 +473,13 @@ main.main__interest {
   position: relative;
   transition: fill 0.2s;
 }
+.chat__container__inputs > form > div:not([data-type=chat-media-preview]) > svg[data-type=add-image-icon] {
+  width: 2.4rem;
+  height: 2.4rem;
+}
 .chat__container__inputs > form > div:not([data-type=chat-media-preview]) > svg[data-type=send-chat-icon] {
+  width: 2.2rem;
+  height: 2.2rem;
   left: 0.15rem;
   bottom: -0.12rem;
 }

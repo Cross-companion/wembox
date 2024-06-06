@@ -4,9 +4,13 @@ import TimeManager from '../utils/TimeManager.js';
 class AppView {
   constructor() {
     this.app = document.querySelector('#app');
+    this.pages = document.querySelectorAll('[data-type="page"]');
     this.appNav = document.querySelector('#app-nav');
     this.appHeader = document.querySelector('#app-header');
     this.contactList = document.querySelector('[data-type="contact-list"]');
+    this.currentContactEntity = document.querySelector(
+      '.active[data-type="contact-entity"]'
+    );
     this.watchAppHeader();
   }
 
@@ -82,13 +86,19 @@ class AppView {
       : `sent__${elementStatus}`;
 
     return `
-    <div class="entity ${elementClass}">
+    <div class="entity ${elementClass}"
+      data-type="contact-entity"
+      data-contact-id="${contact._id}"
+      data-username="${username}"
+      data-name="${name}"
+      data-profile-image="${profileImage}"
+      >
       <div>
         <img
           data-type="profile-gateway"
           data-username="${username}"
           src="/images/${profileImage}"
-          alt="${name} profile image"
+          alt="${name}'s profile image"
           class="entity__img"
         />
       </div>

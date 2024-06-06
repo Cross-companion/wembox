@@ -24,16 +24,11 @@
       </div>
       <div class="app__loader__loader"></div>
     </div>
-    <section id="app-modal" class="app-modal">
-      <div id="app-modal-overlay" class="app-modal__overlay"></div>
-      <div
-        id="app-modal-content-container"
-        class="app-modal__modal glassmorph app-modal__modal--no-padding profile"
-      >
-        <div class="app-modal__loader"></div>
-      </div>
-    </section>
-    <section class="app__chat-list">
+    <section
+      class="app__chat-list active"
+      data-type="page"
+      data-page-name="contacts"
+    >
       <header class="app__header" id="app-header">
         <div class="app__header__details">
           <div class="person__img__container person__img__container--decorated">
@@ -67,7 +62,14 @@
         </nav>
       </header>
       <section class="app__chat-list__list" data-type="contact-list">
-        <div class="entity received__unseen active">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity received__unseen active"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -89,7 +91,14 @@
             </span>
           </div>
         </div>
-        <div class="entity sent__seen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity sent__seen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -115,7 +124,14 @@
             </span>
           </div>
         </div>
-        <div class="entity received__unseen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity received__unseen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -137,7 +153,14 @@
             </span>
           </div>
         </div>
-        <div class="entity sent__seen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity sent__seen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -163,7 +186,14 @@
             </span>
           </div>
         </div>
-        <div class="entity sent__seen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity sent__seen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -189,7 +219,14 @@
             </span>
           </div>
         </div>
-        <div class="entity sent__unseen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity sent__unseen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -215,7 +252,14 @@
             </span>
           </div>
         </div>
-        <div class="entity sent__unseen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity sent__unseen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -241,7 +285,14 @@
             </span>
           </div>
         </div>
-        <div class="entity sent__seen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity sent__seen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -267,7 +318,14 @@
             </span>
           </div>
         </div>
-        <div class="entity sent__seen">
+        <div
+          data-type="contact-entity"
+          data-contact-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity sent__seen"
+        >
           <div>
             <img
               src="../Imgs/users/leo.jpg"
@@ -382,8 +440,12 @@
         </div>
       </div>
     </section>
-    <section class="app__chat-container chat__container active">
-      <!-- <div class="chat__container--pre-load">
+    <section
+      class="app__chat-container chat__container"
+      data-type="page"
+      data-page-name="chats"
+    >
+      <!-- <div class="chat__container--pre-load" data-type="chat-preload">
         <img src="./../Imgs/logos/DALL-E/wembee-logo-v1.jpg" alt="" />
         <div class="logo">
           <span class="logo__text logo__text--burn">Wembox</span>
@@ -394,7 +456,7 @@
         <div data-type="profile">
           <img src="./../Imgs/users/monica.jpg" alt="" />
           <div data-type="details">
-            <p data-type="name">Jacob Arizona sony walter biggs</p>
+            <p data-type="name">Jacob Mugabe the second</p>
             <p class="active" data-type="online-status">Online</p>
           </div>
         </div>
@@ -656,9 +718,7 @@
             <input type="file" data-type="chat-preview-input" />
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              height="24px"
               viewBox="0 -960 960 960"
-              width="24px"
               data-type="add-image-icon"
             >
               <path
@@ -670,9 +730,7 @@
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              height="22px"
               viewBox="0 -960 960 960"
-              width="22px"
               data-type="send-chat-icon"
             >
               <path

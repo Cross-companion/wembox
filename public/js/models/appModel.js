@@ -10,7 +10,6 @@ class AppModel {
 
     if (data.status !== 'success') throw new Error(data.message);
 
-    console.log(data);
     return data;
   }
 }
