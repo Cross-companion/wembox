@@ -7,6 +7,7 @@ const Config = {
   suggestionRoute: '/api/v1/suggest',
   followRoute: '/api/v1/follow',
   contactRoute: '/api/v1/contacts',
+  chatRoute: '/api/v1/chat',
   engagementScores: {
     follow: 6,
   },

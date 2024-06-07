@@ -73,13 +73,13 @@ class AppView {
 
   contactEntity(contact = {}) {
     const {
-      _id: otherUser,
+      _id: otherUserId,
       profileImage,
       name,
       frontEndUsername: username,
     } = contact.otherUser[0];
     const { status, message, createdAt, sender } = contact.lastMessage;
-    const isReceived = sender === otherUser;
+    const isReceived = sender === otherUserId;
     const elementStatus = status !== 'seen' ? 'unseen' : 'seen';
     const elementClass = isReceived
       ? `received__${elementStatus}`
@@ -88,7 +88,7 @@ class AppView {
     return `
     <div class="entity ${elementClass}"
       data-type="contact-entity"
-      data-contact-id="${contact._id}"
+      data-other-user-id="${otherUserId}"
       data-username="${username}"
       data-name="${name}"
       data-profile-image="${profileImage}"

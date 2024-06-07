@@ -777,6 +777,12 @@ svg.interest__topics__follow-icon {
   opacity: 0.5;
 }
 
+.message__day {
+  display: flex;
+  justify-content: center;
+  text-transform: capitalize;
+  padding: 1rem;
+}
 .message__group {
   position: relative;
   width: 100%;

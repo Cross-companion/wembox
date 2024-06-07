@@ -1,3 +1,4 @@
+import chatModel from '../models/chatModel.js';
 import chatView from '../views/chatView.js';
 
 class ChatController {
@@ -5,11 +6,13 @@ class ChatController {
     this.page = document.querySelector('[data-page-name="chats"]');
   }
 
-  openChats(userData = { contactId, name, username, profileImage }) {
-    console.log(userData.contactId);
+  async openChats(userData = { otherUserId, name, username, profileImage }) {
     chatView.removePreload();
-    console.log(userData);
     this.page.innerHTML = chatView.chatTemplate(userData);
+    const chatContentContainer = chatView.setChatContentContainer();
+    const { chats } = await chatModel.getChats(userData.otherUserId);
+    const chatsHtml = chatView.chatsHtml(chats, userData.otherUserId);
+    chatContentContainer.innerHTML = chatsHtml;
   }
 }
 

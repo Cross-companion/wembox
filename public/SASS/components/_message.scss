@@ -1,4 +1,11 @@
 .message {
+  &__day {
+    display: flex;
+    justify-content: center;
+    text-transform: capitalize;
+    padding: 1rem;
+  }
+
   &__group {
     position: relative;
     width: 100%;

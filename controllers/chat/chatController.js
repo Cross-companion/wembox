@@ -48,7 +48,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
 
 exports.getRecentChats = catchAsync(async (req, res, next) => {
   const { _id: userID } = req.user;
-  const { otherUserID, page = 1 } = req.body;
+  const { otherUserID, page = 1 } = req.params;
   const usersArr = [userID, otherUserID];
   const chatsLimit = chatsPerRequest || 20;
   const skipBy = (page - 1) * chatsLimit;
