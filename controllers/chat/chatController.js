@@ -42,7 +42,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
 
   const updatedContact = await Contact.findByIdAndUpdate(
     { _id: contactID },
-    { lastMessage: newChat._id },
+    { lastMessage: newChat._id, $inc: { [`unseens.${receiverID}`]: 1 } },
     {
       new: true,
       runValidators: true,
@@ -67,13 +67,20 @@ exports.getRecentChats = catchAsync(async (req, res, next) => {
   if (page < 1)
     return next(new AppError('Invalid page number specified.', 401));
 
-  const { nModified } = await Chat.updateMany(
+  await Chat.updateMany(
     {
       receiver: userID,
       sender: otherUserID,
       status: deliveredStatus,
     },
     { status: seenStatus }
+  );
+
+  await Contact.updateOne(
+    {
+      users: { $all: [userID, otherUserID] },
+    },
+    { [`unseens.${userID}`]: 0 }
   );
 
   const recentChats = await getChatsFromDB(usersArr, skipBy, chatsLimit);

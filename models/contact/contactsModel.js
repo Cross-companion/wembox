@@ -30,6 +30,22 @@ const contactSchema = new mongoose.Schema(
       ref: 'Chat',
       required: [true, 'No last message has be assigned to this contact.'],
     },
+    unseens: {
+      type: mongoose.Schema.Types.Mixed,
+      validate: {
+        validator: function (value) {
+          // Ensure all values are numbers
+          for (const prop in value) {
+            if (typeof value[prop] !== 'number') {
+              return false;
+            }
+          }
+          return true;
+        },
+        message: (props) => `${props.value} is not a valid number!`,
+      },
+      select: false,
+    },
     createdAt: {
       type: Date,
       default: Date.now,

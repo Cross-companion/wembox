@@ -72,19 +72,29 @@ class AppView {
   }
 
   contactEntity(contact = {}) {
+    const { otherUser, lastMessage, unseenMessages } = contact;
     const {
       _id: otherUserId,
       profileImage,
       name,
       frontEndUsername: username,
-    } = contact.otherUser[0];
-    const { status, message, createdAt, sender } = contact.lastMessage;
+    } = otherUser;
+    const { status, message, createdAt, sender } = lastMessage;
     const isReceived = sender === otherUserId;
     const elementStatus = status !== 'seen' ? 'unseen' : 'seen';
     const elementClass = isReceived
       ? `received-${elementStatus}`
       : `sent-${elementStatus}`;
+    const showAlertNumber = unseenMessages > 0;
 
+    console.log({
+      otherUser,
+      lastMessage,
+      unseenMessages,
+      elementStatus,
+      elementClass,
+      showAlertNumber,
+    });
     return `
     <div class="entity ${elementClass}"
       data-type="contact-entity"
@@ -115,8 +125,8 @@ class AppView {
             lowercase: true,
           })}</span>
           ${
-            isReceived
-              ? `<span class="entity__alert-number">1</span>`
+            isReceived && showAlertNumber
+              ? `<span class="entity__alert-number">${unseenMessages}</span>`
               : Icons({ type: `chat/${status}` })
           }
         </span>
@@ -125,7 +135,17 @@ class AppView {
   }
 
   buildContactList(contacts = []) {
-    return contacts.map((contact) => this.contactEntity(contact)).join(' ');
+    try {
+      const contactListHtml = contacts
+        .map((contact) => {
+          console.log(contact.unseenMessages);
+          return this.contactEntity(contact);
+        })
+        .join(' ');
+      return contactListHtml;
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 
