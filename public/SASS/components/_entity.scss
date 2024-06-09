@@ -92,7 +92,7 @@
     background-color: var(--theme-blueish-white);
   }
 
-  &.sent__seen &__message {
+  &[data-entity-state='sent-seen'] &__message {
     &__time {
       // color: var(--theme-blue);
 
@@ -102,8 +102,8 @@
     }
   }
 
-  &.received__seen &__message,
-  &.received__unseen &__message {
+  &[data-entity-state='received-seen'] &__message,
+  &[data-entity-state='received-unseen'] &__message {
     &__time {
       top: 0.1rem;
       & > svg {
@@ -112,13 +112,13 @@
     }
   }
 
-  &.received__unseen,
-  &.received__unseen &__title,
-  &.received__unseen &__message__time {
+  &[data-entity-state='received-unseen'],
+  &[data-entity-state='received-unseen'] &__title,
+  &[data-entity-state='received-unseen'] &__message__time {
     color: var(--theme-blue);
   }
 
-  &.received__unseen &__alert-number {
+  &[data-entity-state='received-unseen'] &__alert-number {
     display: flex;
   }
 }

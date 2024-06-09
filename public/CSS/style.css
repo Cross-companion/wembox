@@ -695,19 +695,19 @@ main.main__interest {
 .entity.active {
   background-color: var(--theme-blueish-white);
 }
-.entity.sent__seen .entity__message__time > svg {
+.entity[data-entity-state=sent-seen] .entity__message__time > svg {
   fill: var(--theme-blue);
 }
-.entity.received__seen .entity__message__time, .entity.received__unseen .entity__message__time {
+.entity[data-entity-state=received-seen] .entity__message__time, .entity[data-entity-state=received-unseen] .entity__message__time {
   top: 0.1rem;
 }
-.entity.received__seen .entity__message__time > svg, .entity.received__unseen .entity__message__time > svg {
+.entity[data-entity-state=received-seen] .entity__message__time > svg, .entity[data-entity-state=received-unseen] .entity__message__time > svg {
   display: none;
 }
-.entity.received__unseen, .entity.received__unseen .entity__title, .entity.received__unseen .entity__message__time {
+.entity[data-entity-state=received-unseen], .entity[data-entity-state=received-unseen] .entity__title, .entity[data-entity-state=received-unseen] .entity__message__time {
   color: var(--theme-blue);
 }
-.entity.received__unseen .entity__alert-number {
+.entity[data-entity-state=received-unseen] .entity__alert-number {
   display: flex;
 }
 

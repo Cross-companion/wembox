@@ -252,7 +252,9 @@ class AppController {
   async openChats(entity) {
     this.activatePage('chats');
     this.activateChatEntity(entity);
-    chatController.openChats({ ...entity.dataset });
+    await chatController.openChats({ ...entity.dataset });
+    if (entity.dataset.entityState === 'received-unseen')
+      entity.dataset.entityState = 'received-seen';
   }
 }
 

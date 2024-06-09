@@ -82,8 +82,8 @@ class AppView {
     const isReceived = sender === otherUserId;
     const elementStatus = status !== 'seen' ? 'unseen' : 'seen';
     const elementClass = isReceived
-      ? `received__${elementStatus}`
-      : `sent__${elementStatus}`;
+      ? `received-${elementStatus}`
+      : `sent-${elementStatus}`;
 
     return `
     <div class="entity ${elementClass}"
@@ -92,6 +92,7 @@ class AppView {
       data-username="${username}"
       data-name="${name}"
       data-profile-image="${profileImage}"
+      data-entity-state='${elementClass}'
       >
       <div>
         <img
