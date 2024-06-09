@@ -12,6 +12,14 @@
     background-position: 0% 50%, 50% 50%, 100% 100%;
   }
 }
+@keyframes rotate-infinite {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
 :root {
   --color-secondary: #d0d6f9;
   --color-secondary-rgb: rgb(208, 214, 249);
@@ -448,7 +456,7 @@ main.main__interest {
   align-items: center;
   position: relative;
 }
-.chat__container__inputs > form > div:not([data-type=chat-media-preview]) {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]) {
   width: var(--height-of-input-elements);
   height: var(--height-of-input-elements);
   border-radius: 50%;
@@ -462,28 +470,31 @@ main.main__interest {
   cursor: pointer;
   transition: background-color 0.2s border-color 0.2s;
 }
-.chat__container__inputs > form > div:not([data-type=chat-media-preview]):hover {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]):hover {
   background-color: var(--theme-blue);
 }
-.chat__container__inputs > form > div:not([data-type=chat-media-preview]):hover > svg {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]):hover > svg {
   fill: var(--color-white);
 }
-.chat__container__inputs > form > div:not([data-type=chat-media-preview]) > svg {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview])[type=submit]:disabled {
+  cursor: not-allowed;
+}
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]) > svg {
   fill: var(--theme-blue);
   position: relative;
   transition: fill 0.2s;
 }
-.chat__container__inputs > form > div:not([data-type=chat-media-preview]) > svg[data-type=add-image-icon] {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]) > svg[data-type=add-image-icon] {
   width: 2.4rem;
   height: 2.4rem;
 }
-.chat__container__inputs > form > div:not([data-type=chat-media-preview]) > svg[data-type=send-chat-icon] {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]) > svg[data-type=send-chat-icon] {
   width: 2.2rem;
   height: 2.2rem;
   left: 0.15rem;
   bottom: -0.12rem;
 }
-.chat__container__inputs > form > div:not([data-type=chat-media-preview]) > input[data-type=chat-preview-input] {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]) > input[data-type=chat-preview-input] {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -829,8 +840,14 @@ svg.interest__topics__follow-icon {
 .message__group__item > div[data-type=image-carrier]:last-child {
   margin-bottom: 0.6rem;
 }
-.message__group__item > p {
+.message__group__item > pre {
   padding: 0.8rem 1.2rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
 }
 .message__group__item > span {
   position: absolute;
@@ -842,7 +859,17 @@ svg.interest__topics__follow-icon {
   height: 2rem;
   fill: var(--color-tertiary-custom-light);
 }
-.message__group__item > span.seen > svg {
+.message__group__item > span[data-chat-item-status=seen] > svg {
+  fill: var(--gradient-color-3);
+}
+.message__group__item > span[data-chat-item-status=sending] > svg {
+  width: 1.6rem;
+  height: 1.6rem;
+  animation: rotate-infinite 0.6s linear infinite;
+}
+.message__group__item > span[data-chat-item-status=error] > svg {
+  width: 1.6rem;
+  height: 1.6rem;
   fill: var(--gradient-color-3);
 }
 .message__group.sent > .message__group__item {

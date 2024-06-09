@@ -22,8 +22,8 @@ class AppController {
   eventHandler() {
     const app = appView.app;
     app.addEventListener('click', this.clickHandlers.bind(this));
-    app.addEventListener('change', this.changeHandlers.bind(this));
     app.addEventListener('submit', this.submitHandlers.bind(this));
+    app.addEventListener('change', this.changeHandlers.bind(this));
   }
 
   clickHandlers(e) {
@@ -55,8 +55,10 @@ class AppController {
     e.preventDefault();
     const form = e.target;
     const isUpdateMeForm = form.dataset.type === 'update-me-form';
+    const isChatInputForm = form.dataset.type === 'chat-input-form';
 
     if (isUpdateMeForm) return this.updateMe(form);
+    if (isChatInputForm) return chatController.sendChats(new FormData(form));
   }
 
   changeHandlers(e) {

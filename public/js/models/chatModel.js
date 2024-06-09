@@ -17,6 +17,19 @@ class ChatModel {
     return data;
   }
 
+  async sendChat(formData) {
+    const data = await fetch(`${chatRoute}/`, {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
   setAbortController(name) {
     this[`${name}AbortController`]?.abort();
     this[`${name}AbortController`] = new AbortController();

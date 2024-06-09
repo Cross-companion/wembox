@@ -10,7 +10,11 @@ router.use(chatController.deliverChats);
 
 router
   .route('/')
-  .post(contactController.protect, chatController.sendChat)
+  .post(
+    chatController.uploadChatImages,
+    contactController.protect,
+    chatController.sendChat
+  )
   .delete(chatController.deleteChat);
 
 router.route('/:otherUserID').get(chatController.getRecentChats);

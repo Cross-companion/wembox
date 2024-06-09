@@ -14,6 +14,20 @@ class ChatController {
     const chatsHtml = chatView.chatsHtml(chats, userData.otherUserId);
     chatContentContainer.innerHTML = chatsHtml;
   }
+
+  async sendChats(formData) {
+    const DOMChat = { createdAt: new Date().toISOString(), status: 'sending' };
+    formData.forEach((data, key) => {
+      DOMChat[key] = data;
+    });
+    chatView.insertNewChat(DOMChat);
+    try {
+      const { newChat } = await chatModel.sendChat(formData);
+      chatView.setChatStatus(newChat.status, ['sending']);
+    } catch (err) {
+      chatView.setChatStatus('error', ['sending']);
+    }
+  }
 }
 
 export default new ChatController();

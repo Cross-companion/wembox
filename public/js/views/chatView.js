@@ -18,7 +18,7 @@ class ChatView {
     preLoad?.remove();
   }
 
-  chatTemplate({ name, profileImage }) {
+  chatTemplate({ otherUserId, name, profileImage }) {
     return `
       <section class="chat__container__header">
         <div data-type="profile">
@@ -29,23 +29,26 @@ class ChatView {
           </div>
         </div>
       </section>
-      <section class="chat__container__content"><div data-type="chat-content-container"></div></section>
+      <section class="chat__container__content">
+        <div data-type="chat-content-container"></div>
+      </section>
       <section class="chat__container__inputs">
-        <form>
-          <div>
-            <input type="file" data-type="chat-preview-input" />
+        <form data-type="chat-input-form">
+          <input type="hidden" name="receiverID" value="${otherUserId}"/>
+          <button type="button">
+            <input type="file" name="chatImages" data-type="chat-preview-input" />
             ${Icons({
               type: 'add-image',
               dataStrings: 'data-type="add-image-icon"',
             })}
-          </div>
-          <textarea name="" id="" cols="30" rows="10"></textarea>
-          <div>
+          </button>
+          <textarea name="message" id="" cols="30" rows="10"></textarea>
+          <button type="submit">
           ${Icons({
             type: 'send-chat',
             dataStrings: 'data-type="send-chat-icon"',
           })}
-          </div>
+          </button>
         </form>
       </section>
       `;
@@ -59,15 +62,15 @@ class ChatView {
   }
 
   messageGroup(chats = [], otherUserId) {
-    const { createdAt: messageDay, receiver } = chats[chats.length - 1];
+    const { createdAt, receiver } = chats[chats.length - 1];
+    const messageTime = TimeManager.dateToCompleteTime(createdAt, {
+      lowercase: true,
+    });
     const groupStatus = receiver === otherUserId ? 'sent' : 'received';
 
     return `
-    <div class="message__group ${groupStatus}">
-      <div data-type="message-time">${TimeManager.dateToCompleteTime(
-        messageDay,
-        { lowercase: true }
-      )}</div>
+    <div class="message__group ${groupStatus}" data-group-status="${groupStatus}" data-message-time=${createdAt}>
+      <div data-type="message-time">${messageTime}</div>
       ${chats.map((chat) => this.messageItem(chat)).join(' ')}
     </div>
     `;
@@ -77,10 +80,10 @@ class ChatView {
     const { message, status } = chat;
     return `
     <div class="message__group__item">
-      <span class="${status}">
+      <span data-type="status-icon-container" data-chat-item-status="${status}">
         ${Icons({ type: `chat/${status}` })}
       </span>
-      <p>${message}</p>
+      <pre>${message}</pre>
     </div>`;
   }
 
@@ -91,22 +94,25 @@ class ChatView {
     </div>`;
   }
 
-  bundleChatsToGroups(chats = []) {
+  isValidTimeDifference(curDateString, prevDateString) {
     const maxSecDifference = 60;
-    function isValidTimeDifference(curDateString, prevDateString) {
-      const curDate = new Date(curDateString).getTime();
-      const prevDate = new Date(prevDateString).getTime();
-      const isValid = (curDate - prevDate) / 1000 < maxSecDifference;
-      return isValid;
-    }
+    const curDate = new Date(curDateString).getTime();
+    const prevDate = new Date(prevDateString).getTime();
+    const isValid = (curDate - prevDate) / 1000 < maxSecDifference;
+    return isValid;
+  }
 
+  bundleChatsToGroups(chats = []) {
     const bundledChats = chats.reduce((groups, currentChat, i, chatsArr) => {
       const previousChat = chatsArr[i - 1];
       if (!previousChat) groups.push([currentChat]);
       else if (currentChat.sender !== previousChat?.sender)
         groups.push([currentChat]);
       else if (
-        !isValidTimeDifference(currentChat.createdAt, previousChat.createdAt)
+        !this.isValidTimeDifference(
+          currentChat.createdAt,
+          previousChat.createdAt
+        )
       )
         groups.push([currentChat]);
       else groups[groups.length - 1].push(currentChat);
@@ -134,6 +140,60 @@ class ChatView {
           );
       })
       .join(' ');
+  }
+
+  insertNewChat(newChat) {
+    const chatContainer = this.setChatContentContainer();
+    if (!chatContainer?.children.length) return this.insertChatGroup(newChat); //
+
+    const { messageTime: lastChatTime, groupStatus } =
+      chatContainer?.children[0].dataset;
+    console.log(groupStatus);
+    if (groupStatus !== 'sent') return this.insertChatGroup(newChat);
+    const isValidTimeDifference = this.isValidTimeDifference(
+      newChat.createdAt,
+      lastChatTime
+    );
+
+    if (!isValidTimeDifference) return this.insertChatGroup(newChat); //
+    else return this.insertChatGroupItem(newChat);
+  }
+
+  insertChatGroup(newChat) {
+    const html = this.messageGroup([newChat], newChat.receiver);
+    const container = this.setChatContentContainer();
+    container.insertAdjacentHTML('afterbegin', html);
+  }
+
+  insertChatGroupItem(newChat) {
+    const html = this.messageItem(newChat);
+    const container = this.setChatContentContainer();
+    container.children[0].insertAdjacentHTML('beforeend', html);
+  }
+
+  setChatStatus(newStatus, priorStatus = ['sending', 'sent']) {
+    const container = this.setChatContentContainer();
+    if (!container) return;
+
+    const statusContainersToUpdate = [];
+    priorStatus.forEach((status) =>
+      statusContainersToUpdate.push(
+        container.querySelectorAll(
+          `[data-type="status-icon-container"][data-chat-item-status="${status}"]`
+        )
+      )
+    );
+
+    statusContainersToUpdate.forEach((nodeList) =>
+      this.replaceChatStatus(nodeList, newStatus)
+    );
+  }
+
+  replaceChatStatus(statusContainers = [], newStatus) {
+    statusContainers.forEach((container) => {
+      container.innerHTML = Icons({ type: `chat/${newStatus}` });
+      container.dataset.chatItemStatus = newStatus;
+    });
   }
 }
 

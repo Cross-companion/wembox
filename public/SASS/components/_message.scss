@@ -58,8 +58,14 @@
         }
       }
 
-      & > p {
+      & > pre {
         padding: 0.8rem 1.2rem 0;
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        font-family: inherit;
       }
 
       & > span {
@@ -73,8 +79,24 @@
           fill: var(--color-tertiary-custom-light);
         }
 
-        &.seen {
+        &[data-chat-item-status='seen'] {
           & > svg {
+            fill: var(--gradient-color-3);
+          }
+        }
+
+        &[data-chat-item-status='sending'] {
+          & > svg {
+            width: 1.6rem;
+            height: 1.6rem;
+            animation: rotate-infinite 0.6s linear infinite;
+          }
+        }
+
+        &[data-chat-item-status='error'] {
+          & > svg {
+            width: 1.6rem;
+            height: 1.6rem;
             fill: var(--gradient-color-3);
           }
         }
@@ -84,7 +106,7 @@
     &.sent > &__item {
       background-color: var(--theme-blue);
 
-      & > p {
+      & > pre {
         // padding-right: 2rem;
       }
 

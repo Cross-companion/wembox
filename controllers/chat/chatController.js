@@ -1,6 +1,7 @@
+const multer = require('multer');
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { getChatsFromDB } = require('./helpers');
+const { getChatsFromDB, multerStorage, multerFilter } = require('./helpers');
 const {
   defaultChatStatus,
   seenStatus,
@@ -12,9 +13,17 @@ const {
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
 
+const upload = multer({
+  storage: multerStorage,
+  fileFilter: multerFilter,
+});
+
+exports.uploadChatImages = upload.fields([{ name: 'chatImages', maxCount: 1 }]);
+
 exports.sendChat = catchAsync(async (req, res, next) => {
   // contactID was set at contact protect.
   const { _id: senderID, contactID } = req.user;
+
   const { receiverID, message } = req.body;
 
   if (!receiverID || senderID == receiverID)
@@ -42,7 +51,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message,
+    newChat,
   });
 });
 
