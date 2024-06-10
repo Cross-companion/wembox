@@ -47,6 +47,18 @@ class AppView {
     </div>`;
   }
 
+  setContactList() {
+    this.contactList = document.querySelector('[data-type="contact-list"]');
+    return this.contactList;
+  }
+
+  setCurrentEntity() {
+    this.currentContactEntity = document.querySelector(
+      '.active[data-type="contact-entity"]'
+    );
+    return this.currentContactEntity;
+  }
+
   noContactsHtml() {
     return `
   <div class="glassmorph app__no-contacts">
@@ -71,7 +83,7 @@ class AppView {
   </div>`;
   }
 
-  contactEntity(contact = {}) {
+  contactEntity(contact = {}, isActive) {
     const { otherUser, lastMessage, unseenMessages } = contact;
     const {
       _id: otherUserId,
@@ -87,16 +99,8 @@ class AppView {
       : `sent-${elementStatus}`;
     const showAlertNumber = unseenMessages > 0;
 
-    console.log({
-      otherUser,
-      lastMessage,
-      unseenMessages,
-      elementStatus,
-      elementClass,
-      showAlertNumber,
-    });
     return `
-    <div class="entity ${elementClass}"
+    <div class="entity ${isActive ? 'active' : ''} ${elementClass}"
       data-type="contact-entity"
       data-other-user-id="${otherUserId}"
       data-username="${username}"
@@ -135,17 +139,32 @@ class AppView {
   }
 
   buildContactList(contacts = []) {
-    try {
-      const contactListHtml = contacts
-        .map((contact) => {
-          console.log(contact.unseenMessages);
-          return this.contactEntity(contact);
-        })
-        .join(' ');
-      return contactListHtml;
-    } catch (err) {
-      console.log(err);
-    }
+    const contactListHtml = contacts
+      .map((contact) => this.contactEntity(contact))
+      .join(' ');
+    return contactListHtml;
+  }
+
+  updateContactList({ newChat, updatedContact, otherUser }) {
+    const contactEntity = document.querySelector(
+      `[data-type="contact-entity"][data-other-user-id="${otherUser._id}"]`
+    );
+    const contact = { ...updatedContact };
+    const dataset = contactEntity.dataset;
+    contact.lastMessage = newChat;
+    contact.otherUser = {
+      _id: otherUser._id,
+      profileImage: dataset.profileImage,
+      name: dataset.name,
+      frontEndUsername: dataset.username,
+    };
+
+    contactEntity.remove();
+    const contactList = this.setContactList();
+    contactList.insertAdjacentHTML(
+      'afterbegin',
+      this.contactEntity(contact, true)
+    );
   }
 }
 

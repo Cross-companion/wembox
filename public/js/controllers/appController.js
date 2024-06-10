@@ -58,7 +58,7 @@ class AppController {
     const isChatInputForm = form.dataset.type === 'chat-input-form';
 
     if (isUpdateMeForm) return this.updateMe(form);
-    if (isChatInputForm) return chatController.sendChats(new FormData(form));
+    if (isChatInputForm) return this.sendChat(form);
   }
 
   changeHandlers(e) {
@@ -244,9 +244,8 @@ class AppController {
   }
 
   activateChatEntity(selectedEntity) {
-    appView.currentContactEntity?.classList.remove('active');
+    appView.setCurrentEntity()?.classList.remove('active');
     selectedEntity.classList.add('active');
-    appView.currentContactEntity = selectedEntity;
   }
 
   async openChats(entity) {
@@ -255,6 +254,11 @@ class AppController {
     await chatController.openChats({ ...entity.dataset });
     if (entity.dataset.entityState === 'received-unseen')
       entity.dataset.entityState = 'received-seen';
+  }
+
+  async sendChat(form) {
+    const chatData = await chatController.sendChats(new FormData(form));
+    appView.updateContactList(chatData);
   }
 }
 

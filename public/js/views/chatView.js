@@ -42,7 +42,7 @@ class ChatView {
               dataStrings: 'data-type="add-image-icon"',
             })}
           </button>
-          <textarea name="message" id="" cols="30" rows="10"></textarea>
+          <textarea name="message" data-type="chat-text-input" id="" cols="30" rows="10"></textarea>
           <button type="submit">
           ${Icons({
             type: 'send-chat',
@@ -59,6 +59,18 @@ class ChatView {
       '[data-type="chat-content-container"]'
     );
     return this.chatContentContainer;
+  }
+
+  setChatForm() {
+    this.chatForm = document.querySelector('[data-type="chat-input-form"]');
+    return this.chatForm;
+  }
+
+  setChatTextInput() {
+    this.chatTextInput = document.querySelector(
+      '[data-type="chat-text-input"]'
+    );
+    return this.chatTextInput;
   }
 
   messageGroup(chats = [], otherUserId) {
@@ -148,7 +160,6 @@ class ChatView {
 
     const { messageTime: lastChatTime, groupStatus } =
       chatContainer?.children[0].dataset;
-    console.log(groupStatus);
     if (groupStatus !== 'sent') return this.insertChatGroup(newChat);
     const isValidTimeDifference = this.isValidTimeDifference(
       newChat.createdAt,
@@ -194,6 +205,15 @@ class ChatView {
       container.innerHTML = Icons({ type: `chat/${newStatus}` });
       container.dataset.chatItemStatus = newStatus;
     });
+  }
+
+  clearChatForm() {
+    const chatForm = this.setChatForm();
+    if (!chatForm) return;
+    const chatInputs = chatForm.querySelectorAll(
+      'input:not([type="hidden"]), textarea'
+    );
+    chatInputs.forEach((input) => (input.value = ''));
   }
 }
 
