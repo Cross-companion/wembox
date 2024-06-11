@@ -23,12 +23,29 @@ class ChatController {
   }
 
   async sendChats(formData) {
-    const DOMChat = { createdAt: new Date().toISOString(), status: 'sending' };
+    chatView.setChatMediaPreview()?.remove();
+    const DOMChat = {
+      createdAt: new Date().toISOString(),
+      status: 'sending',
+      chatImages: [],
+    };
     formData.forEach((data, key) => {
+      if (key === 'chatImages' && data?.size)
+        return DOMChat[key].push(URL.createObjectURL(data));
       DOMChat[key] = data;
     });
     chatView.clearChatForm();
-    chatView.insertNewChat(DOMChat);
+    if (!DOMChat.chatImages.length) chatView.insertNewChat(DOMChat);
+    else
+      DOMChat.chatImages.forEach((imgUrl, i, imgArr) =>
+        chatView.insertNewChat({
+          ...DOMChat,
+          action: { type: 'image', payload: imgUrl },
+          message: i === imgArr.length - 1 ? DOMChat.message : undefined,
+        })
+      );
+    // This else block is called when an Image is sent along and it appends any message only to the last img
+
     try {
       const { newChat, updatedContact } = await chatModel.sendChat(formData);
       chatView.setChatStatus(newChat.status, ['sending']);
@@ -40,6 +57,28 @@ class ChatController {
     } catch (err) {
       chatView.setChatStatus('error', ['sending']);
     }
+  }
+
+  addMediaPreview(input) {
+    const chatInputContainer = chatView.setChatInputContainer();
+    const chatMediaPreview = chatView.setChatMediaPreview();
+    if (!chatInputContainer) return;
+    if (!(input.files && input.files[0])) return chatMediaPreview.remove();
+
+    const imgs = [...input.files].reduce((allUrls, img) => {
+      const title = img.name.split('.')[0];
+      const imageUrl = URL.createObjectURL(img);
+      allUrls.push({ imageUrl, title });
+      return allUrls;
+    }, []);
+    const previewList = chatView.chatImagePreview(imgs);
+
+    if (chatMediaPreview) chatMediaPreview.remove();
+    chatInputContainer.insertAdjacentHTML('afterbegin', previewList);
+  }
+
+  deleteChatPreview(deleteBtn) {
+    chatView.deleteChatPreview(deleteBtn);
   }
 }
 

@@ -13,6 +13,46 @@ class ChatView {
       </div>`;
   }
 
+  setChatContentContainer() {
+    this.chatContentContainer = document.querySelector(
+      '[data-type="chat-content-container"]'
+    );
+    return this.chatContentContainer;
+  }
+
+  setChatMediaPreview() {
+    this.chatMediaPreview = document.querySelector(
+      '[data-type="chat-media-preview-container"]'
+    );
+    return this.chatMediaPreview;
+  }
+
+  setChatForm() {
+    this.chatForm = document.querySelector('[data-type="chat-input-form"]');
+    return this.chatForm;
+  }
+
+  setChatInputContainer() {
+    this.chatInputContainer = document.querySelector(
+      '[data-type="chat-inputs-container"]'
+    );
+    return this.chatInputContainer;
+  }
+
+  setChatTextInput() {
+    this.chatTextInput = document.querySelector(
+      '[data-type="chat-text-input"]'
+    );
+    return this.chatTextInput;
+  }
+
+  setChatMediaInput() {
+    this.chatMediaInput = document.querySelector(
+      '[data-type="chat-media-preview-input"]'
+    );
+    return this.chatMediaInput;
+  }
+
   removePreload() {
     const preLoad = document.querySelector('[data-type="chat-preload"]');
     preLoad?.remove();
@@ -32,11 +72,15 @@ class ChatView {
       <section class="chat__container__content">
         <div data-type="chat-content-container"></div>
       </section>
-      <section class="chat__container__inputs">
+      <section class="chat__container__inputs" data-type="chat-inputs-container">
         <form data-type="chat-input-form">
           <input type="hidden" name="receiverID" value="${otherUserId}"/>
           <button type="button">
-            <input type="file" name="chatImages" data-type="chat-preview-input" />
+            <input type="file" 
+            name="chatImages" 
+            data-type="chat-media-preview-input" 
+            accept="image/*"
+            multiple/>
             ${Icons({
               type: 'add-image',
               dataStrings: 'data-type="add-image-icon"',
@@ -54,23 +98,21 @@ class ChatView {
       `;
   }
 
-  setChatContentContainer() {
-    this.chatContentContainer = document.querySelector(
-      '[data-type="chat-content-container"]'
-    );
-    return this.chatContentContainer;
+  chatImagePreview(imgs = []) {
+    return `
+    <div data-type="chat-media-preview-container">
+      ${imgs.map((img) => this.chatImagePreviewItem(img)).join(' ')}
+    </div>`;
   }
 
-  setChatForm() {
-    this.chatForm = document.querySelector('[data-type="chat-input-form"]');
-    return this.chatForm;
-  }
-
-  setChatTextInput() {
-    this.chatTextInput = document.querySelector(
-      '[data-type="chat-text-input"]'
-    );
-    return this.chatTextInput;
+  chatImagePreviewItem({ imageUrl, title }) {
+    return `
+    <div data-type="chat-media-preview">
+      <img src="${imageUrl}" alt="${title}" />
+      <span data-type="delete-chat-media-preview">
+        ${Icons({ type: 'cancel' })}
+      </span>
+    </div>`;
   }
 
   messageGroup(chats = [], otherUserId) {
@@ -88,14 +130,32 @@ class ChatView {
     `;
   }
 
+  messageTypes(action) {
+    switch (action.type) {
+      case 'image':
+        return `
+        <div data-type="image-carrier">
+          <img
+            src="${action.payload}"
+            alt=""
+          />
+        </div>`;
+      default:
+        throw new Error('Invalid message type specified.');
+    }
+  }
+
   messageItem(chat) {
-    const { message, status } = chat;
+    const { message, status, action } = chat;
     return `
-    <div class="message__group__item">
+    <div class="message__group__item" ${
+      action?.type ? `data-carrying="${action.type}"` : ''
+    }>
       <span data-type="status-icon-container" data-chat-item-status="${status}">
         ${Icons({ type: `chat/${status}` })}
       </span>
-      <pre>${message}</pre>
+      ${action?.type ? this.messageTypes(action) : ''}
+      ${message ? `<pre>${message}</pre>` : ''}
     </div>`;
   }
 
@@ -214,6 +274,29 @@ class ChatView {
       'input:not([type="hidden"]), textarea'
     );
     chatInputs.forEach((input) => (input.value = ''));
+  }
+
+  deleteChatPreview(deleteBtn) {
+    const chatMediaPreviews = this.setChatMediaPreview();
+    const previewElement = deleteBtn.closest(
+      '[data-type="chat-media-preview"]'
+    );
+    if (!chatMediaPreviews || !previewElement) return;
+    const previewIndex = [...chatMediaPreviews.children].findIndex(
+      (el) => el === previewElement
+    );
+
+    const input = this.setChatMediaInput();
+    if (!input || !input.files || !input.files[0])
+      return previewElement.remove();
+
+    const filteredFiles = [...input.files].filter(
+      (file, i) => i !== previewIndex
+    );
+    const newFiles = new DataTransfer();
+    filteredFiles.forEach((file) => newFiles.items.add(file));
+    previewElement.remove();
+    input.files = newFiles.files;
   }
 }
 

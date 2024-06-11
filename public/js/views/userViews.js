@@ -18,7 +18,7 @@ class UserView {
                 name="profileCoverImage"
                 type="file"
                 accept="images/*"
-                data-type="image-preview-input"
+                data-type="update-me-image-preview-input"
             />
             <img
                 class="profile__images__cover"
@@ -47,7 +47,7 @@ class UserView {
                 name="profileImage"
                 type="file"
                 accept="images/*"
-                data-type="image-preview-input"
+                data-type="update-me-image-preview-input"
             />
             <img src="/images/${profileImage}" alt="" data-type="preview" />
             </div>

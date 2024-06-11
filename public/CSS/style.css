@@ -494,7 +494,7 @@ main.main__interest {
   left: 0.15rem;
   bottom: -0.12rem;
 }
-.chat__container__inputs > form > button:not([data-type=chat-media-preview]) > input[data-type=chat-preview-input] {
+.chat__container__inputs > form > button:not([data-type=chat-media-preview]) > input[data-type=chat-media-preview-input] {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -516,26 +516,40 @@ main.main__interest {
   max-width: 27rem;
   font-family: inherit;
 }
-.chat__container__inputs > div[data-type=chat-media-preview] {
+.chat__container__inputs > div[data-type=chat-media-preview-container] {
+  --max-height: 15rem;
+  --cancel-btn-width: 3rem;
+  display: flex;
+  align-items: center;
+  max-height: var(--max-height);
+  max-width: 70%;
+  overflow: scroll;
+  padding: 0 calc(var(--cancel-btn-width) / 2);
+  gap: calc(var(--cancel-btn-width) / 2);
+}
+.chat__container__inputs > div[data-type=chat-media-preview-container] > div[data-type=chat-media-preview] {
   border: 2px solid var(--theme-blue);
   border-radius: 0.4rem;
-  max-height: 15rem;
-  max-width: 70%;
+  max-height: calc(var(--max-height) - 1rem);
+  max-width: 100%;
+  min-width: 10.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   box-sizing: content-box;
 }
-.chat__container__inputs > div[data-type=chat-media-preview] > img {
+.chat__container__inputs > div[data-type=chat-media-preview-container] > div[data-type=chat-media-preview] > img {
   max-width: 100%;
-  max-height: 15rem;
+  max-height: calc(var(--max-height) - 1.2rem);
 }
-.chat__container__inputs > div[data-type=chat-media-preview] > span[data-type=delete-preview] {
-  --element-width: 3rem;
+.chat__container__inputs > div[data-type=chat-media-preview-container] > div[data-type=chat-media-preview] > span[data-type=delete-chat-media-preview] {
   background-color: var(--theme-blue);
-  width: var(--element-width);
-  height: var(--element-width);
+  width: var(--cancel-btn-width);
+  height: var(--cancel-btn-width);
   border-radius: 50%;
   position: absolute;
-  right: calc(var(--element-width) * -1 / 2);
+  right: calc(var(--cancel-btn-width) * -1 / 2);
   top: 50%;
   transform: translateY(-50%);
   display: flex;
@@ -543,13 +557,13 @@ main.main__interest {
   justify-content: center;
   cursor: pointer;
 }
-.chat__container__inputs > div[data-type=chat-media-preview] > span[data-type=delete-preview]:hover {
+.chat__container__inputs > div[data-type=chat-media-preview-container] > div[data-type=chat-media-preview] > span[data-type=delete-chat-media-preview]:hover {
   background-color: var(--theme-blueish-white);
 }
-.chat__container__inputs > div[data-type=chat-media-preview] > span[data-type=delete-preview]:hover > svg {
+.chat__container__inputs > div[data-type=chat-media-preview-container] > div[data-type=chat-media-preview] > span[data-type=delete-chat-media-preview]:hover > svg {
   fill: var(--gradient-color-7);
 }
-.chat__container__inputs > div[data-type=chat-media-preview] > span[data-type=delete-preview] > svg {
+.chat__container__inputs > div[data-type=chat-media-preview-container] > div[data-type=chat-media-preview] > span[data-type=delete-chat-media-preview] > svg {
   fill: var(--color-white);
   width: 1.8rem;
   height: 1.8rem;

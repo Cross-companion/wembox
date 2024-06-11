@@ -30,6 +30,11 @@ class AppController {
     const target = e.target;
     const isProfileGateway = target.dataset.type === 'profile-gateway';
     const isCancelUpdateMe = target.dataset.type === 'cancel-update-me';
+    const isDeleteChatMediaPreview =
+      target.dataset.type === 'delete-chat-media-preview' ||
+      target.closest('[data-type="delete-chat-media-preview"]')
+        ? true
+        : false;
     const isContactEntity =
       target.dataset.type === 'contact-entity' ||
       target.closest('[data-type="contact-entity"]')
@@ -49,6 +54,8 @@ class AppController {
         userViews.updateMeForm(this.PUBLIC_USER_DATA)
       );
     if (isCancelUpdateMe) return modal.closeModal();
+    if (isDeleteChatMediaPreview)
+      return chatController.deleteChatPreview(target);
   }
 
   submitHandlers(e) {
@@ -63,10 +70,14 @@ class AppController {
 
   changeHandlers(e) {
     const input = e.target;
-    const isImagePreviewInput = e.target.dataset.type === 'image-preview-input';
+    const isImagePreviewInput =
+      e.target.dataset.type === 'update-me-image-preview-input';
+    const isChatMediaPreviewInput =
+      e.target.dataset.type === 'chat-media-preview-input';
 
     if (isImagePreviewInput)
       return suggestionView.setProfileImagePreview(input);
+    if (isChatMediaPreviewInput) chatController.addMediaPreview(input);
   }
 
   async getContacts() {

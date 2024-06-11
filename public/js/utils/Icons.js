@@ -86,6 +86,17 @@ function Icons({ type, iconClasses = '', dataStrings = '' }) {
             d="M792-443 176-183q-20 8-38-3.5T120-220v-520q0-22 18-33.5t38-3.5l616 260q25 11 25 37t-25 37ZM200-280l474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"
           />
         </svg>`;
+    case 'cancel':
+      return `
+      <svg xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 -960 960 960"
+        height="24px"
+        width="24px"
+        fill="#5f6368">
+        <path
+          d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"
+        />
+      </svg>`;
 
     default:
       throw new Error(`No such api exist as ${type}`);
