@@ -9,7 +9,7 @@ const {
   AWS_BUCKET_NAME,
   AWS_SECRET,
   AWS_REGION,
-  AWS_USER_IMAGES_FOLDER,
+  AWS_CHAT_IMAGES_FOLDER,
 } = process.env;
 
 const awsClient = new S3Client({
@@ -26,8 +26,8 @@ class ImageFile {
     uniqueID,
     prefix = 'not-prefixed',
     resize = [500, 500],
-    quality = 90,
-    folderName = AWS_USER_IMAGES_FOLDER,
+    quality = 100,
+    folderName = AWS_CHAT_IMAGES_FOLDER,
   } = {}) {
     this.image = image;
     this.prefix = prefix;
@@ -37,12 +37,12 @@ class ImageFile {
     this.imageName = `${folderName}${prefix}-${uniqueID}-${Date.now()}.jpeg`;
   }
 
-  async sharpify(fit = 'contain') {
+  async sharpify(fit = 'cover') {
     try {
       if (!this.image || !this.uniqueID)
         throw new Error('No Image buffer or unique id  Specified');
       const sharpenedToBuffer = await sharp(this.image.buffer)
-        .resize(this.resize[0], this.resize[1], { fit: 'cover' })
+        .resize(this.resize[0], this.resize[1], { fit })
         .toFormat('jpeg')
         .jpeg({ quality: this.quality })
         .toBuffer()
@@ -54,7 +54,7 @@ class ImageFile {
     }
   }
 
-  async uploadToAWS(useSharp = true) {
+  async uploadToAWS({ useSharp = true } = {}) {
     if (!this.image || !this.uniqueID)
       throw new Error('No Image buffer or unique id  Specified');
     const imageBuffer = useSharp ? await this.sharpify() : this.image.buffer;

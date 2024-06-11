@@ -268,7 +268,7 @@ class AppController {
   }
 
   async sendChat(form) {
-    const chatData = await chatController.sendChats(new FormData(form));
+    const chatData = await chatController.sendChat(new FormData(form));
     appView.updateContactList(chatData);
   }
 }

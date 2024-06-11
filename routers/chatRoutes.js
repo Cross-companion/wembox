@@ -13,6 +13,7 @@ router
   .post(
     chatController.uploadChatImages,
     contactController.protect,
+    chatController.handleChatImages,
     chatController.sendChat
   )
   .delete(chatController.deleteChat);

@@ -10,7 +10,11 @@ const ImageFile = require('../../utilities/imageFileManager');
 const AppError = require('../../utilities/AppError');
 const catchAsync = require('../../utilities/catchAsync');
 const UserAggregations = require('../../models/user/aggregation');
-const { PROFILE_IMAGE_PREFIX, PROFILE_COVER_IMAGE_PREFIX } = process.env;
+const {
+  PROFILE_IMAGE_PREFIX,
+  PROFILE_COVER_IMAGE_PREFIX,
+  AWS_USER_IMAGES_FOLDER,
+} = process.env;
 
 const upload = multer({
   storage: multerStorage,
@@ -30,24 +34,27 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 
   await Promise.all([
     (async () => {
-      console.log('Profile Image Does not exist', !profileImage);
       if (!profileImage) return;
       profileImage = new ImageFile({
         image: profileImage[0],
         uniqueID: userID,
         prefix: PROFILE_IMAGE_PREFIX,
+        resize: [500, 500],
+        quality: 90,
+        folderName: AWS_USER_IMAGES_FOLDER,
       });
       await profileImage?.uploadToAWS();
       req.body.profileImage = profileImage.imageName;
     })(),
     (async () => {
-      console.log('Profile Cover Image Does not exist', !profileCoverImage);
       if (!profileCoverImage) return;
       profileCoverImage = new ImageFile({
         image: profileCoverImage[0],
         uniqueID: userID,
         prefix: PROFILE_COVER_IMAGE_PREFIX,
         resize: [2000, 650],
+        quality: 90,
+        folderName: AWS_USER_IMAGES_FOLDER,
       });
       await profileCoverImage?.uploadToAWS();
       req.body.profileCoverImage = profileCoverImage.imageName;

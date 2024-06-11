@@ -12,19 +12,48 @@ const {
 } = require('../../config/chatConfig');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
+const ImageFile = require('../../utilities/imageFileManager');
+const { CHAT_IMAGE_PREFIX, AWS_CHAT_IMAGES_FOLDER } = process.env;
 
 const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter,
 });
 
-exports.uploadChatImages = upload.fields([{ name: 'chatImages', maxCount: 1 }]);
+exports.uploadChatImages = upload.fields([
+  { name: 'chatImages', maxCount: 20 },
+]);
+
+exports.handleChatImages = catchAsync(async (req, res, next) => {
+  let { chatImages } = req.files;
+  const { _id: userID } = req.user;
+
+  if (!chatImages || !chatImages?.length) return next();
+  const savedImages = [];
+
+  const imagePromises = chatImages.map((image, i) => {
+    return (async () => {
+      const img = new ImageFile({
+        image: image,
+        uniqueID: `${userID}-${Math.ceil(Math.random() * 1000)}`,
+        prefix: CHAT_IMAGE_PREFIX,
+        folderName: AWS_CHAT_IMAGES_FOLDER,
+      });
+      await img?.uploadToAWS({ useSharp: false });
+      savedImages[i] = img.imageName;
+    })();
+  });
+  await Promise.all(imagePromises);
+
+  req.body.images = savedImages;
+  next();
+});
 
 exports.sendChat = catchAsync(async (req, res, next) => {
   // contactID was set at contact protect.
   const { _id: senderID, contactID } = req.user;
 
-  const { receiverID, message } = req.body;
+  const { receiverID, message, images } = req.body;
 
   if (!receiverID || senderID == receiverID)
     return next(new AppError('Invalid users specified.', 401));
@@ -35,6 +64,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
         sender: senderID,
         receiver: receiverID,
         message,
+        images,
       },
     ],
     { select: 'sender receiver status message createdAt' }

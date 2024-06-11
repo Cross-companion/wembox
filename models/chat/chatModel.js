@@ -6,7 +6,6 @@ const {
 const {
   chatStatusEnum,
   defaultChatStatus,
-  deliveredStatus,
 } = require('../../config/chatConfig');
 
 const chatSchema = new mongoose.Schema(
@@ -23,6 +22,9 @@ const chatSchema = new mongoose.Schema(
     },
     message: {
       type: String,
+    },
+    images: {
+      type: [String],
     },
     status: {
       type: String,

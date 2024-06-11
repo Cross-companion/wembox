@@ -1,5 +1,8 @@
 import chatModel from '../models/chatModel.js';
 import chatView from '../views/chatView.js';
+import Config from '../config.js';
+
+const { maxChatImages } = Config;
 
 class ChatController {
   constructor() {
@@ -22,7 +25,7 @@ class ChatController {
     });
   }
 
-  async sendChats(formData) {
+  async sendChat(formData) {
     chatView.setChatMediaPreview()?.remove();
     const DOMChat = {
       createdAt: new Date().toISOString(),
@@ -64,6 +67,11 @@ class ChatController {
     const chatMediaPreview = chatView.setChatMediaPreview();
     if (!chatInputContainer) return;
     if (!(input.files && input.files[0])) return chatMediaPreview.remove();
+    if (input.files.length > maxChatImages) {
+      alert(`You can only upload a maximum of ${maxChatImages} files.`);
+      input.value = '';
+      return chatMediaPreview.remove();
+    }
 
     const imgs = [...input.files].reduce((allUrls, img) => {
       const title = img.name.split('.')[0];
