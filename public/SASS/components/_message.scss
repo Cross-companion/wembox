@@ -39,6 +39,10 @@
         margin-bottom: 2rem;
       }
 
+      &[data-carrying='image'] {
+        border-radius: 1rem;
+      }
+
       & > div[data-type='image-carrier'] {
         display: flex;
         justify-content: center;
@@ -108,10 +112,6 @@
 
       & > pre {
         // padding-right: 2rem;
-      }
-
-      &[data-carrying='image'] {
-        border-radius: 1rem;
       }
 
       &:last-child {

@@ -647,8 +647,14 @@ main.main__interest {
 }
 .entity__message {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 1.5rem;
+}
+.entity__message > svg {
+  width: 2.3rem;
+  height: 2.3rem;
+  fill: #aebac7;
 }
 .entity__message__message {
   overflow: hidden;
@@ -720,6 +726,9 @@ main.main__interest {
 }
 .entity[data-entity-state=received-unseen], .entity[data-entity-state=received-unseen] .entity__title, .entity[data-entity-state=received-unseen] .entity__message__time {
   color: var(--theme-blue);
+}
+.entity[data-entity-state=received-unseen] .entity__message > svg {
+  fill: var(--theme-blue);
 }
 .entity[data-entity-state=received-unseen] .entity__alert-number {
   display: flex;
@@ -838,6 +847,9 @@ svg.interest__topics__follow-icon {
 .message__group__item:last-child {
   margin-bottom: 2rem;
 }
+.message__group__item[data-carrying=image] {
+  border-radius: 1rem;
+}
 .message__group__item > div[data-type=image-carrier] {
   display: flex;
   justify-content: center;
@@ -888,9 +900,6 @@ svg.interest__topics__follow-icon {
 }
 .message__group.sent > .message__group__item {
   background-color: var(--theme-blue);
-}
-.message__group.sent > .message__group__item[data-carrying=image] {
-  border-radius: 1rem;
 }
 .message__group.sent > .message__group__item:last-child {
   border-bottom-right-radius: 0.4rem;

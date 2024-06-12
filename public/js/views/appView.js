@@ -83,6 +83,17 @@ class AppView {
   </div>`;
   }
 
+  mediaTypes(media) {
+    const mediaTag = media.payload.length > 1 ? 'multi' : 'single';
+
+    switch (media.type) {
+      case 'image':
+        return Icons({ type: `image/${mediaTag}` });
+      default:
+        throw new Error('Invalid message type specified.');
+    }
+  }
+
   contactEntity(contact = {}, isActive) {
     const { otherUser, lastMessage, unseenMessages } = contact;
     const {
@@ -91,7 +102,7 @@ class AppView {
       name,
       frontEndUsername: username,
     } = otherUser;
-    const { status, message, createdAt, sender } = lastMessage;
+    const { status, message, createdAt, sender, media } = lastMessage;
     const isReceived = sender === otherUserId;
     const elementStatus = status !== 'seen' ? 'unseen' : 'seen';
     const elementClass = isReceived
@@ -120,6 +131,7 @@ class AppView {
       <div class="entity__content">
         <div class="entity__title">${name}</div>
         <div class="entity__message" title="${message}">
+          ${media?.payload.length ? this.mediaTypes(media) : ''}
           <p class="entity__message__message">
             ${message}
           </p>

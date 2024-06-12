@@ -30,8 +30,15 @@
 
   &__message {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
     font-size: 1.5rem;
+
+    & > svg {
+      width: 2.3rem;
+      height: 2.3rem;
+      fill: #aebac7;
+    }
 
     &__message {
       overflow: hidden;
@@ -116,6 +123,10 @@
   &[data-entity-state='received-unseen'] &__title,
   &[data-entity-state='received-unseen'] &__message__time {
     color: var(--theme-blue);
+  }
+
+  &[data-entity-state='received-unseen'] &__message > svg {
+    fill: var(--theme-blue);
   }
 
   &[data-entity-state='received-unseen'] &__alert-number {

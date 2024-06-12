@@ -64,6 +64,7 @@ exports.getContactsQuery = async (query, { userID, contactsLimit, skipBy }) => {
         'lastMessage.sender': 1,
         'lastMessage.receiver': 1,
         'lastMessage.message': 1,
+        'lastMessage.media': 1,
         'lastMessage.createdAt': 1,
       },
     },
