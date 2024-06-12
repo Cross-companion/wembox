@@ -50,10 +50,10 @@ class suggestionView {
         <div class="profile__images">
           <img class="profile__images__cover" src="${
             profileCoverImage
-              ? `/images/${profileCoverImage}`
+              ? `${profileCoverImage}`
               : '/Imgs/users/mars-spacex-starship-wallpapers.jpg'
           }" alt="">
-          <img class="profile__images__profile" src="/images/${profileImage}" alt="">
+          <img class="profile__images__profile" src="${profileImage}" alt="">
           <div id="social-action-btns" class="profile__social-actions">
             ${
               isMe
@@ -125,7 +125,7 @@ class suggestionView {
     return `
         <div id="suggestion-item-${_id}" data-class="suggestion-item" ${dataset} class="suggestion__person">
             <img
-                src="images/${profileImage}"
+                src="${profileImage}"
                 alt=""
                 class="suggestion__person__img"
                 data-type="profile-gateway"
@@ -158,7 +158,7 @@ class suggestionView {
     return `
     <form class="app-form contact-request__modal" data-user-id="${userID}">
       <div class="contact-request__details">
-        <img src="/images/${profileImage}" class="contact-request__img person__img person__img--me" alt="profile image of ${name}">
+        <img src="${profileImage}" class="contact-request__img person__img person__img--me" alt="profile image of ${name}">
         <div class="contact-request__identities">
           <div>
             <span class="suggestion__person__name">${name}</span>
@@ -284,7 +284,7 @@ class suggestionView {
     const myProfiles = document.querySelectorAll(
       '[data-value="my-profile-gateway"]'
     );
-    myProfiles?.forEach((img) => (img.src = `/images/${newUrl}`));
+    myProfiles?.forEach((img) => (img.src = `${newUrl}`));
   }
 }
 

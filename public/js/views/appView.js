@@ -112,7 +112,7 @@ class AppView {
         <img
           data-type="profile-gateway"
           data-username="${username}"
-          src="/images/${profileImage}"
+          src="${profileImage}"
           alt="${name}'s profile image"
           class="entity__img"
         />

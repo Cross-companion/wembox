@@ -30,23 +30,18 @@ class ChatController {
     const DOMChat = {
       createdAt: new Date().toISOString(),
       status: 'sending',
-      chatImages: [],
+      media: { type: 'image', payload: [] },
     };
     formData.forEach((data, key) => {
       if (key === 'chatImages' && data?.size)
-        return DOMChat[key].push(URL.createObjectURL(data));
+        return DOMChat.media.payload.push(URL.createObjectURL(data));
       DOMChat[key] = data;
     });
     chatView.clearChatForm();
-    if (!DOMChat.chatImages.length) chatView.insertNewChat(DOMChat);
-    else
-      DOMChat.chatImages.forEach((imgUrl, i, imgArr) =>
-        chatView.insertNewChat({
-          ...DOMChat,
-          action: { type: 'image', payload: imgUrl },
-          message: i === imgArr.length - 1 ? DOMChat.message : undefined,
-        })
-      );
+    chatView.mediaCheckChat(DOMChat).forEach((chat) => {
+      console.log(chat);
+      return chatView.insertNewChat(chat);
+    });
     // This else block is called when an Image is sent along and it appends any message only to the last img
 
     try {

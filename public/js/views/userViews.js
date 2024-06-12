@@ -24,7 +24,7 @@ class UserView {
                 class="profile__images__cover"
                 src="${
                   profileCoverImage
-                    ? `/images/${profileCoverImage}`
+                    ? profileCoverImage
                     : '/Imgs/users/mars-spacex-starship-wallpapers.jpg'
                 }"
                 data-type="preview"
@@ -49,7 +49,7 @@ class UserView {
                 accept="images/*"
                 data-type="update-me-image-preview-input"
             />
-            <img src="/images/${profileImage}" alt="" data-type="preview" />
+            <img src="${profileImage}" alt="" data-type="preview" />
             </div>
             <div id="social-action-btns" class="profile__social-actions">
             <button

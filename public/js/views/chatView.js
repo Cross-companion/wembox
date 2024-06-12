@@ -62,7 +62,7 @@ class ChatView {
     return `
       <section class="chat__container__header">
         <div data-type="profile">
-          <img src="images/${profileImage}" alt="" />
+          <img src="${profileImage}" alt="" />
           <div data-type="details">
             <p data-type="name">${name}</p>
             <p class="active" data-type="online-status">Online</p>
@@ -130,13 +130,13 @@ class ChatView {
     `;
   }
 
-  messageTypes(action) {
-    switch (action.type) {
+  mediaTypes(media) {
+    switch (media.type) {
       case 'image':
         return `
         <div data-type="image-carrier">
           <img
-            src="${action.payload}"
+            src="${media.payload}"
             alt=""
           />
         </div>`;
@@ -146,15 +146,15 @@ class ChatView {
   }
 
   messageItem(chat) {
-    const { message, status, action } = chat;
+    const { message, status, media } = chat;
     return `
     <div class="message__group__item" ${
-      action?.type ? `data-carrying="${action.type}"` : ''
+      media?.type ? `data-carrying="${media.type}"` : ''
     }>
       <span data-type="status-icon-container" data-chat-item-status="${status}">
         ${Icons({ type: `chat/${status}` })}
       </span>
-      ${action?.type ? this.messageTypes(action) : ''}
+      ${media?.type ? this.mediaTypes(media) : ''}
       ${message ? `<pre>${message}</pre>` : ''}
     </div>`;
   }
@@ -174,20 +174,33 @@ class ChatView {
     return isValid;
   }
 
+  mediaCheckChat(chat) {
+    if (!chat.media?.payload.length) return [{ ...chat, media: undefined }];
+
+    const checkedChats = chat.media.payload.map((payload, i, payloadArr) => {
+      const media = { type: chat.media.type, payload };
+      if (i === payloadArr.length - 1) return { ...chat, media };
+      else return { ...chat, media, message: undefined };
+    });
+    console.log(checkedChats);
+    return checkedChats;
+  }
+
   bundleChatsToGroups(chats = []) {
     const bundledChats = chats.reduce((groups, currentChat, i, chatsArr) => {
+      const mediaCheckedChat = this.mediaCheckChat(currentChat);
+
       const previousChat = chatsArr[i - 1];
-      if (!previousChat) groups.push([currentChat]);
-      else if (currentChat.sender !== previousChat?.sender)
-        groups.push([currentChat]);
-      else if (
+      const conditionForNewGroup =
+        !previousChat ||
+        currentChat.sender !== previousChat?.sender ||
         !this.isValidTimeDifference(
           currentChat.createdAt,
           previousChat.createdAt
-        )
-      )
-        groups.push([currentChat]);
-      else groups[groups.length - 1].push(currentChat);
+        );
+
+      if (conditionForNewGroup) groups.push([...mediaCheckedChat]);
+      else groups[groups.length - 1].push(...mediaCheckedChat);
       return groups;
     }, []);
 

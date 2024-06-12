@@ -22,7 +22,7 @@ html(lang='en')
       header#app-header.app__header
         .app__header__details
           .person__img__container.person__img__container--decorated
-            img.person__img.person__img--me(src=`/images/${user.profileImage}`, alt=`${user.frontEndUsername}`, data-username=`${user.username}`, data-me='me', data-type='profile-gateway' data-value='my-profile-gateway')
+            img.person__img.person__img--me(src=user.profileImage, alt=user.frontEndUsername, data-username=user.username, data-me='me', data-type='profile-gateway', data-value='my-profile-gateway')
           div
             span.app__header__notifications
               svg.app__header__notifications-icon(xmlns='http://www.w3.org/2000/svg', height='24px', viewBox='0 -960 960 960', width='24px')

@@ -8,6 +8,22 @@ const {
   defaultChatStatus,
 } = require('../../config/chatConfig');
 
+const mediaSchema = new mongoose.Schema(
+  {
+    type: {
+      type: String,
+      required: true,
+      enum: ['image'],
+    },
+    payload: {
+      type: [String],
+      required: true,
+      default: [],
+    },
+  },
+  { _id: false }
+);
+
 const chatSchema = new mongoose.Schema(
   {
     sender: {
@@ -23,9 +39,7 @@ const chatSchema = new mongoose.Schema(
     message: {
       type: String,
     },
-    images: {
-      type: [String],
-    },
+    media: mediaSchema,
     status: {
       type: String,
       enum: {

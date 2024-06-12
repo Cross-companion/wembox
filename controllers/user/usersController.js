@@ -14,6 +14,7 @@ const {
   PROFILE_IMAGE_PREFIX,
   PROFILE_COVER_IMAGE_PREFIX,
   AWS_USER_IMAGES_FOLDER,
+  ROOT_IMAGE_ROUTE,
 } = process.env;
 
 const upload = multer({
@@ -44,7 +45,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
         folderName: AWS_USER_IMAGES_FOLDER,
       });
       await profileImage?.uploadToAWS();
-      req.body.profileImage = profileImage.imageName;
+      req.body.profileImage = `${ROOT_IMAGE_ROUTE}${profileImage.imageName}`;
     })(),
     (async () => {
       if (!profileCoverImage) return;
@@ -57,7 +58,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
         folderName: AWS_USER_IMAGES_FOLDER,
       });
       await profileCoverImage?.uploadToAWS();
-      req.body.profileCoverImage = profileCoverImage.imageName;
+      req.body.profileCoverImage = `${ROOT_IMAGE_ROUTE}${profileCoverImage.imageName}`;
     })(),
   ]);
   next();

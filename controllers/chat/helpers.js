@@ -8,8 +8,8 @@ const getChatsFromDB = async (usersArr, skipBy, chatsLimit) => {
   })
     .sort({ createdAt: 1 })
     .select('-contactRequest')
-    .skip(skipBy || 0)
-    .limit(300 || chatsLimit || chatsPerRequest || 20);
+    .skip(skipBy || 0);
+  // .limit(300 || chatsLimit || chatsPerRequest || 20);
 
   return recentChats;
 };
