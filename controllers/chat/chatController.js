@@ -31,7 +31,6 @@ exports.handleChatImages = catchAsync(async (req, res, next) => {
 
   if (!chatImages || !chatImages?.length) return next();
   const media = { type: 'image', payload: [] };
-  // console.log('////// -- 1 -- ////');
 
   const imagePromises = chatImages.map((image, i) => {
     return (async () => {
@@ -60,8 +59,6 @@ exports.sendChat = catchAsync(async (req, res, next) => {
 
   if (!receiverID || senderID == receiverID)
     return next(new AppError('Invalid users specified.', 401));
-
-  console.log({ receiverID, message, media });
 
   const [newChat] = await Chat.create(
     [

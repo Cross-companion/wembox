@@ -39,7 +39,6 @@ class ChatController {
     });
     chatView.clearChatForm();
     chatView.mediaCheckChat(DOMChat).forEach((chat) => {
-      console.log(chat);
       return chatView.insertNewChat(chat);
     });
     // This else block is called when an Image is sent along and it appends any message only to the last img

@@ -182,7 +182,6 @@ class ChatView {
       if (i === payloadArr.length - 1) return { ...chat, media };
       else return { ...chat, media, message: undefined };
     });
-    console.log(checkedChats);
     return checkedChats;
   }
 
