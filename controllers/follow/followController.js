@@ -5,6 +5,8 @@ const AppError = require('../../utilities/AppError');
 const catchAsync = require('../../utilities/catchAsync');
 const { updateEngagements } = require('../handlerFactory');
 const { engagementScores } = require('../../config/suggestionConfig');
+const Notification = require('../../models/notification/notificationModel');
+const { followNotificationType } = require('../../config/notificationConfig');
 
 const populateFollowItems = [
   'name frontEndUsername profileImage accountType numberOfFollowers numberOfFollowing',
@@ -34,6 +36,11 @@ exports.follow = catchAsync(async (req, res, next) => {
   try {
     const createFollow = await Follow.create({ follower, following });
     if (!createFollow) return next(new AppError('Unable to follow.', 500));
+    await Notification.create({
+      sender: follower,
+      for: following,
+      notificationType: followNotificationType,
+    });
 
     const newTopicObj = {
       topic: followBasis.topic,

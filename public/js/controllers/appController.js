@@ -6,11 +6,15 @@ import suggestionModel from '../models/suggestionModel.js';
 import userModel from '../models/userModel.js';
 import userViews from '../views/userViews.js';
 import chatController from './chatController.js';
+import SwitchBtn from '../utils/switchBtn.js';
 
 class AppController {
   constructor() {
     this.contactSuggestions = suggestionView.defineSuggestionContainer();
     this.currentUser = {};
+    this.notificationSwitchBtn = new SwitchBtn(
+      document.querySelector('[data-type="header-notifications"]')
+    );
     this.suggestContacts();
     this.contactSuggestions.addEventListener('click', (e) =>
       this.openContactRequestModal(e.target)
@@ -45,6 +49,11 @@ class AppController {
       target.closest('[data-type="profile-edit"]')
         ? true
         : false;
+    const isNotificationToogle =
+      target.dataset.type === 'header-notifications' ||
+      target.closest('[data-type="header-notifications"]')
+        ? true
+        : false;
 
     if (isProfileGateway) return this.handleProfileVisits(target); // Imgs in this have a higher prioity than it being part of a contact entity, hence, not needed to bubble up.
     if (isContactEntity)
@@ -56,6 +65,7 @@ class AppController {
     if (isCancelUpdateMe) return modal.closeModal();
     if (isDeleteChatMediaPreview)
       return chatController.deleteChatPreview(target);
+    if (isNotificationToogle) return this.notificationToogle();
   }
 
   submitHandlers(e) {
@@ -219,7 +229,7 @@ class AppController {
     if (remove) {
       parentEl.dataset.loadState = 'loaded';
       const loader = parentEl.querySelector('[data-loader="loader"]');
-      loader.remove();
+      loader?.remove();
       return;
     }
 
@@ -270,6 +280,14 @@ class AppController {
   async sendChat(form) {
     const chatData = await chatController.sendChat(new FormData(form));
     appView.updateContactList(chatData);
+  }
+
+  notificationToogle() {
+    const pageType = this.notificationSwitchBtn.switch();
+    const page = pageType.split('show-')[1];
+    if (page === 'chats') return this.getContacts();
+    else if (page === 'notifications')
+      this.insertContacts(appView.noContactsHtml());
   }
 }
 

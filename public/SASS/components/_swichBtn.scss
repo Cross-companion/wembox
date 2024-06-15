@@ -1,0 +1,15 @@
+[data-comp-type='switch-btn-container'] {
+  position: relative;
+
+  & > [data-value='switch-btn'] {
+    z-index: -1;
+    opacity: 0;
+    visibility: hidden;
+
+    &.active {
+      z-index: 0;
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}

@@ -13,6 +13,8 @@ const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
 const { updateContactSession } = require('../../utilities/helpers');
 const { seenStatus } = require('../../config/chatConfig');
+const Notification = require('../../models/notification/notificationModel');
+const { CRNotificationType } = require('../../config/notificationConfig');
 
 exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const { username, _id: senderID } = req.user;
@@ -58,6 +60,12 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
       };
 
     await Chat.create(conRequestData);
+    await Notification.create({
+      sender: senderID,
+      for: receiverID,
+      message,
+      notificationType: CRNotificationType,
+    });
   } catch (err) {
     if (err?.code !== duplicateErrorCode)
       return next(new AppError(err.message, 404));

@@ -42,16 +42,36 @@
             />
           </div>
           <div>
-            <span class="app__header__notifications">
+            <span
+              class="app__header__notifications"
+              data-type="header-notifications"
+              data-comp-type="switch-btn-container"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="24px"
+                viewBox="0 -960 960 960"
+                width="24px"
+                data-type="show-notifications"
+                data-value="switch-btn"
+                class="app__header__notifications-icon active"
+              >
+                <path
+                  d="M480-80q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80Zm0-420ZM200-200q-17 0-28.5-11.5T160-240q0-17 11.5-28.5T200-280h40v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v13q-11 22-16 45t-4 47q-10-2-19.5-3.5T480-720q-66 0-113 47t-47 113v280h320v-257q18 8 38.5 12.5T720-520v240h40q17 0 28.5 11.5T800-240q0 17-11.5 28.5T760-200H200Zm520-400q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z"
+                />
+              </svg>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="24px"
                 viewBox="0 -960 960 960"
                 width="24px"
                 class="app__header__notifications-icon"
+                data-type="show-chats"
+                data-value="switch-btn"
+                data-util="adjust"
               >
                 <path
-                  d="M480-80q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80Zm0-420ZM200-200q-17 0-28.5-11.5T160-240q0-17 11.5-28.5T200-280h40v-280q0-83 50-147.5T420-792v-28q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v13q-11 22-16 45t-4 47q-10-2-19.5-3.5T480-720q-66 0-113 47t-47 113v280h320v-257q18 8 38.5 12.5T720-520v240h40q17 0 28.5 11.5T800-240q0 17-11.5 28.5T760-200H200Zm520-400q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35Z"
+                  d="m240-240-92 92q-19 19-43.5 8.5T80-177v-623q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240Zm-34-80h594v-480H160v525l46-45Zm-46 0v-480 480Zm120-80h240q17 0 28.5-11.5T560-440q0-17-11.5-28.5T520-480H280q-17 0-28.5 11.5T240-440q0 17 11.5 28.5T280-400Zm0-120h400q17 0 28.5-11.5T720-560q0-17-11.5-28.5T680-600H280q-17 0-28.5 11.5T240-560q0 17 11.5 28.5T280-520Zm0-120h400q17 0 28.5-11.5T720-680q0-17-11.5-28.5T680-720H280q-17 0-28.5 11.5T240-680q0 17 11.5 28.5T280-640Z"
                 />
               </svg>
             </span>
@@ -62,6 +82,54 @@
         </nav>
       </header>
       <section class="app__chat-list__list" data-type="contact-list">
+        <div data-type="follow-entity" class="entity">
+          <div>
+            <img
+              src="../Imgs/users/leo.jpg"
+              alt="profile image of Leo Conan"
+              class="entity__img"
+            />
+          </div>
+          <div class="entity__content">
+            <div><span class="entity__title">Leo Conan</span> followed you</div>
+            <span class="entity__message__time">
+              <span>12:30am</span>
+            </span>
+          </div>
+        </div>
+        <div
+          data-type="contact-request-entity"
+          data-chat-id=""
+          data-username="leoConan"
+          data-name="Leo Conan"
+          data-profile-image="leo.jpg"
+          class="entity"
+        >
+          <div>
+            <img
+              src="../Imgs/users/leo.jpg"
+              alt="profile image of Leo Conan"
+              class="entity__img"
+            />
+          </div>
+          <div class="entity__content">
+            <div>
+              <span class="entity__title">Leo Conan</span
+              ><span> sent you a contact request.</span>
+            </div>
+            <div class="entity__message" title="tits">
+              <p class="entity__message__message">
+                hello bro, I like your style of writing!
+              </p>
+            </div>
+            <span class="entity__message__time">
+              <span>12:30am</span>
+              <span class="entity__alert-number">1</span>
+            </span>
+          </div>
+        </div>
+      </section>
+      <!-- <section class="app__chat-list__list" data-type="contact-list">
         <div
           data-type="contact-entity"
           data-contact-id=""
@@ -382,7 +450,7 @@
             </span>
           </div>
         </div>
-      </section>
+      </section> -->
       <div
         id="suggestion-container"
         data-type="contact-request"
