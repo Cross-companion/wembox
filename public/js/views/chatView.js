@@ -53,6 +53,11 @@ class ChatView {
     return this.chatMediaInput;
   }
 
+  setCRForm() {
+    const CRForm = document.querySelector('[data-type="cr-form"]');
+    return CRForm;
+  }
+
   removePreload() {
     const preLoad = document.querySelector('[data-type="chat-preload"]');
     preLoad?.remove();
@@ -172,6 +177,34 @@ class ChatView {
     const prevDate = new Date(prevDateString).getTime();
     const isValid = (curDate - prevDate) / 1000 < maxSecDifference;
     return isValid;
+  }
+
+  CRForm(senderID, status) {
+    const isPending = status === 'pending';
+    return `
+    <div>
+      <form class="CR" data-type="cr-form" data-sender-id="${senderID}">
+        ${
+          isPending
+            ? `
+        <button data-value="declined" type="submit" class="declined">
+          Decline
+        </button>
+        <button data-value="accepted" type="submit">
+          Accept Request
+        </button>`
+            : this.CRBtn(status)
+        }
+      </form>
+    </div>`;
+  }
+
+  CRBtn(type) {
+    return `
+    <button class="${type}" data-type="${type}">
+      Request ${type}
+    </button>
+    `;
   }
 
   mediaCheckChat(chat) {

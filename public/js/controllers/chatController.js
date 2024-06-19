@@ -9,13 +9,7 @@ class ChatController {
     this.page = document.querySelector('[data-page-name="chats"]');
   }
 
-  async openChats(userData = { otherUserId, name, username, profileImage }) {
-    chatView.removePreload();
-    this.page.innerHTML = chatView.chatTemplate(userData);
-    const chatContentContainer = chatView.setChatContentContainer();
-    const { chats } = await chatModel.getChats(userData.otherUserId);
-    const chatsHtml = chatView.chatsHtml(chats, userData.otherUserId);
-    chatContentContainer.innerHTML = chatsHtml;
+  addChatInputListener() {
     const chatTextInput = chatView.setChatTextInput();
     chatTextInput.addEventListener('keydown', async (e) => {
       if (e.key !== 'Enter' || e.shiftKey) return;
@@ -23,6 +17,43 @@ class ChatController {
       e.preventDefault();
       e.target.closest('form').querySelector('button[type="submit"]').click();
     });
+  }
+
+  async openChats(
+    userData = {
+      otherUserId,
+      name,
+      username,
+      profileImage,
+    }
+  ) {
+    chatView.removePreload();
+    this.page.innerHTML = chatView.chatTemplate(userData);
+    const chatContentContainer = chatView.setChatContentContainer();
+    const { chats } = await chatModel.getChats(userData.otherUserId);
+    const chatsHtml = chatView.chatsHtml(chats, userData.otherUserId);
+    chatContentContainer.innerHTML = chatsHtml;
+    this.addChatInputListener();
+  }
+
+  openCR(
+    userData = {
+      chatId,
+      otherUserId,
+      name,
+      username,
+      profileImage,
+    }
+  ) {
+    chatView.removePreload();
+    this.page.innerHTML = chatView.chatTemplate(userData);
+    const chatContentContainer = chatView.setChatContentContainer();
+    const chat = chatModel.getNotification(userData.chatId)?.message;
+    const chatsHtml =
+      chatView.CRForm(userData.otherUserId, chat?.contactRequest?.status) +
+      chatView.chatsHtml([chat], userData.otherUserId);
+    chatContentContainer.innerHTML = chatsHtml;
+    this.addChatInputListener();
   }
 
   async sendChat(formData) {
@@ -81,6 +112,20 @@ class ChatController {
 
   deleteChatPreview(deleteBtn) {
     chatView.deleteChatPreview(deleteBtn);
+  }
+
+  async processCR(form, status) {
+    const isSubmitting = form.dataset.state === 'submitting';
+    if (isSubmitting) return;
+    const { senderId: senderID } = form.dataset;
+    try {
+      form.dataset.state = 'submitting';
+      await chatModel.processCR({ senderID, status });
+      const CRForm = chatView.setCRForm();
+      CRForm.innerHTML = chatView.CRBtn(status);
+    } finally {
+      form.dataset.state = 'free';
+    }
   }
 }
 

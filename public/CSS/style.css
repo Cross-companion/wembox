@@ -569,6 +569,27 @@ main.main__interest {
   height: 1.8rem;
 }
 
+.CR[data-state=submitting] > button {
+  filter: grayscale(0.6);
+}
+.CR > button {
+  display: inline-block;
+  padding: 0.8rem 2rem !important;
+  font-size: 1.3rem;
+  color: var(--color-white);
+  background-color: #55c57a;
+  border-radius: 6.25rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.CR > button:not(:last-child) {
+  margin-right: 0.7rem;
+}
+.CR > button.declined {
+  background-color: #ff7730;
+}
+
 .contact-request__modal {
   display: flex;
   flex-direction: column;

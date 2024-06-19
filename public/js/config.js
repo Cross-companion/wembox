@@ -10,6 +10,7 @@ const Config = {
   followRoute: '/api/v1/follow',
   contactRoute: '/api/v1/contacts',
   chatRoute: '/api/v1/chat',
+  notificationRoute: '/api/v1/notifications/',
   engagementScores: {
     follow: 6,
   },

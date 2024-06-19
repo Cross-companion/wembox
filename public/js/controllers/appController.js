@@ -20,6 +20,7 @@ class AppController {
       this.openContactRequestModal(e.target)
     );
     this.getContacts();
+    appModel.getNotifications();
     this.eventHandler();
   }
 
@@ -44,6 +45,12 @@ class AppController {
       target.closest('[data-type="contact-entity"]')
         ? true
         : false;
+    const isCREntity =
+      target.dataset.type === 'contact-request-entity' ||
+      target.closest('[data-type="contact-request-entity"]')
+        ? true
+        : false;
+
     const isEditProfile =
       target.dataset.type === 'profile-edit' ||
       target.closest('[data-type="profile-edit"]')
@@ -58,6 +65,10 @@ class AppController {
     if (isProfileGateway) return this.handleProfileVisits(target); // Imgs in this have a higher prioity than it being part of a contact entity, hence, not needed to bubble up.
     if (isContactEntity)
       return this.openChats(target.closest('[data-type="contact-entity"]'));
+    if (isCREntity)
+      return chatController.openCR(
+        target.closest('[data-type="contact-request-entity"]').dataset
+      );
     if (isEditProfile)
       return modal.replaceContentContainer(
         userViews.updateMeForm(this.PUBLIC_USER_DATA)
@@ -73,9 +84,12 @@ class AppController {
     const form = e.target;
     const isUpdateMeForm = form.dataset.type === 'update-me-form';
     const isChatInputForm = form.dataset.type === 'chat-input-form';
+    const isCRForm = form.dataset.type === 'cr-form';
 
     if (isUpdateMeForm) return this.updateMe(form);
     if (isChatInputForm) return this.sendChat(form);
+    if (isCRForm)
+      return chatController.processCR(form, e.submitter.dataset.value);
   }
 
   changeHandlers(e) {
@@ -101,7 +115,17 @@ class AppController {
       // alert(err.message);
     } finally {
       this.toogleLoader(appView.app, undefined, { remove: true });
+      // history.pushState(null, '', '/');
     }
+  }
+
+  async openNotifications() {
+    const { notifications } = await appModel.getNotifications();
+    if (!notifications?.length)
+      return this.insertContacts(appView.noNotificationsHtml());
+    const notificationList = appView.buildNotifications(notifications);
+    this.insertContacts(notificationList);
+    history.pushState(null, '', '?notification');
   }
 
   insertContacts(html) {
@@ -277,6 +301,12 @@ class AppController {
       entity.dataset.entityState = 'received-seen';
   }
 
+  async openCR(entity) {
+    this.activatePage('chats');
+    this.activateChatEntity(entity);
+    chatController.openCR({ ...entity.dataset });
+  }
+
   async sendChat(form) {
     const chatData = await chatController.sendChat(new FormData(form));
     appView.updateContactList(chatData);
@@ -286,8 +316,7 @@ class AppController {
     const pageType = this.notificationSwitchBtn.switch();
     const page = pageType.split('show-')[1];
     if (page === 'chats') return this.getContacts();
-    else if (page === 'notifications')
-      this.insertContacts(appView.noContactsHtml());
+    else if (page === 'notifications') this.openNotifications();
   }
 }
 

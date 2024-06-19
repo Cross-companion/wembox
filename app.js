@@ -18,6 +18,7 @@ const suggestionRouter = require('./routers/suggestionRoutes');
 const followRouter = require('./routers/followRoutes');
 const contactRouter = require('./routers/contactRoutes');
 const chatRouter = require('./routers/chatRoutes');
+const notificationRouter = require('./routers/notificationRoutes');
 const globalErrorHandler = require('./controllers/globalErrorHandler');
 const TRAP = require('./utilities/trap'); // For testing purpose only
 
@@ -69,6 +70,7 @@ app.use('/api/v1/suggest', suggestionRouter);
 app.use('/api/v1/follow', followRouter);
 app.use('/api/v1/contacts', contactRouter);
 app.use('/api/v1/chat', chatRouter);
+app.use('/api/v1/notifications', notificationRouter);
 app.use('/', viewRouter);
 
 app.all('*', (req, res, next) => {

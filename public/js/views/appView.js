@@ -54,7 +54,8 @@ class AppView {
 
   setCurrentEntity() {
     this.currentContactEntity = document.querySelector(
-      '.active[data-type="contact-entity"]'
+      '.active[data-type="contact-entity"]',
+      '.active[data-type="contact-request-entity"]'
     );
     return this.currentContactEntity;
   }
@@ -79,6 +80,19 @@ class AppView {
       <h5>
         You can Send a contact request below to people you might know or find
         interesting.
+      </h5>
+  </div>`;
+  }
+
+  noNotificationsHtml() {
+    return `
+  <div class="glassmorph app__no-contacts">
+      <div class="app__no-contacts__logo">
+        ${Icons({ type: 'bell', iconClasses: 'app__no-contacts__logo-icon' })}
+        <h3>No new notification.</h3>
+      </div>
+      <h5>
+        When You get a new notification, if pops up here.
       </h5>
   </div>`;
   }
@@ -177,6 +191,85 @@ class AppView {
       'afterbegin',
       this.contactEntity(contact, true)
     );
+  }
+
+  CREntity({ _id, sender, message, createdAt } = {}) {
+    const { profileImage, name, username, _id: otherUserId } = sender;
+    const { message: requestMessage = '' } = message || {};
+
+    return `
+    <div
+      data-type="contact-request-entity"
+      class="entity"
+      data-chat-id="${_id}"
+      data-other-user-id="${otherUserId}"
+      data-username="${username}"
+      data-name="${name}"
+      data-profile-image="${profileImage}"
+    >
+      <div>
+        <img
+          data-type="profile-gateway"
+          data-username="${username}"
+          src="${profileImage}"
+          alt="${name}'s profile image"
+          class="entity__img"
+        />
+      </div>
+      <div class="entity__content">
+        <div>
+          <span class="entity__title">${name}</span
+          ><span> sent you a contact request.</span>
+        </div>
+        <div class="entity__message" title="${requestMessage}">
+          <p class="entity__message__message">
+            ${requestMessage}
+          </p>
+        </div>
+        <span class="entity__message__time">
+          <span>${TimeManager.dateToCompleteTime(createdAt, {
+            lowercase: true,
+          })}</span>
+        </span>
+      </div>
+    </div>`;
+  }
+
+  followEntity({ sender, createdAt } = {}) {
+    const { profileImage, name, username } = sender;
+    return `
+    <div data-type="follow-entity" class="entity">
+      <div>
+        <img
+          data-type="profile-gateway"
+          data-username="${username}"
+          src="${profileImage}"
+          alt="profile image of ${name}"
+          class="entity__img"
+        />
+      </div>
+      <div class="entity__content">
+        <div><span class="entity__title">${name}</span> followed you</div>
+        <span class="entity__message__time">
+          <span>${TimeManager.dateToCompleteTime(createdAt, {
+            lowercase: true,
+          })}</span>
+        </span>
+      </div>
+    </div>`;
+  }
+
+  buildNotifications(notifications = []) {
+    return notifications
+      .map((element) => {
+        const { notificationType, sender, createdAt } = element;
+
+        if (notificationType === 'follow')
+          return this.followEntity({ sender, createdAt });
+        else if (notificationType === 'contact-request')
+          return this.CREntity(element);
+      })
+      .join(' ');
   }
 }
 

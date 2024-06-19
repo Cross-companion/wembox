@@ -18,7 +18,8 @@ const notificationSchema = new mongoose.Schema(
       required: [true, 'A notification must have an owner'],
     },
     message: {
-      type: String,
+      type: mongoose.Schema.ObjectId,
+      ref: 'Chat',
     },
     status: {
       type: String,

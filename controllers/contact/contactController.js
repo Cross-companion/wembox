@@ -59,11 +59,11 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
         code: duplicateErrorCode,
       };
 
-    await Chat.create(conRequestData);
+    const newCR = await Chat.create(conRequestData);
     await Notification.create({
       sender: senderID,
       for: receiverID,
-      message,
+      message: newCR._id,
       notificationType: CRNotificationType,
     });
   } catch (err) {

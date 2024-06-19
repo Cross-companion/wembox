@@ -1,6 +1,7 @@
 import Config from '../config.js';
+import localStore from '../utils/localStore.js';
 
-const { chatRoute } = Config;
+const { chatRoute, contactRoute } = Config;
 
 class ChatModel {
   async getChats(otherUserId) {
@@ -21,6 +22,28 @@ class ChatModel {
     const data = await fetch(`${chatRoute}/`, {
       method: 'POST',
       body: formData,
+    })
+      .then((res) => res.json())
+      .then((data) => data);
+
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
+  getNotification(userId) {
+    return [...localStore.getItem('notifications')]?.find(
+      (note) => note?._id === userId
+    );
+  }
+
+  async processCR(requestData = { senderID, status }) {
+    const data = await fetch(`${contactRoute}/request`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
     })
       .then((res) => res.json())
       .then((data) => data);
