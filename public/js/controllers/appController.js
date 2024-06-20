@@ -115,7 +115,7 @@ class AppController {
       // alert(err.message);
     } finally {
       this.toogleLoader(appView.app, undefined, { remove: true });
-      // history.pushState(null, '', '/');
+      history.pushState(null, '', '/');
     }
   }
 
