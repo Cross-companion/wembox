@@ -6,9 +6,10 @@ const contactController = require('../controllers/contact/contactController');
 const chatController = require('../controllers/chat/chatController');
 
 router.use(authController.protect);
-router.use(chatController.deliverChats);
 
-router.route('/').get(contactController.getContacts);
+router
+  .route('/')
+  .get(chatController.deliverChats, contactController.getContacts);
 
 router
   .route('/request')
