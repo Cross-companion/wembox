@@ -7,6 +7,7 @@ import userModel from '../models/userModel.js';
 import userViews from '../views/userViews.js';
 import chatController from './chatController.js';
 import SwitchBtn from '../utils/switchBtn.js';
+import socket from '../utils/socket.js';
 
 class AppController {
   constructor() {
@@ -22,6 +23,14 @@ class AppController {
     this.getContacts();
     appModel.getNotifications();
     this.eventHandler();
+    this.setSocketHandlers();
+  }
+
+  setSocketHandlers() {
+    const handlers = [
+      { event: 'chatReceived', func: this.chatReceived.bind(this) },
+    ];
+    socket.socketListeners(handlers);
   }
 
   eventHandler() {
@@ -107,6 +116,7 @@ class AppController {
   async getContacts() {
     try {
       const { contacts } = await appModel.getContacts();
+      console.log(contacts);
       if (!contacts?.length)
         return this.insertContacts(appView.noContactsHtml());
       const contactList = appView.buildContactList(contacts);
@@ -309,6 +319,10 @@ class AppController {
 
   async sendChat(form) {
     const chatData = await chatController.sendChat(new FormData(form));
+    appView.updateContactList(chatData);
+  }
+
+  chatReceived(chatData) {
     appView.updateContactList(chatData);
   }
 

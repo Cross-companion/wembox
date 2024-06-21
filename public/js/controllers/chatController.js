@@ -1,12 +1,21 @@
 import chatModel from '../models/chatModel.js';
 import chatView from '../views/chatView.js';
 import Config from '../config.js';
+import socket from '../utils/socket.js';
 
 const { maxChatImages } = Config;
 
 class ChatController {
   constructor() {
     this.page = document.querySelector('[data-page-name="chats"]');
+    this.setSocketHandlers();
+  }
+
+  setSocketHandlers() {
+    const handlers = [
+      { event: 'chatReceived', func: this.chatReceived.bind(this) },
+    ];
+    socket.socketListeners(handlers);
   }
 
   addChatInputListener() {
@@ -76,6 +85,11 @@ class ChatController {
 
     try {
       const { newChat, updatedContact } = await chatModel.sendChat(formData);
+      socket.emit('chatSent', {
+        newChat,
+        updatedContact,
+        otherUser: { _id: newChat.sender },
+      });
       chatView.setChatStatus(newChat.status, ['sending']);
       return {
         newChat,
@@ -85,6 +99,13 @@ class ChatController {
     } catch (err) {
       chatView.setChatStatus('error', ['sending']);
     }
+  }
+
+  chatReceived({ newChat } = {}) {
+    if (!newChat) throw new Error('New Chat was received but is invalid.');
+    chatView.mediaCheckChat(newChat).forEach((chat) => {
+      return chatView.insertNewChat(chat);
+    });
   }
 
   addMediaPreview(input) {

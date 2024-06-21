@@ -44,7 +44,6 @@ const contactSchema = new mongoose.Schema(
         },
         message: (props) => `${props.value} is not a valid number!`,
       },
-      select: false,
     },
     createdAt: {
       type: Date,

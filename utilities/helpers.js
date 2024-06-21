@@ -1,5 +1,9 @@
+const { promisify } = require('util');
+const jwt = require('jsonwebtoken');
+
 const Reader = require('@maxmind/geoip2-node').Reader;
 const redis = require('./redisInit');
+const { JWT_SECRET } = process.env;
 
 const { engagementTimeSpans } = require('../config/interestConfig');
 const countryRegions = require('../config/countryRegions.json');
@@ -153,4 +157,23 @@ exports.ageLimit = (type = 'minimum') => {
   return new Date(
     `${year - process.env[`AGE_${type.toUpperCase()}`]}-${month}-${date}`
   );
+};
+
+exports.parseCookies = (cookieHeader) => {
+  if (!cookieHeader?.length) return {};
+  const cookies = cookieHeader.split(';');
+  const parsedCookies = {};
+
+  cookies.forEach((cookie) => {
+    const parts = cookie.split('=');
+    const name = parts[0].trim();
+    const value = parts[1].trim();
+    parsedCookies[name] = value;
+  });
+
+  return parsedCookies;
+};
+
+exports.getDecodedData = async (jwtToken) => {
+  return await promisify(jwt.verify)(jwtToken, JWT_SECRET);
 };

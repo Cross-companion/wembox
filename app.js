@@ -2,9 +2,12 @@ const path = require('path');
 
 // IMPORTING 3rd party MODULES
 const express = require('express');
-const session = require('express-session');
+const app = express();
 const http = require('http');
-const socketIo = require('socket.io');
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+const io = new Server(server);
+const session = require('express-session');
 const RedisStore = require('connect-redis').default;
 const redisClient = require('./utilities/redisInit');
 const morgan = require('morgan');
@@ -18,11 +21,11 @@ const suggestionRouter = require('./routers/suggestionRoutes');
 const followRouter = require('./routers/followRoutes');
 const contactRouter = require('./routers/contactRoutes');
 const chatRouter = require('./routers/chatRoutes');
+const chatSocket = require('./sockets/chatSocket');
 const notificationRouter = require('./routers/notificationRoutes');
 const globalErrorHandler = require('./controllers/globalErrorHandler');
 const TRAP = require('./utilities/trap'); // For testing purpose only
-
-const app = express();
+const { parseCookies, getDecodedData } = require('./utilities/helpers');
 
 // Initialize store.
 const redisStore = new RedisStore({
@@ -73,6 +76,16 @@ app.use('/api/v1/chat', chatRouter);
 app.use('/api/v1/notifications', notificationRouter);
 app.use('/', viewRouter);
 
+io.on('connection', (socket) => {
+  const jwtToken = parseCookies(socket?.handshake.headers.cookie)['jwt'];
+  if (jwtToken)
+    getDecodedData(jwtToken).then(
+      (decoded) => decoded?.id && socket.join(decoded.id)
+    );
+
+  socket.on('chatSent', (queryObj) => chatSocket.chatSent(socket, queryObj));
+});
+
 app.all('*', (req, res, next) => {
   const errMessage = `Can't find ${req.originalUrl} on this server`;
 
@@ -85,4 +98,4 @@ app.all('*', (req, res, next) => {
 
 app.use(globalErrorHandler);
 
-module.exports = app;
+module.exports = server;
