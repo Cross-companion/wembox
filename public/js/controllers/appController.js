@@ -116,7 +116,6 @@ class AppController {
   async getContacts() {
     try {
       const { contacts } = await appModel.getContacts();
-      console.log(contacts);
       if (!contacts?.length)
         return this.insertContacts(appView.noContactsHtml());
       const contactList = appView.buildContactList(contacts);
