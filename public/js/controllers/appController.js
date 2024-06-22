@@ -29,7 +29,7 @@ class AppController {
   setSocketHandlers() {
     const handlers = [
       { event: 'chatReceived', func: this.chatReceived.bind(this) },
-      { event: 'chatProcessed', func: this.chatDelivered.bind(this) },
+      { event: 'chatProcessed', func: this.chatReceived.bind(this) },
     ];
     socket.socketListeners(handlers);
   }
@@ -315,14 +315,12 @@ class AppController {
   async sendChat(form) {
     const chatData = await chatController.sendChat(new FormData(form));
     appView.updateContactList(chatData);
+    appModel.updateRemoteData('contacts', chatData.updatedContact);
   }
 
   chatReceived(chatData) {
     appView.updateContactList(chatData);
-  }
-
-  chatDelivered(chatData) {
-    appView.updateContactList(chatData);
+    appModel.updateRemoteData('contacts', chatData.updatedContact);
   }
 
   notificationToogle() {

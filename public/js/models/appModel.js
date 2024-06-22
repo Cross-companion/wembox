@@ -4,7 +4,7 @@ import localStore from '../utils/localStore.js';
 const { contactRoute, notificationRoute } = Config;
 class AppModel {
   async getContacts() {
-    if (this.contacts) return this;
+    if (this.contacts?.length) return this;
 
     // const data = await fetch(`/public/dev-data/contacts.json`)
     const data = await fetch(`${contactRoute}/`)
@@ -30,6 +30,21 @@ class AppModel {
     localStore.setItem('notifications', data.notifications);
     this.notifications = data.notifications;
     return data;
+  }
+
+  updateRemoteData(type, payload) {
+    switch (type) {
+      case 'contacts': {
+        this[type] = localStore.findAndUpdateElement('contacts', {
+          key: '_id',
+          value: payload._id,
+          update: payload,
+        });
+        return this[type];
+      }
+      default:
+        throw new Error(`No api for ${type} @updateRemoteData`);
+    }
   }
 }
 

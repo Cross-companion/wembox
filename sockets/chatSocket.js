@@ -16,14 +16,14 @@ exports.chatSent = async (
   chatData = { newChat: {}, updatedContact: {} },
   io
 ) => {
+  const userId = socket?.user?.id;
   const receiver = chatData?.newChat?.receiver;
   const sender = chatData?.newChat?.sender;
   const contactId = chatData?.updatedContact?._id;
   const newChatId = chatData?.newChat?._id;
   let receiverInChatRoom = false;
 
-  if (!receiver || !sender || !contactId || !newChatId) return;
-  chatData.newChat.wasReceived = true;
+  if (!userId || !receiver || !sender || !contactId || !newChatId) return;
   chatData.updatedContact.unseenMessages =
     chatData?.updatedContact.unseens[receiver];
   socket.to(receiver).emit('chatReceived', chatData);

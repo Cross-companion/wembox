@@ -113,6 +113,7 @@ class ChatController {
 
   chatReceived({ newChat } = {}) {
     if (!newChat) throw new Error('New Chat was received but is invalid.');
+    newChat.wasReceived = true;
     chatView.mediaCheckChat(newChat).forEach((chat) => {
       return chatView.insertNewChat(chat);
     });
