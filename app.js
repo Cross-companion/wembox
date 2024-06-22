@@ -25,7 +25,11 @@ const chatSocket = require('./sockets/chatSocket');
 const notificationRouter = require('./routers/notificationRoutes');
 const globalErrorHandler = require('./controllers/globalErrorHandler');
 const TRAP = require('./utilities/trap'); // For testing purpose only
-const { parseCookies, getDecodedData } = require('./utilities/helpers');
+const {
+  parseCookies,
+  getDecodedData,
+  createChatRoomStr,
+} = require('./utilities/helpers');
 
 // Initialize store.
 const redisStore = new RedisStore({
@@ -79,11 +83,21 @@ app.use('/', viewRouter);
 io.on('connection', (socket) => {
   const jwtToken = parseCookies(socket?.handshake.headers.cookie)['jwt'];
   if (jwtToken)
-    getDecodedData(jwtToken).then(
-      (decoded) => decoded?.id && socket.join(decoded.id)
-    );
+    getDecodedData(jwtToken).then((decoded) => {
+      if (!decoded.id) return;
+      decoded.id && socket.join(decoded.id);
+      socket.user = { id: decoded.id, username: decoded.username };
+    });
 
-  socket.on('chatSent', (queryObj) => chatSocket.chatSent(socket, queryObj));
+  socket.on('chatSent', (queryObj) =>
+    chatSocket.chatSent(socket, queryObj, io)
+  );
+
+  socket.on('changeChatRoom', (queryObj) => {
+    socket.leave(createChatRoomStr(queryObj?.leave, socket.user.id));
+    if (!queryObj?.join || !socket.user.id) return;
+    socket.join(createChatRoomStr(queryObj.join, socket.user.id));
+  });
 });
 
 app.all('*', (req, res, next) => {

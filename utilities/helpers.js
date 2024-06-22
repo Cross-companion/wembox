@@ -177,3 +177,11 @@ exports.parseCookies = (cookieHeader) => {
 exports.getDecodedData = async (jwtToken) => {
   return await promisify(jwt.verify)(jwtToken, JWT_SECRET);
 };
+
+exports.getNumSocketClients = (io, room) => {
+  const numClients = io.sockets.adapter.rooms.get(room)?.size || 0;
+  console.log(`${numClients} are currently in this room -> ${room}`);
+  return numClients;
+};
+
+exports.createChatRoomStr = (contactId, userId) => `${contactId}/${userId}`;

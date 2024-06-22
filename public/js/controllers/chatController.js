@@ -8,6 +8,7 @@ const { maxChatImages } = Config;
 class ChatController {
   constructor() {
     this.page = document.querySelector('[data-page-name="chats"]');
+    this.currentChatRoom = undefined;
     this.setSocketHandlers();
   }
 
@@ -34,15 +35,26 @@ class ChatController {
       name,
       username,
       profileImage,
+      contactId,
     }
   ) {
     chatView.removePreload();
     this.page.innerHTML = chatView.chatTemplate(userData);
     const chatContentContainer = chatView.setChatContentContainer();
+    this.changeChatRoom(userData.contactId);
     const { chats } = await chatModel.getChats(userData.otherUserId);
     const chatsHtml = chatView.chatsHtml(chats, userData.otherUserId);
     chatContentContainer.innerHTML = chatsHtml;
     this.addChatInputListener();
+  }
+
+  changeChatRoom(contactId) {
+    if (!contactId) return;
+    socket.emit('changeChatRoom', {
+      leave: this.currentChatRoom,
+      join: contactId,
+    });
+    this.currentChatRoom = contactId;
   }
 
   openCR(
@@ -88,13 +100,11 @@ class ChatController {
       socket.emit('chatSent', {
         newChat,
         updatedContact,
-        otherUser: { _id: newChat.sender },
       });
       chatView.setChatStatus(newChat.status, ['sending']);
       return {
         newChat,
         updatedContact,
-        otherUser: { _id: DOMChat.receiverID },
       };
     } catch (err) {
       chatView.setChatStatus('error', ['sending']);

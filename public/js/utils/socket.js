@@ -1,3 +1,5 @@
+// import {} from './socket.io.js';
+
 class Socket {
   constructor() {
     if (!io) throw new Error('Unable to create a client Socket');

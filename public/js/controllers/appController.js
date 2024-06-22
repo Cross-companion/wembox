@@ -29,6 +29,7 @@ class AppController {
   setSocketHandlers() {
     const handlers = [
       { event: 'chatReceived', func: this.chatReceived.bind(this) },
+      { event: 'chatProcessed', func: this.chatDelivered.bind(this) },
     ];
     socket.socketListeners(handlers);
   }
@@ -75,8 +76,8 @@ class AppController {
     if (isContactEntity)
       return this.openChats(target.closest('[data-type="contact-entity"]'));
     if (isCREntity)
-      return chatController.openCR(
-        target.closest('[data-type="contact-request-entity"]').dataset
+      return this.openCR(
+        target.closest('[data-type="contact-request-entity"]')
       );
     if (isEditProfile)
       return modal.replaceContentContainer(
@@ -124,7 +125,7 @@ class AppController {
       // alert(err.message);
     } finally {
       this.toogleLoader(appView.app, undefined, { remove: true });
-      history.pushState(null, '', '/');
+      // history.pushState(null, '', '/');
     }
   }
 
@@ -297,14 +298,9 @@ class AppController {
     });
   }
 
-  activateChatEntity(selectedEntity) {
-    appView.setCurrentEntity()?.classList.remove('active');
-    selectedEntity.classList.add('active');
-  }
-
   async openChats(entity) {
     this.activatePage('chats');
-    this.activateChatEntity(entity);
+    appView.activateChatEntity(entity);
     await chatController.openChats({ ...entity.dataset });
     if (entity.dataset.entityState === 'received-unseen')
       entity.dataset.entityState = 'received-seen';
@@ -312,7 +308,7 @@ class AppController {
 
   async openCR(entity) {
     this.activatePage('chats');
-    this.activateChatEntity(entity);
+    appView.activateChatEntity(entity);
     chatController.openCR({ ...entity.dataset });
   }
 
@@ -322,6 +318,10 @@ class AppController {
   }
 
   chatReceived(chatData) {
+    appView.updateContactList(chatData);
+  }
+
+  chatDelivered(chatData) {
     appView.updateContactList(chatData);
   }
 

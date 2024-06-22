@@ -109,7 +109,8 @@ class AppView {
   }
 
   contactEntity(contact = {}, isActive) {
-    const { otherUser, lastMessage, unseenMessages } = contact;
+    const { _id: contactId, otherUser, lastMessage, unseenMessages } = contact;
+    console.log(otherUser);
     const {
       _id: otherUserId,
       profileImage,
@@ -118,7 +119,8 @@ class AppView {
     } = otherUser;
     const { status, message, createdAt, sender, media } = lastMessage;
     const isReceived = sender === otherUserId;
-    const elementStatus = status !== 'seen' ? 'unseen' : 'seen';
+    let elementStatus = status !== 'seen' ? 'unseen' : 'seen';
+    if (isActive && isReceived) elementStatus = 'seen';
     const elementClass = isReceived
       ? `received-${elementStatus}`
       : `sent-${elementStatus}`;
@@ -127,11 +129,13 @@ class AppView {
     return `
     <div class="entity ${isActive ? 'active' : ''} ${elementClass}"
       data-type="contact-entity"
+      data-contact-id="${contactId}"
       data-other-user-id="${otherUserId}"
       data-username="${username}"
       data-name="${name}"
       data-profile-image="${profileImage}"
-      data-entity-state='${elementClass}'
+      data-entity-state="${elementClass}"
+      data-active="${isActive ? 'active' : ''}"
       >
       <div>
         <img
@@ -164,6 +168,19 @@ class AppView {
     </div>`;
   }
 
+  activateChatEntity(selectedEntity) {
+    const currentEntity = this.setCurrentEntity();
+    currentEntity?.classList.remove('active');
+    if (currentEntity?.dataset.active) currentEntity.dataset.active = '';
+    selectedEntity.classList.add('active');
+    selectedEntity.dataset.active = 'active';
+  }
+
+  isActiveEntity(otherUserId) {
+    const activeUserId = this.currentContactEntity?.dataset.otherUserId;
+    return activeUserId === otherUserId;
+  }
+
   buildContactList(contacts = []) {
     const contactListHtml = contacts
       .map((contact) => this.contactEntity(contact))
@@ -171,15 +188,14 @@ class AppView {
     return contactListHtml;
   }
 
-  updateContactList({ newChat, updatedContact, otherUser }) {
+  updateContactList({ newChat, updatedContact: contact }) {
     const contactEntity = document.querySelector(
-      `[data-type="contact-entity"][data-other-user-id="${otherUser._id}"]`
+      `[data-type="contact-entity"][data-contact-id="${contact._id}"]`
     );
-    const contact = { ...updatedContact };
     const dataset = contactEntity.dataset;
     contact.lastMessage = newChat;
     contact.otherUser = {
-      _id: otherUser._id,
+      _id: dataset.otherUserId,
       profileImage: dataset.profileImage,
       name: dataset.name,
       frontEndUsername: dataset.username,
@@ -189,7 +205,7 @@ class AppView {
     const contactList = this.setContactList();
     contactList.insertAdjacentHTML(
       'afterbegin',
-      this.contactEntity(contact, true)
+      this.contactEntity(contact, dataset.active)
     );
   }
 
