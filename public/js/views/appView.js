@@ -110,7 +110,6 @@ class AppView {
 
   contactEntity(contact = {}, isActive) {
     const { _id: contactId, otherUser, lastMessage, unseenMessages } = contact;
-    console.log(otherUser);
     const {
       _id: otherUserId,
       profileImage,
