@@ -264,22 +264,18 @@ class ChatView {
     if (!chatContainer) return;
     if (!chatContainer?.children.length) return this.insertChatGroup(newChat); //
 
-    const { messageTime: lastChatTime, groupStatus } =
+    const { messageTime: lastChatTime, groupStatus: lastGroupStatus } =
       chatContainer?.children[0].dataset;
     const wasReceived = newChat?.wasReceived;
-    if (groupStatus !== 'sent' && !wasReceived)
-      return this.insertChatGroup(newChat);
-    if (wasReceived && groupStatus !== 'received')
-      // If chat was received
-      return this.insertChatGroup(newChat, newChat.sender);
-
+    const newGroupStatus = wasReceived ? 'received' : 'sent';
     const isValidTimeDifference = this.isValidTimeDifference(
       newChat.createdAt,
       lastChatTime
     );
 
-    if (!isValidTimeDifference) return this.insertChatGroup(newChat);
-    else return this.insertChatGroupItem(newChat);
+    if (isValidTimeDifference && lastGroupStatus === newGroupStatus)
+      return this.insertChatGroupItem(newChat, wasReceived);
+    else return this.insertChatGroup(newChat, wasReceived);
   }
 
   insertChatGroup(newChat, receiver = newChat?.receiver) {

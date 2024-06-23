@@ -103,13 +103,13 @@ class ChatController {
         newChat,
         updatedContact,
       });
-      chatView.setChatStatus(newChat);
+      chatView.updateChatElement(newChat);
       return {
         newChat,
         updatedContact,
       };
     } catch (err) {
-      chatView.setChatStatus({ ...DOMChat, status: 'error' });
+      chatView.updateChatElement({ ...DOMChat, status: 'error' });
     }
   }
 
