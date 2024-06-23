@@ -24,10 +24,14 @@ class LocalStore {
 
   findAndUpdateElement(propertyName = '', { key, value, update, sortBy }) {
     const data = this.getItem(propertyName) || [];
-    const newData = data.filter(
-      (element) => element[key] !== value && element !== value
-    );
-    newData.unshift(update);
+    let elementToUpdate;
+    const newData = data.filter((element) => {
+      if (element[key] !== value && element !== value) return true;
+      elementToUpdate = element;
+      return false;
+    });
+
+    newData.unshift({ ...elementToUpdate, ...update });
     this.setItem(propertyName, newData);
     return newData;
   }
