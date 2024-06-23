@@ -18,7 +18,7 @@ const { CRNotificationType } = require('../../config/notificationConfig');
 
 exports.sendContactRequest = catchAsync(async (req, res, next) => {
   const { username, _id: senderID } = req.user;
-  const { receiverID, message } = req.body;
+  const { receiverID, message, createdAt } = req.body;
   const duplicateErrorCode = 11000;
 
   if (!receiverID)
@@ -37,6 +37,7 @@ exports.sendContactRequest = catchAsync(async (req, res, next) => {
       isLastChat: true,
       status: defaultRequestStatus,
     },
+    createdAt,
   };
 
   if (message) conRequestData.message = message;

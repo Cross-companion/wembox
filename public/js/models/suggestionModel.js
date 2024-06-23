@@ -96,6 +96,7 @@ class suggestionModel {
     const reqObject = {
       receiverID,
       message,
+      createdAt: new Date().toISOString(),
     };
 
     const data = await fetch(`${contactRoute}/request`, {

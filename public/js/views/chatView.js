@@ -151,11 +151,11 @@ class ChatView {
   }
 
   messageItem(chat) {
-    const { message, status, media } = chat;
+    const { message, status, media, createdAt } = chat;
     return `
-    <div class="message__group__item" ${
-      media?.type ? `data-carrying="${media.type}"` : ''
-    }>
+    <div class="message__group__item" 
+      ${media?.type ? `data-carrying="${media.type}"` : ''}
+      data-created-at="${createdAt}">
       <span data-type="status-icon-container" data-chat-item-status="${status}">
         ${Icons({ type: `chat/${status}` })}
       </span>
@@ -261,6 +261,7 @@ class ChatView {
 
   insertNewChat(newChat) {
     const chatContainer = this.setChatContentContainer();
+    if (!chatContainer) return;
     if (!chatContainer?.children.length) return this.insertChatGroup(newChat); //
 
     const { messageTime: lastChatTime, groupStatus } =
@@ -293,22 +294,28 @@ class ChatView {
     container.children[0].insertAdjacentHTML('beforeend', html);
   }
 
-  setChatStatus(newStatus, priorStatus = ['sending', 'sent']) {
-    const container = this.setChatContentContainer();
-    if (!container) return;
-
-    const statusContainersToUpdate = [];
-    priorStatus.forEach((status) =>
-      statusContainersToUpdate.push(
-        container.querySelectorAll(
-          `[data-type="status-icon-container"][data-chat-item-status="${status}"]`
-        )
-      )
+  updateChatElement(chat) {
+    const chatContainer = this.setChatContentContainer();
+    const createdAt = chat.createdAt;
+    if (!createdAt || !chatContainer) return;
+    const chatElements = chatContainer.querySelectorAll(
+      `[data-created-at="${createdAt}"]`
     );
 
-    statusContainersToUpdate.forEach((nodeList) =>
-      this.replaceChatStatus(nodeList, newStatus)
+    chatElements.forEach(
+      (chatEl) => this.setChatStatus(chatEl, chat.status)
+      // A message edit function can be added here
     );
+  }
+
+  setChatStatus(chatEl, newStatus) {
+    const statusEl = chatEl?.querySelector(
+      `[data-type="status-icon-container"]`
+    );
+    if (!statusEl) return;
+
+    statusEl.innerHTML = Icons({ type: `chat/${newStatus}` });
+    statusEl.dataset.chatItemStatus = newStatus;
   }
 
   replaceChatStatus(statusContainers = [], newStatus) {

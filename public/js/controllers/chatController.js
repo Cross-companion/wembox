@@ -15,6 +15,7 @@ class ChatController {
   setSocketHandlers() {
     const handlers = [
       { event: 'chatReceived', func: this.chatReceived.bind(this) },
+      { event: 'chatProcessed', func: this.chatProcessed.bind(this) },
     ];
     socket.socketListeners(handlers);
   }
@@ -78,12 +79,13 @@ class ChatController {
   }
 
   async sendChat(formData) {
+    if (!formData) return;
     chatView.setChatMediaPreview()?.remove();
     const DOMChat = {
-      createdAt: new Date().toISOString(),
       status: 'sending',
       media: { type: 'image', payload: [] },
     };
+    formData.append('createdAt', new Date().toISOString());
     formData.forEach((data, key) => {
       if (key === 'chatImages' && data?.size)
         return DOMChat.media.payload.push(URL.createObjectURL(data));
@@ -101,22 +103,27 @@ class ChatController {
         newChat,
         updatedContact,
       });
-      chatView.setChatStatus(newChat.status, ['sending']);
+      chatView.setChatStatus(newChat);
       return {
         newChat,
         updatedContact,
       };
     } catch (err) {
-      chatView.setChatStatus('error', ['sending']);
+      chatView.setChatStatus({ ...DOMChat, status: 'error' });
     }
   }
 
   chatReceived({ newChat } = {}) {
-    if (!newChat) throw new Error('New Chat was received but is invalid.');
+    if (!newChat) throw new Error('A new Chat was received but is invalid.');
     newChat.wasReceived = true;
     chatView.mediaCheckChat(newChat).forEach((chat) => {
       return chatView.insertNewChat(chat);
     });
+  }
+
+  chatProcessed({ newChat } = {}) {
+    if (!newChat) throw new Error('A new Chat was processed but is invalid.');
+    chatView.updateChatElement(newChat);
   }
 
   addMediaPreview(input) {

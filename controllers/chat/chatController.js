@@ -55,7 +55,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
   // contactID was set at contact protect.
   const { _id: senderID, contactID } = req.user;
 
-  const { receiverID, message, media } = req.body;
+  const { receiverID, message, media, createdAt } = req.body;
 
   if (!receiverID || senderID == receiverID)
     return next(new AppError('Invalid users specified.', 401));
@@ -67,6 +67,7 @@ exports.sendChat = catchAsync(async (req, res, next) => {
         receiver: receiverID,
         message,
         media,
+        createdAt,
       },
     ],
     { select: 'sender receiver status message createdAt' }
