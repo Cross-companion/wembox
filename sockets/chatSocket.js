@@ -26,7 +26,13 @@ exports.chatSent = async (
   if (!userId || !receiver || !sender || !contactId || !newChatId) return;
   chatData.updatedContact.unseenMessages =
     chatData?.updatedContact.unseens[receiver];
-  socket.to(receiver).emit('chatReceived', chatData);
+  socket.to(receiver).emit('chatReceived', {
+    ...chatData,
+    updatedContact: {
+      ...chatData.updatedContact,
+      lastMessage: chatData.newChat,
+    },
+  });
 
   if (!getNumSocketClients(io, receiver)) return; // Is basically not online.
   if (getNumSocketClients(io, createChatRoomStr(contactId, receiver))) {
