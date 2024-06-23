@@ -63,7 +63,7 @@ class ChatView {
     preLoad?.remove();
   }
 
-  chatTemplate({ otherUserId, name, profileImage }) {
+  chatTemplate({ otherUserId, name, profileImage }, contactId) {
     return `
       <section class="chat__container__header">
         <div data-type="profile">
@@ -75,7 +75,7 @@ class ChatView {
         </div>
       </section>
       <section class="chat__container__content">
-        <div data-type="chat-content-container"></div>
+        <div data-type="chat-content-container" data-contact-id="${contactId}"></div>
       </section>
       <section class="chat__container__inputs" data-type="chat-inputs-container">
         <form data-type="chat-input-form">
@@ -351,6 +351,12 @@ class ChatView {
     filteredFiles.forEach((file) => newFiles.items.add(file));
     previewElement.remove();
     input.files = newFiles.files;
+  }
+
+  contactIsActive(contactId) {
+    const chatContainer = this.setChatContentContainer();
+    if (!chatContainer) return false;
+    return chatContainer.dataset?.contactId === contactId;
   }
 }
 

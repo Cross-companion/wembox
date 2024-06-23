@@ -40,7 +40,7 @@ class ChatController {
     }
   ) {
     chatView.removePreload();
-    this.page.innerHTML = chatView.chatTemplate(userData);
+    this.page.innerHTML = chatView.chatTemplate(userData, userData.contactId);
     const chatContentContainer = chatView.setChatContentContainer();
     this.changeChatRoom(userData.contactId);
     const { chats } = await chatModel.getChats(userData.otherUserId);
@@ -113,8 +113,12 @@ class ChatController {
     }
   }
 
-  chatReceived({ newChat } = {}) {
-    if (!newChat) throw new Error('A new Chat was received but is invalid.');
+  chatReceived({ newChat, updatedContact } = {}) {
+    const contactId = updatedContact?.id;
+    if (!newChat || !contactId)
+      throw new Error('A new Chat was received but is invalid.');
+    if (!chatView.contactIsActive(contactId)) return;
+
     newChat.wasReceived = true;
     chatView.mediaCheckChat(newChat).forEach((chat) => {
       return chatView.insertNewChat(chat);
