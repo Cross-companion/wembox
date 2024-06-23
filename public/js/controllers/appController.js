@@ -122,7 +122,7 @@ class AppController {
       const contactList = appView.buildContactList(contacts);
       this.insertContacts(contactList);
     } catch (err) {
-      // alert(err.message);
+      console.error(err.message);
     } finally {
       this.toogleLoader(appView.app, undefined, { remove: true });
       // history.pushState(null, '', '/');

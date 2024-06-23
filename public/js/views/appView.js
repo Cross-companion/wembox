@@ -191,6 +191,7 @@ class AppView {
     const contactEntity = document.querySelector(
       `[data-type="contact-entity"][data-contact-id="${contact._id}"]`
     );
+    if (!contactEntity) return;
     const dataset = contactEntity.dataset;
     contact.lastMessage = newChat;
     contact.otherUser = {
