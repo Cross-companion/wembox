@@ -46,6 +46,16 @@ class AppModel {
         throw new Error(`No api for ${type} @updateRemoteData`);
     }
   }
+
+  updateContactStatus(newStatus, contactId) {
+    const contact = localStore.findElement('contacts', {
+      key: '_id',
+      value: contactId,
+    });
+    if (!contact.lastMessage?.status) return;
+    contact.lastMessage.status = newStatus;
+    this.updateRemoteData('contacts', contact);
+  }
 }
 
 export default new AppModel();

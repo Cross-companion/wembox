@@ -16,6 +16,10 @@ class ChatController {
     const handlers = [
       { event: 'chatReceived', func: this.chatReceived.bind(this) },
       { event: 'chatProcessed', func: this.chatProcessed.bind(this) },
+      {
+        event: 'chatStatusUpdated',
+        func: chatView.setMultiplechatStatus.bind(chatView),
+      },
     ];
     socket.socketListeners(handlers);
   }
@@ -46,6 +50,15 @@ class ChatController {
     const { chats } = await chatModel.getChats(userData.otherUserId);
     const chatsHtml = chatView.chatsHtml(chats, userData.otherUserId);
     chatContentContainer.innerHTML = chatsHtml;
+    socket.emit('updateChatStatus', {
+      newStatus: 'seen',
+      contactData: [
+        {
+          otherUser: userData.otherUserId,
+          contactId: userData.contactId,
+        },
+      ],
+    });
     this.addChatInputListener();
   }
 

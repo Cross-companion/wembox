@@ -314,6 +314,24 @@ class ChatView {
     statusEl.dataset.chatItemStatus = newStatus;
   }
 
+  setMultiplechatStatus({ newStatus, possiblePrevStatus = [], contactId }) {
+    const chatContainer = this.setChatContentContainer();
+    if (
+      !chatContainer ||
+      !this.contactIsActive(contactId) ||
+      !possiblePrevStatus?.length
+    )
+      return;
+    const queryStr = possiblePrevStatus
+      .map(
+        (status) =>
+          `[data-type="status-icon-container"][data-chat-item-status="${status}"]`
+      )
+      .join(',');
+    const statusContainers = chatContainer.querySelectorAll(queryStr);
+    this.replaceChatStatus(statusContainers, newStatus);
+  }
+
   replaceChatStatus(statusContainers = [], newStatus) {
     statusContainers.forEach((container) => {
       container.innerHTML = Icons({ type: `chat/${newStatus}` });

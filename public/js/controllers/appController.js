@@ -30,6 +30,7 @@ class AppController {
     const handlers = [
       { event: 'chatReceived', func: this.chatReceived.bind(this) },
       { event: 'chatProcessed', func: this.chatReceived.bind(this) },
+      { event: 'chatStatusUpdated', func: this.updateContactStatus.bind(this) },
     ];
     socket.socketListeners(handlers);
   }
@@ -121,6 +122,13 @@ class AppController {
         return this.insertContacts(appView.noContactsHtml());
       const contactList = appView.buildContactList(contacts);
       this.insertContacts(contactList);
+      const contactData = contacts.map((contact) => {
+        return { contactId: contact._id, otherUser: contact.otherUser._id };
+      });
+      socket.emit('updateChatStatus', {
+        newStatus: 'delivered',
+        contactData,
+      });
     } catch (err) {
       console.error(err.message);
     } finally {
@@ -328,6 +336,12 @@ class AppController {
     const page = pageType.split('show-')[1];
     if (page === 'chats') return this.getContacts();
     else if (page === 'notifications') this.openNotifications();
+  }
+
+  updateContactStatus({ newStatus, possiblePrevStatus = [], contactId }) {
+    if (!newStatus || !possiblePrevStatus?.length || !contactId) return;
+    appModel.updateContactStatus(newStatus, contactId);
+    appView.setContactStatus({ newStatus, possiblePrevStatus, contactId });
   }
 }
 

@@ -47,6 +47,13 @@ class AppView {
     </div>`;
   }
 
+  getContactEntity(contactId) {
+    const contactEntity = document.querySelector(
+      `[data-type="contact-entity"][data-contact-id="${contactId}"]`
+    );
+    return contactEntity;
+  }
+
   setContactList() {
     this.contactList = document.querySelector('[data-type="contact-list"]');
     return this.contactList;
@@ -58,6 +65,33 @@ class AppView {
       '.active[data-type="contact-request-entity"]'
     );
     return this.currentContactEntity;
+  }
+
+  setContactStatus(
+    { newStatus, possiblePrevStatus, contactId },
+    { isReceived = false } = {}
+  ) {
+    const contactEntity = this.getContactEntity(contactId);
+    if (!newStatus || !contactEntity) return;
+
+    const queryStr = possiblePrevStatus
+      .map(
+        (status) =>
+          `[data-type="contact-entity-status"][data-contact-entity-status="${status}"]`
+      )
+      .join(',');
+    const contactStatus = contactEntity.querySelector(queryStr);
+    if (!contactStatus) return;
+    contactStatus.outerHTML = Icons({
+      type: `chat/${newStatus}`,
+      dataStrings: `data-type="contact-entity-status" data-contact-entity-status="${newStatus}"`,
+    });
+
+    const elementStatus = newStatus !== 'seen' ? 'unseen' : 'seen';
+    const elementClassPrefix = isReceived ? 'received' : 'sent';
+    const elementClass = `${elementClassPrefix}-${elementStatus}`;
+    contactEntity.classList.add(elementClass);
+    contactEntity.dataset.entityState = elementClass;
   }
 
   noContactsHtml() {
@@ -160,7 +194,10 @@ class AppView {
           ${
             isReceived && showAlertNumber
               ? `<span class="entity__alert-number">${unseenMessages}</span>`
-              : Icons({ type: `chat/${status}` })
+              : Icons({
+                  type: `chat/${status}`,
+                  dataStrings: `data-type="contact-entity-status" data-contact-entity-status="${status}"`,
+                })
           }
         </span>
       </div>
@@ -188,9 +225,7 @@ class AppView {
   }
 
   updateContactList({ newChat, updatedContact: contact }) {
-    const contactEntity = document.querySelector(
-      `[data-type="contact-entity"][data-contact-id="${contact._id}"]`
-    );
+    const contactEntity = this.getContactEntity(contact?._id);
     if (!contactEntity) return;
     const dataset = contactEntity.dataset;
     contact.lastMessage = newChat;

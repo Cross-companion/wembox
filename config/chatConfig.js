@@ -15,6 +15,18 @@ const chatConfig = {
   deletedForSenderStatus: 'deleted for sender',
   deletedMessageString: 'Deleted',
   chatsPerRequest: 100,
+  getPossiblePrevStatus(status) {
+    switch (status) {
+      case this.defaultChatStatus:
+        return [];
+      case this.deliveredStatus:
+        return [this.defaultChatStatus];
+      case this.seenStatus:
+        return [this.defaultChatStatus, this.deliveredStatus];
+      default:
+        return [];
+    }
+  },
 };
 
 module.exports = chatConfig;

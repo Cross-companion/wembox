@@ -1,10 +1,6 @@
 const Chat = require('../models/chat/chatModel');
-const {
-  chatStatusEnum,
-  deliveredStatus,
-  defaultChatStatus,
-  seenStatus,
-} = require('../config/chatConfig');
+const chatConfig = require('../config/chatConfig');
+const { chatStatusEnum, deliveredStatus, seenStatus } = chatConfig; // Making `this` available
 const {
   getNumSocketClients,
   createChatRoomStr,
@@ -59,10 +55,24 @@ exports.chatSent = async (
 
 exports.updateChatStatus = async (
   socket,
-  queryObj = { sender: '', status: '' }
+  queryObj = {
+    newStatus: '',
+    contactData: [{ otherUser, contactId }],
+  }
 ) => {
-  const { status } = queryObj;
-  if (!chatStatusEnum.includes(status) || !socket.user.id || !sender) return;
+  const { newStatus, contactData } = queryObj;
+  const userId = socket.user.id;
 
-  await Chat.updateMany({ receiver: socket.user.id, sender }, { status });
+  if (!chatStatusEnum.includes(newStatus) || !userId || !contactData?.length)
+    return;
+
+  const possiblePrevStatus = chatConfig.getPossiblePrevStatus('seen');
+  contactData.forEach((contact) => {
+    if (!contact.otherUser || !contact.contactId) return;
+    socket.to(contact.otherUser).emit('chatStatusUpdated', {
+      newStatus,
+      possiblePrevStatus,
+      contactId: contact.contactId,
+    });
+  });
 };

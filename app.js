@@ -93,6 +93,10 @@ io.on('connection', (socket) => {
     chatSocket.chatSent(socket, queryObj, io)
   );
 
+  socket.on('updateChatStatus', (queryObj) =>
+    chatSocket.updateChatStatus(socket, queryObj)
+  );
+
   socket.on('changeChatRoom', (queryObj) => {
     socket.leave(createChatRoomStr(queryObj?.leave, socket.user.id));
     if (!queryObj?.join || !socket.user.id) return;
