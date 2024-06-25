@@ -58,14 +58,36 @@ class ChatView {
     return CRForm;
   }
 
+  setChatPage() {
+    const chatPage = document.querySelector(
+      '[data-page-name="chats"][data-type="page"]'
+    );
+    return chatPage;
+  }
+
   removePreload() {
     const preLoad = document.querySelector('[data-type="chat-preload"]');
     preLoad?.remove();
   }
 
+  insertPreload() {
+    const chatPage = this.setChatPage();
+    chatPage.innerHTML = this.preLoad;
+  }
+
   chatTemplate({ otherUserId, name, profileImage }, contactId) {
     return `
       <section class="chat__container__header">
+        <button data-type="close-chat-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 -960 960 960"
+          >
+            <path
+              d="m142-480 294 294q15 15 14.5 35T435-116q-15 15-35 15t-35-15L57-423q-12-12-18-27t-6-30q0-15 6-30t18-27l308-308q15-15 35.5-14.5T436-844q15 15 15 35t-15 35L142-480Z"
+            />
+          </svg>
+        </button>
         <div data-type="profile">
           <img src="${profileImage}" alt="" />
           <div data-type="details">
@@ -375,6 +397,12 @@ class ChatView {
     const chatContainer = this.setChatContentContainer();
     if (!chatContainer) return false;
     return chatContainer.dataset?.contactId === contactId;
+  }
+
+  chatPageIsActive() {
+    const chatPage = this.setChatPage();
+    if (!chatPage) return false;
+    return chatPage.classList.contains('active');
   }
 }
 

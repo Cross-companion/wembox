@@ -5,6 +5,14 @@
     position: relative;
     // margin: 0 3rem;
 
+    @media only screen and (max-width: 43.748em) {
+      --children-padding: 2rem;
+    }
+
+    @media only screen and (max-width: 37.5em) {
+      --children-padding: 1rem;
+    }
+
     &--pre-load {
       position: absolute;
       top: 50%;
@@ -26,11 +34,53 @@
       width: 100%;
       top: 0rem;
       left: 0rem;
-      padding: 1.5rem 0 0.5rem var(--children-padding);
+      padding: 1.5rem var(--children-padding) 0.5rem;
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       z-index: var(--z-index-header);
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+
+      @media only screen and (max-width: 37.5em) {
+        padding-top: 1rem;
+      }
+
+      @media only screen and (max-width: 25em) {
+        padding: 0.7rem 0.7rem 0.5rem;
+      }
+
+      & > button[data-type='close-chat-btn'] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        border: none;
+        background-color: transparent;
+
+        @media only screen and (max-width: 43.748em) {
+          display: flex;
+        }
+
+        & > svg {
+          position: relative;
+          left: 10%;
+          height: 2.2rem;
+          width: 2.2rem;
+          // fill: var(--theme-blue);
+        }
+
+        &:hover {
+          background-color: #f0f0f0;
+
+          & > svg {
+            fill: var(--theme-blue);
+          }
+        }
+      }
 
       & > div[data-type='profile'] {
         --profile-gap: 1rem;
@@ -88,6 +138,7 @@
       justify-content: end;
       overflow: auto;
       height: calc(100% - var(--height-of-input-container));
+      width: 100%;
 
       & > div {
         overflow: auto;

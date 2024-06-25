@@ -63,7 +63,6 @@ class ChatController {
   }
 
   changeChatRoom(contactId) {
-    if (!contactId) return;
     socket.emit('changeChatRoom', {
       leave: this.currentChatRoom,
       join: contactId,
@@ -182,6 +181,12 @@ class ChatController {
     } finally {
       form.dataset.state = 'free';
     }
+  }
+
+  closeChat() {
+    if (!this.currentChatRoom) return;
+    this.changeChatRoom();
+    chatView.insertPreload();
   }
 }
 

@@ -24,6 +24,15 @@ class AppController {
     appModel.getNotifications();
     this.eventHandler();
     this.setSocketHandlers();
+    this.windowEvent();
+  }
+
+  windowEvent() {
+    window.addEventListener('popstate', (event) => {
+      if (!window.location.search) {
+        this.closeChat();
+      }
+    });
   }
 
   setSocketHandlers() {
@@ -51,6 +60,11 @@ class AppController {
       target.closest('[data-type="delete-chat-media-preview"]')
         ? true
         : false;
+    const isCloseChatBtn =
+      target.dataset.type === 'close-chat-btn' ||
+      target.closest('[data-type="close-chat-btn"]')
+        ? true
+        : false;
     const isContactEntity =
       target.dataset.type === 'contact-entity' ||
       target.closest('[data-type="contact-entity"]')
@@ -76,6 +90,7 @@ class AppController {
     if (isProfileGateway) return this.handleProfileVisits(target); // Imgs in this have a higher prioity than it being part of a contact entity, hence, not needed to bubble up.
     if (isContactEntity)
       return this.openChats(target.closest('[data-type="contact-entity"]'));
+    if (isCloseChatBtn) return this.closeChat();
     if (isCREntity)
       return this.openCR(
         target.closest('[data-type="contact-request-entity"]')
@@ -129,11 +144,11 @@ class AppController {
         newStatus: 'delivered',
         contactData,
       });
+      history.pushState(null, '', '/');
     } catch (err) {
       console.error(err.message);
     } finally {
       this.toogleLoader(appView.app, undefined, { remove: true });
-      // history.pushState(null, '', '/');
     }
   }
 
@@ -295,7 +310,7 @@ class AppController {
     }
   }
 
-  activatePage(pageName) {
+  activatePage(pageName, param = `?${pageName}`) {
     if (pageName !== 'chats' && pageName !== 'contacts')
       throw new Error('Invalid page name');
 
@@ -304,6 +319,8 @@ class AppController {
         ? page.classList.add('active')
         : page.classList.remove('active');
     });
+
+    history.pushState(null, '', param);
   }
 
   async openChats(entity) {
@@ -342,6 +359,12 @@ class AppController {
     if (!newStatus || !possiblePrevStatus?.length || !contactId) return;
     appModel.updateContactStatus(newStatus, contactId);
     appView.setContactStatus({ newStatus, possiblePrevStatus, contactId });
+  }
+
+  closeChat() {
+    this.activatePage('contacts', '/');
+    appView.deactivateEntity();
+    chatController.closeChat();
   }
 }
 

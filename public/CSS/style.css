@@ -356,6 +356,16 @@ main.main__interest {
   --children-padding: 3rem;
   position: relative;
 }
+@media only screen and (max-width: 43.748em) {
+  .chat__container {
+    --children-padding: 2rem;
+  }
+}
+@media only screen and (max-width: 37.5em) {
+  .chat__container {
+    --children-padding: 1rem;
+  }
+}
 .chat__container--pre-load {
   position: absolute;
   top: 50%;
@@ -374,11 +384,51 @@ main.main__interest {
   width: 100%;
   top: 0rem;
   left: 0rem;
-  padding: 1.5rem 0 0.5rem var(--children-padding);
+  padding: 1.5rem var(--children-padding) 0.5rem;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   z-index: var(--z-index-header);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+@media only screen and (max-width: 37.5em) {
+  .chat__container__header {
+    padding-top: 1rem;
+  }
+}
+@media only screen and (max-width: 25em) {
+  .chat__container__header {
+    padding: 0.7rem 0.7rem 0.5rem;
+  }
+}
+.chat__container__header > button[data-type=close-chat-btn] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+}
+@media only screen and (max-width: 43.748em) {
+  .chat__container__header > button[data-type=close-chat-btn] {
+    display: flex;
+  }
+}
+.chat__container__header > button[data-type=close-chat-btn] > svg {
+  position: relative;
+  left: 10%;
+  height: 2.2rem;
+  width: 2.2rem;
+}
+.chat__container__header > button[data-type=close-chat-btn]:hover {
+  background-color: #f0f0f0;
+}
+.chat__container__header > button[data-type=close-chat-btn]:hover > svg {
+  fill: var(--theme-blue);
 }
 .chat__container__header > div[data-type=profile] {
   --profile-gap: 1rem;
@@ -425,6 +475,7 @@ main.main__interest {
   justify-content: end;
   overflow: auto;
   height: calc(100% - var(--height-of-input-container));
+  width: 100%;
 }
 .chat__container__content > div {
   overflow: auto;
@@ -1277,6 +1328,21 @@ svg.interest__topics__follow-icon {
 .app {
   display: flex;
   height: 100vh;
+}
+.app > section.active {
+  display: flex;
+}
+@media only screen and (max-width: 43.748em) {
+  .app > section.active {
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+  }
+}
+@media only screen and (max-width: 43.748em) {
+  .app > section {
+    display: none;
+  }
 }
 .app__header {
   box-shadow: rgba(0, 0, 0, 0.1) -3px 0px 12px;

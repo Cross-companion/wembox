@@ -212,6 +212,10 @@ class AppView {
     selectedEntity.dataset.active = 'active';
   }
 
+  deactivateEntity(entity = this.setCurrentEntity()) {
+    if (entity?.dataset.active) entity.dataset.active = '';
+  }
+
   isActiveEntity(otherUserId) {
     const activeUserId = this.currentContactEntity?.dataset.otherUserId;
     return activeUserId === otherUserId;
