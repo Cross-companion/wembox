@@ -70,11 +70,11 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String,
-      default: 'user-images/default-profile-image.jpg',
+      default: '/images/user-images/default-profile-image.jpg',
     },
     profileCoverImage: {
       type: String,
-      default: 'user-images/default-profile-cover-image.jpg',
+      default: '/images/user-images/default-profile-cover-image.jpg',
     },
     note: {
       type: String,
@@ -90,18 +90,7 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
-      min: [
-        ageLimit(),
-        'Invalid date: Sorry, the date you specified is above our maximum age limit',
-      ],
-      max: [
-        ageLimit('maximum'),
-        'Invalid date: Sorry, the date you specified is below our minimum age limit',
-      ],
-      required: [
-        true,
-        'Please tell us your date of birth so we can personalize you experience.',
-      ],
+      // min: [git
     },
     password: {
       type: String,
