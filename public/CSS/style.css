@@ -87,7 +87,6 @@
 
 html {
   position: relative;
-  min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary);
 }
@@ -128,6 +127,7 @@ main.main__interest {
   border-radius: 0 !important;
   border: none;
   height: 100vh;
+  height: 100svh;
 }
 
 .app-form {
@@ -289,9 +289,10 @@ main.main__interest {
 }
 
 .app-modal {
+  display: block !important;
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   z-index: var(--z-index-heighest);
 }
 .app-modal__overlay {
@@ -356,9 +357,15 @@ main.main__interest {
   --children-padding: 3rem;
   position: relative;
 }
+@media only screen and (max-width: 62.5em) {
+  .chat__container {
+    --height-of-input-container: 6rem;
+  }
+}
 @media only screen and (max-width: 43.748em) {
   .chat__container {
     --children-padding: 2rem;
+    --height-of-input-container: 5rem;
   }
 }
 @media only screen and (max-width: 37.5em) {
@@ -1328,6 +1335,7 @@ svg.interest__topics__follow-icon {
 .app {
   display: flex;
   height: 100vh;
+  height: 100svh;
 }
 .app > section.active {
   display: flex;
@@ -1703,6 +1711,7 @@ svg.interest__topics__follow-icon {
   left: 0;
   width: 100vw;
   height: 100vh;
+  height: 100svh;
   z-index: var(--z-index-lowest);
 }
 

@@ -112,7 +112,7 @@
 html {
   //   Aligning the rem size to 10px makes for a more easy calculation and implementation thereofs (font-size of 1rem = 10px)
   position: relative;
-  min-height: 100vh;
+  // min-height: 100vh;
   font-size: 62.5%;
   background-color: var(--color-primary);
 }
@@ -152,6 +152,7 @@ main {
       border-radius: 0 !important;
       border: none;
       height: 100vh;
+      height: 100svh;
     }
   }
 }

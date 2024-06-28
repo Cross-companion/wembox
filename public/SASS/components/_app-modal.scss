@@ -1,7 +1,8 @@
 .app-modal {
+  display: block !important; // Important for smaller view-ports
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   z-index: var(--z-index-heighest);
   &__overlay {
     position: absolute;
