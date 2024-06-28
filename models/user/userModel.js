@@ -90,7 +90,18 @@ const userSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
-      // min: [git
+      // min: [
+      //   ageLimit(),
+      //   'Invalid date: Sorry, the date you specified is above our maximum age limit',
+      // ],
+      // max: [
+      //   ageLimit('maximum'),
+      //   'Invalid date: Sorry, the date you specified is below our minimum age limit',
+      // ],
+      // required: [
+      //   true,
+      //   'Please tell us your date of birth so we can personalize you experience.',
+      // ],
     },
     password: {
       type: String,
