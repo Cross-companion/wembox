@@ -217,7 +217,7 @@ const userSchema = new mongoose.Schema(
         },
       ],
       default: [],
-      select: false,
+      // select: false,
     },
     contentType: {
       type: [
@@ -241,7 +241,7 @@ const userSchema = new mongoose.Schema(
         },
       ],
       default: [],
-      select: false,
+      // select: false,
     },
     IPGeoLocation: {
       type: {

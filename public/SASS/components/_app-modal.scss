@@ -2,7 +2,7 @@
   display: block !important; // Important for smaller view-ports
   position: absolute;
   width: 100vw;
-  height: 100%;
+  height: 100dvh;
   z-index: var(--z-index-heighest);
   &__overlay {
     position: absolute;

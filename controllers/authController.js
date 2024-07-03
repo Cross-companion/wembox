@@ -119,12 +119,6 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
     );
   }
 
-  // await sendEmail({
-  //   email,
-  //   subject: 'Wembox verification token. (Expires in 10 minutes)',
-  //   message,
-  // });
-
   res.status(200).json({
     status: 'success',
     message: `6 digit otp has been sent to ${email}.`,
