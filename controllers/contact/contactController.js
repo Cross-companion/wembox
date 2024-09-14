@@ -11,7 +11,6 @@ const {
 } = require('../../config/contactConfig');
 const catchAsync = require('../../utilities/catchAsync');
 const AppError = require('../../utilities/AppError');
-const { updateContactSession } = require('../../utilities/helpers');
 const { seenStatus } = require('../../config/chatConfig');
 const Notification = require('../../models/notification/notificationModel');
 const { CRNotificationType } = require('../../config/notificationConfig');
