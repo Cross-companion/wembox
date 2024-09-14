@@ -12,9 +12,7 @@ const { extractSuggestCreatorData } = require('./helper');
 exports.getSuggestions = catchAsync(async (req, res, next) => {
   const userRegion = req.user.IPGeoLocation.region;
   const interestKey = process.env.INTEREST_CACHE_KEY + userRegion;
-  const cachedInterests = await redis
-    .get(interestKey)
-    .then((data) => JSON.parse(data));
+  const cachedInterests = JSON.parse((await redis.get(interestKey)) || 0);
 
   const interests =
     cachedInterests ||
@@ -94,6 +92,7 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
     conditionToExcludeFollowing
   );
 
+  console.log('paginationKey 2: ', paginationKey);
   const { users, newPaginationData } = await USER_AGG.SUGGEST_CREATOR_AGG();
 
   if (newPaginationData) req.session[paginationKey] = newPaginationData;

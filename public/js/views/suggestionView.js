@@ -110,7 +110,10 @@ class suggestionView {
             <div class="profile__details__username"><span>@</span>${username}</div>
           </div>
           <div class="profile__details__note">${
-            note || 'Gratittude is a must ♥'
+            note ||
+            (!isMe
+              ? 'Gratittude is a must ♥'
+              : 'Change Dummy text  "Gratittude is a must ♥" by clicking on edit to customize your profile!.')
           }</div>
           <div class="profile__details__following">
             <div><span>${numberOfFollowers}</span> followers</div>

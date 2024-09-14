@@ -36,7 +36,9 @@ exports.extractSuggestCreatorData = (req) => {
     req.user.username
   }:${interestTypes.sort().join('-').replace(/ /g, '-')}`;
 
+  console.log('paginationKey 1: ', paginationKey);
   const paginationData = req.session[paginationKey] || undefined;
+  console.log('paginationData 1: ', paginationData);
   const {
     excludeByFollowing = false,
     conditionToExcludeFollowing = false,
