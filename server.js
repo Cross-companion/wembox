@@ -9,14 +9,14 @@ const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
 ).replace('<ENVIRONMENT>', process.env.NODE_ENV);
-
+console.log(DB);
 mongoose
   .connect(DB)
   .then(() => {
     console.log('DB connection successful');
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err, '<<<<>>>>');
   });
 
 const port = process.env.PORT || 3000;

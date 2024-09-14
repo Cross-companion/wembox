@@ -1,3 +1,4 @@
+const path = require('path');
 const {
   S3Client,
   PutObjectCommand,
@@ -79,6 +80,10 @@ class ImageFile {
     const { Body, ContentType } = await awsClient.send(command);
 
     return { Body, ContentType };
+  }
+
+  localiseUrl(urlFromFolder) {
+    return path.join(__dirname, `../public/Imgs/${urlFromFolder}`);
   }
 }
 

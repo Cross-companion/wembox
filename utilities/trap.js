@@ -8,6 +8,7 @@ const countryRegions = require('../config/countryRegions.json');
 
 class ReUse {
   constructor() {
+    if (process.env.NODE_ENV !== 'development') return;
     // TAKE EXTRA CARE BEFORE CALLING A METHOD
     this.delayTime = 1000 * 10;
     // this.CREATE_USERS(10000, 10);

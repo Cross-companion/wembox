@@ -2,7 +2,8 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 
 const Reader = require('@maxmind/geoip2-node').Reader;
-const redis = require('./redisInit');
+// const redis = require('./redisInit');
+const redis = require('./MockRedis');
 const { JWT_SECRET } = process.env;
 
 const { engagementTimeSpans } = require('../config/interestConfig');

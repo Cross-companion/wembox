@@ -7,9 +7,9 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
-const session = require('express-session');
-const RedisStore = require('connect-redis').default;
-const redisClient = require('./utilities/redisInit');
+// const session = require('express-session'); COMPLETE COMMENT
+// const RedisStore = require('connect-redis').default; COMPLETE COMMENT
+// const redisClient = require('./utilities/redisInit'); COMPLETE COMMENT
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
@@ -32,10 +32,10 @@ const {
 } = require('./utilities/helpers');
 
 // Initialize store.
-const redisStore = new RedisStore({
-  client: redisClient,
-  prefix: process.env.APP_NAME + ':',
-});
+// const redisStore = new RedisStore({
+//   client: redisClient,
+//   prefix: process.env.APP_NAME + ':',
+// }); COMPLETE COMMENT
 
 // SETTING UP PUG
 app.set('view engine', 'pug');
@@ -55,14 +55,14 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Initialize sesssion storage.
-app.use(
-  session({
-    store: redisStore,
-    resave: false, // required: force lightweight session keep alive (touch)
-    saveUninitialized: false, // recommended: only save session when data exists
-    secret: process.env.SESSION_SECRET_KEY,
-  })
-);
+// app.use(
+//   session({
+//     store: redisStore,
+//     resave: false, // required: force lightweight session keep alive (touch)
+//     saveUninitialized: false, // recommended: only save session when data exists
+//     secret: process.env.SESSION_SECRET_KEY,
+//   })
+// ); COMPLETE COMMENT
 
 // Test middleware
 app.use((req, res, next) => {

@@ -17,7 +17,8 @@ const {
   getIPAddress,
   getLocationByIP,
 } = require('../utilities/helpers');
-const redis = require('../utilities/redisInit');
+// const redis = require('../utilities/redisInit');
+const redis = require('../utilities/MockRedis');
 const DocumentMethods = require('../utilities/DocumentMethods');
 const { getContactsQuery } = require('./contact/helper');
 
@@ -111,7 +112,7 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
       otp: token,
     }).sendEmailVerificationOTP();
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return next(
       new AppError(
         'There was a short server error, please try again and if problem persist, contact the wembox customer service.'
@@ -254,7 +255,7 @@ exports.protect = async (req, res, next) => {
       throw new Error('Your session has exprired. Please login again.');
 
     const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
-    const cachedUser = JSON.parse(await redis.get(userKey));
+    const cachedUser = JSON.parse((await redis.get(userKey)) || 0);
     const user =
       cachedUser ||
       (await User.findById(decoded.id).select('+interests +contentType'));
@@ -281,6 +282,7 @@ exports.protect = async (req, res, next) => {
     // );
     return next();
   } catch (err) {
+    console.error(err);
     res.redirect('/auth');
   }
 };
@@ -323,7 +325,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       message: 'The email has been sent',
     });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpire = undefined;
     await user.save({ validateBeforeSave: false });

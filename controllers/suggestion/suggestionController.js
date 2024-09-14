@@ -2,7 +2,8 @@ const Interest = require('../../models/interest/interestModel');
 const UserAggregations = require('../../models/user/aggregation');
 const AppError = require('../../utilities/AppError');
 const catchAsync = require('../../utilities/catchAsync');
-const redis = require('../../utilities/redisInit');
+// const redis = require('../../utilities/redisInit');
+const redis = require('../../utilities/MockRedis');
 const { extractSuggestCreatorData } = require('./helper');
 /**
  * Since this user interest is cached, it looses all its document methods, any document method used after here must be defined in and called from the DocumentMethods class.

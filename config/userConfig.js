@@ -15,7 +15,24 @@ class UserConfig {
       'senior-admin',
     ];
     this.ADMIN_TYPES = { normalAdmin: 'admin', seniorAdmin: 'senior-admin' };
-    this.INTEREST_TYPES = [];
+    this.INTEREST_TYPES = [
+      'gaming',
+      'fashion and beauty',
+      'business and finance',
+      'family and relationships',
+      'music',
+      'entertainment',
+      'sports',
+      'food',
+      'arts and culture',
+      'careers',
+      'animation and comics',
+      'science',
+      'technology',
+      'travel',
+      'outdoors',
+      'fitness',
+    ];
     this.DEFAULT_INTEREST_ARRAY = [];
     process.env.NODE_ENV !== 'production'
       ? this._testInitialise()

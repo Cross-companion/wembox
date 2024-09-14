@@ -325,7 +325,7 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.post('save', function (doc) {
-  userConfig.setInterests();
+  userConfig.setInterests(); // NOTE THIS OVERWRITE THE INTEREST_TYPE
 });
 
 userSchema.post('findOneAndUpdate', async function (doc, next) {
