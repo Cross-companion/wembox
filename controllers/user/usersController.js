@@ -44,7 +44,8 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
         quality: 90,
         folderName: AWS_USER_IMAGES_FOLDER,
       });
-      await profileImage?.uploadToAWS();
+      // await profileImage?.uploadToAWS(); COMPLETE COMMENT
+      await profileImage?.uploadToLocal();
       req.body.profileImage = `${ROOT_IMAGE_ROUTE}${profileImage.imageName}`;
     })(),
     (async () => {
@@ -57,7 +58,8 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
         quality: 90,
         folderName: AWS_USER_IMAGES_FOLDER,
       });
-      await profileCoverImage?.uploadToAWS();
+      // await profileCoverImage?.uploadToAWS(); COMPLETE COMMENT
+      await profileCoverImage?.uploadToLocal();
       req.body.profileCoverImage = `${ROOT_IMAGE_ROUTE}${profileCoverImage.imageName}`;
     })(),
   ]);

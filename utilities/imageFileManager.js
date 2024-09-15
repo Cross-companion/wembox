@@ -1,3 +1,4 @@
+const fs = require('fs').promises;
 const path = require('path');
 const {
   S3Client,
@@ -84,6 +85,18 @@ class ImageFile {
 
   localiseUrl(urlFromFolder) {
     return path.join(__dirname, `../public/Imgs/${urlFromFolder}`);
+  }
+
+  async uploadToLocal({ useSharp = true } = {}) {
+    try {
+      if (!this.image || !this.uniqueID)
+        throw new Error('No Image buffer or unique id  Specified');
+      const imageBuffer = useSharp ? await this.sharpify() : this.image.buffer;
+      const filePath = this.localiseUrl(this.imageName);
+      await fs.writeFile(filePath, imageBuffer);
+    } catch (err) {
+      throw new Error(err.message);
+    }
   }
 }
 
