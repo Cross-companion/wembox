@@ -206,7 +206,7 @@ class AuthViews {
     id="identity-data"
     name="identity-data"
     placeholder="Your email or username"
-    maxlength="15"
+    maxlength="320"
     required
     />
     <label for="identity-data">Your email or username</label>
