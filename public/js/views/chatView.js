@@ -5,7 +5,7 @@ class ChatView {
   constructor() {
     this.preLoad = `
       <div class="chat__container--pre-load" data-type="chat-preload">
-        <img src="./../Imgs/logos/DALL-E/wembee-logo-v1.jpg" alt="" />
+        <img src="./../Imgs/app-images/logo-mid.png" alt="" />
         <div class="logo">
           <span class="logo__text logo__text--burn">Wembox</span>
           <span>inc.</span>

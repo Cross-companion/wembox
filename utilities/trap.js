@@ -11,7 +11,7 @@ class ReUse {
     if (process.env.NODE_ENV !== 'development') return;
     // TAKE EXTRA CARE BEFORE CALLING A METHOD
     this.delayTime = 1000 * 10;
-    // this.CREATE_USERS(10000, 10);
+    // this.CREATE_USERS(10000, 20);
     // this.CREATE_FOLLOWS(30000);
     // this.DELETE_USERS();
     // this.DELETE_FOLLOWS();
@@ -322,6 +322,9 @@ class ReUse {
           contentType: contentType(),
           IPGeoLocation:
             countries[Math.round(Math.random() * (countries.length - 1))],
+          profileCoverImage: `/images/user-images/default-profile-cover-image-${
+            Math.round(Math.random() * 29) + 1
+          }.jpg`,
         });
       }
       console.log(`CREATED ${dummy.number} Volunteers`);

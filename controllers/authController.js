@@ -175,6 +175,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
     isHuman: req.isHuman, // from recaptcha
     IPGeoLocation: userLocation,
+    profileCoverImage: `/images/user-images/default-profile-cover-image-${
+      Math.round(Math.random() * 29) + 1
+    }.jpg`,
   });
 
   const homeUrl = `${req.protocol}://${req.get('host')}/`;
