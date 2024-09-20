@@ -92,7 +92,7 @@ class ChatView {
           <img src="${profileImage}" alt="" />
           <div data-type="details">
             <p data-type="name">${name}</p>
-            <p class="active" data-type="online-status">Online</p>
+            <p class="active" data-type="online-status">Active</p>
           </div>
         </div>
       </section>
@@ -113,7 +113,7 @@ class ChatView {
               dataStrings: 'data-type="add-image-icon"',
             })}
           </button>
-          <textarea name="message" data-type="chat-text-input" id="" cols="30" rows="10"></textarea>
+          <textarea name="message" data-type="chat-text-input" id="" cols="30" rows="10" required></textarea>
           <button type="submit">
           ${Icons({
             type: 'send-chat',

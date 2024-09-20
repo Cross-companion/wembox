@@ -122,7 +122,7 @@ exports.sendEmailOtp = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
-    message: `6 digit otp has been sent to ${email}.`,
+    message: `6 digit otp has been sent to ${email}.\nThis might take some minute.`,
   });
 });
 
@@ -328,7 +328,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'The email has been sent',
+      message,
     });
   } catch (err) {
     console.error(err);
