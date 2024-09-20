@@ -147,6 +147,9 @@ class AuthViews {
 
   signupDialogue3() {
     this.btnResetText = 'Signup!';
+    // PASSWORD PATTERN - USEFUL
+    // pattern =
+    //   '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$';
     const form = `
       <input
         type="password"
@@ -155,9 +158,7 @@ class AuthViews {
         placeholder="Password"
         minlength="8"
         maxlength="25"
-        value="#1234567eR"
-        autocomplete="current-password"
-        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
+        value=""
         required
       />
       <label for="password">Password</label>
@@ -168,9 +169,6 @@ class AuthViews {
         placeholder="Confirm password"
         minlength="8"
         maxlength="25"
-        value="#1234567eR"
-        autocomplete="current-password"
-        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,25}$"
         required
       />
       <label for="password-confirm">Confirm password</label>

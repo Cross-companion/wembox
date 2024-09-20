@@ -74,6 +74,7 @@
 
   & > div#captcha-container {
     margin: 0 0 1rem 0.5rem;
+    position: relative;
 
     @media (max-width: 35em) {
       position: relative;
@@ -84,6 +85,16 @@
       position: relative;
       left: -3rem;
       transform: scale(0.8);
+    }
+
+    &:before {
+      content: 'Recaptcha Loading...';
+      display: table;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-left: 2rem;
+      z-index: -1;
     }
   }
 
