@@ -55,6 +55,9 @@ class AppController {
     const target = e.target;
     const isProfileGateway = target.dataset.type === 'profile-gateway';
     const isCancelUpdateMe = target.dataset.type === 'cancel-update-me';
+    const isProfileLogout = target.dataset.type === 'profile-logout';
+    const isProfileOptionsClose =
+      target.dataset.type === 'modal-option-item-cancel';
     const isDeleteChatMediaPreview =
       target.dataset.type === 'delete-chat-media-preview' ||
       target.closest('[data-type="delete-chat-media-preview"]')
@@ -103,6 +106,8 @@ class AppController {
     if (isDeleteChatMediaPreview)
       return chatController.deleteChatPreview(target);
     if (isNotificationToogle) return this.notificationToogle();
+    if (isProfileLogout) return this.logout();
+    if (isProfileOptionsClose) return modal.closeModalOptions();
   }
 
   submitHandlers(e) {
@@ -301,10 +306,15 @@ class AppController {
       const formData = new FormData(form);
       modal.setToDefault();
       const { user: updatedMe } = await userModel.updateMe(formData);
-      modal.insertContent(suggestionView.createProfile(updatedMe, isMe));
+      modal.replaceContentContainer(
+        modal.profileContentContainer(
+          suggestionView.createProfile(updatedMe, isMe)
+        )
+      );
       this.PUBLIC_USER_DATA = suggestionView.setPublicUserData(updatedMe);
       suggestionView.updateMyProfiles(this.PUBLIC_USER_DATA.profileImage);
     } catch (err) {
+      console.error(err);
       alert(err.message);
       modal.closeModal();
     }
@@ -365,6 +375,16 @@ class AppController {
     this.activatePage('contacts', '/');
     appView.deactivateEntity();
     chatController.closeChat();
+  }
+
+  logout() {
+    modal.insertModalOptions([
+      {
+        prompt: 'Please confirm Log out',
+        url: '/api/v1/users/logout',
+        action: 'Log out',
+      },
+    ]);
   }
 }
 

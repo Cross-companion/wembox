@@ -1,8 +1,8 @@
 class UserView {
   updateMeForm({ name, username, profileImage, profileCoverImage, note } = {}) {
     return `<form
-        id="app-modal-content-container"
-        class="profile profile--form app-modal__modal app-modal__modal--no-padding glassmorph"
+        id="app-modal-content-parent-container"
+        class="profile profile--form app-modal__modal app-modal__modal--no-padding app-modal__modal--center glassmorph"
         data-type="update-me-form"
         >
         <div class="profile__images">

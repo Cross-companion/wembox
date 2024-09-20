@@ -127,7 +127,7 @@ main.main__interest {
   border-radius: 0 !important;
   border: none;
   height: 100vh;
-  height: 100svh;
+  height: 100dvh;
 }
 
 .app-form {
@@ -313,16 +313,27 @@ main.main__interest {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.199);
 }
-.app-modal__modal {
-  min-width: max-content;
+.app-modal__container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.app-modal__modal {
+  min-width: max-content;
   padding: 1rem 0.5rem;
 }
 .app-modal__modal--no-padding {
   padding: 0 !important;
+}
+.app-modal__modal--center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .app-modal__modal--topic-suggestion {
   padding: 0;
@@ -339,6 +350,36 @@ main.main__interest {
 }
 .app-modal__loader--modal {
   margin: 1.5rem 3rem;
+}
+.app-modal--options {
+  width: 100%;
+  height: 7rem;
+  border: 1px solid red;
+  margin-top: 2rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90%;
+}
+.app-modal--options > [data-type=modal-option-item] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.app-modal--options > [data-type=modal-option-item] [data-type=modal-option-item-cancel] {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.app-modal--options > [data-type=modal-option-item] a {
+  text-decoration: none;
+  background-color: #3d3c3c;
+  color: antiquewhite;
+  border: none;
+  border-radius: 5rem;
+  padding: 0.5rem 1rem;
+  font-size: inherit;
+  margin-left: 0.8rem;
 }
 
 .btn {
@@ -1037,7 +1078,7 @@ svg.interest__topics__follow-icon {
   --profile-cover-img-max-height: 23rem;
   --profile-min-width: 35rem;
   overflow: hidden;
-  font-weight: 600;
+  font-weight: 500;
   background-color: white;
   max-width: 40rem !important;
 }
@@ -1122,7 +1163,7 @@ svg.interest__topics__follow-icon {
 }
 .profile__details {
   margin: 0 1rem 1rem 1rem;
-  font-weight: 700;
+  font-weight: 500;
   max-width: var(--profile-min-width);
 }
 .profile__details__identity {
@@ -1130,11 +1171,11 @@ svg.interest__topics__follow-icon {
 }
 .profile__details__name {
   font-size: 2rem;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 0.9;
 }
 .profile__details__username {
-  font-weight: 600;
+  font-weight: 500;
 }
 .profile__details__note {
   width: 95%;
@@ -1146,6 +1187,16 @@ svg.interest__topics__follow-icon {
 }
 .profile__details__following > div:not(:last-child) {
   margin-right: 1rem;
+}
+.profile__logout {
+  text-decoration: underline;
+  margin-top: 0.3rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.1s color;
+}
+.profile__logout:hover {
+  color: var(--gradient-color-2);
 }
 .profile--form input {
   font-family: inherit;
@@ -1345,7 +1396,7 @@ svg.interest__topics__follow-icon {
 .app {
   display: flex;
   height: 100vh;
-  height: 100svh;
+  height: 100dvh;
 }
 .app > section.active {
   display: flex;

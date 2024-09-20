@@ -1038,50 +1038,77 @@
         </form>
       </div>
     </section> -->
-<!-- <section id="app-modal" class="app-modal">
-      <div id="app-modal-overlay" class="app-modal__overlay"></div>
-      <div
-        id="app-modal-content-container" class="profile app-modal__modal app-modal__modal--no-padding glassmorph profile">
-        <div class="profile__images">
-          <img class="profile__images__cover" src="../Imgs/users/mars-spacex-starship-wallpapers.jpg" alt="">
-          <img class="profile__images__profile" src="../Imgs/users/leo.jpg" alt="">
-          <div class="profile__social-actions">
-            <button
-              type="button"
-              data-value="action-btn"
-              ${dataset}
-              data-type="${type}"
-              data-user-id="${_id}"
-              class="suggestion__btn-main profile__social-actions__btn"
-            >
-              Contact Request
-            </button>
-            <button
-              type="button"
-              data-value="action-btn"
-              ${dataset}
-              data-type="${type}"
-              data-user-id="${_id}"
-              class="suggestion__btn-main profile__social-actions__btn"
-            >
-              follow
-            </button>
-          </div>
-        </div>
-        <div class="profile__details">
-          <div class="profile__details__identity">
-            <div class="profile__details__name">Nwodoh Daniel</div>
-            <div class="profile__details__username"><span>@</span>nwodohDaniel</div>
-          </div>
-          <div class="profile__details__note">Gratittude is a must ♥</div>
-          <div class="profile__details__following">
-            <div><span>1.2k</span> followers</div>
-            <div><span>56</span> following</div>
-          </div>
-          <div><span></span><span></span></div>
+<section id="app-modal" class="app-modal">
+  <div id="app-modal-overlay" class="app-modal__overlay"></div>
+  <div
+    id="app-modal-content-parent-container"
+    class="app-modal__container"
+    data-type="app-modal-content-parent-container"
+  >
+    <div
+      id="app-modal-content-container"
+      class="profile app-modal__modal app-modal__modal--no-padding glassmorph profile"
+    >
+      <div class="profile__images">
+        <img
+          class="profile__images__cover"
+          src="../Imgs/users/mars-spacex-starship-wallpapers.jpg"
+          alt=""
+        />
+        <img
+          class="profile__images__profile"
+          src="../Imgs/users/leo.jpg"
+          alt=""
+        />
+        <div class="profile__social-actions">
+          <button
+            type="button"
+            data-value="action-btn"
+            ${dataset}
+            data-type="${type}"
+            data-user-id="${_id}"
+            class="suggestion__btn-main profile__social-actions__btn"
+          >
+            Contact Request
+          </button>
+          <button
+            type="button"
+            data-value="action-btn"
+            ${dataset}
+            data-type="${type}"
+            data-user-id="${_id}"
+            class="suggestion__btn-main profile__social-actions__btn"
+          >
+            follow
+          </button>
         </div>
       </div>
-    </section> -->
+      <div class="profile__details">
+        <div class="profile__details__identity">
+          <div class="profile__details__name">Nwodoh Daniel</div>
+          <div class="profile__details__username">
+            <span>@</span>nwodohDaniel
+          </div>
+        </div>
+        <div class="profile__details__note">Gratittude is a must ♥</div>
+        <div class="profile__details__following">
+          <div><span>1.2k</span> followers</div>
+          <div><span>56</span> following</div>
+        </div>
+        <span data-type="profile-logout" class="profile__logout">Log out</span>
+      </div>
+    </div>
+    <div data-type="modal-options" class="app-modal--options glassmorph">
+      <div data-type="modal-option-item">
+        <span>Please confirm Log out</span>
+        <span
+          ><span data-type="modal-option-item-cancel">cancel</span>
+          <a href="/api/v1/logout">Log out</a></span
+        >
+      </div>
+    </div>
+  </div>
+</section>
 <!-- Conciousness is a consequence of existing in time -->
 <!-- Space is (can be) infinitely small / infinitely divisible. This makes all know particles that exist in space / time infinitely large. -->
 <!-- Since space is infinitely large and, particles and systems / matter are in a real sense a limited / measurable , -->

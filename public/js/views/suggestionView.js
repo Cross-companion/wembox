@@ -119,7 +119,11 @@ class suggestionView {
             <div><span>${numberOfFollowers}</span> followers</div>
             <div><span>${numberOfFollowing}</span> following</div>
           </div>
-          <div><span></span><span></span></div>
+          ${
+            isMe
+              ? '<span data-type="profile-logout" class="profile__logout">Log out</span>'
+              : ''
+          }
         </div>`;
   }
 

@@ -7,12 +7,38 @@ class Modal {
     return `
     <section id="app-modal" class="app-modal">
       <div id="app-modal-overlay" class="app-modal__overlay"></div>
-      <div
-        id="app-modal-content-container" class="app-modal__modal glassmorph ${modifierClass}"
-      >
-      ${this.defaultContent}
+      <div id="app-modal-content-parent-container" data-type="app-modal-content-parent-container" class="app-modal__container">
+        <div
+          id="app-modal-content-container" class="app-modal__modal glassmorph ${modifierClass}"
+        >
+        ${this.defaultContent}
+        </div>
       </div>
     </section>`;
+  }
+
+  createModalOptions(
+    options = [
+      {
+        prompt: 'test',
+        action: 'Test me!',
+        url: 'testurl',
+      },
+    ]
+  ) {
+    if (!options?.length) return;
+    return `
+    <div data-type="modal-options" class="app-modal--options glassmorph">
+      ${options.map((option) => {
+        return `<div data-type="modal-option-item">
+            <span>${option.prompt}</span>
+            <span>
+              <span data-type="modal-option-item-cancel">cancel</span>
+              <a href="${option.url}">${option.action}</a>
+            </span>
+          </div>`;
+      })}
+    </div>`;
   }
 
   insertContent(modalContent) {
@@ -78,7 +104,7 @@ class Modal {
 
   replaceContentContainer(
     newContent = '',
-    newContentId = '#app-modal-content-container'
+    newContentId = '#app-modal-content-parent-container'
   ) {
     if (!this.modalIsOpen()) return;
     this.setContentContainer();
@@ -87,7 +113,7 @@ class Modal {
     this.contentContainer = document.querySelector(newContentId);
   }
 
-  setContentContainer(elementId = '#app-modal-content-container') {
+  setContentContainer(elementId = '#app-modal-content-parent-container') {
     this.contentContainer = document.querySelector(elementId);
   }
 
@@ -95,6 +121,42 @@ class Modal {
     if (!this.modalIsOpen()) return;
     this.setContentContainer();
     this.contentContainer.innerHTML = this.defaultContent;
+  }
+
+  closeModalOptions() {
+    const options = document.querySelector('[data-type="modal-options"]');
+    if (!options) return;
+    options.remove();
+  }
+
+  insertModalOptions(
+    options = [
+      {
+        prompt: 'test',
+        action: 'Test me!',
+        url: 'testurl',
+      },
+    ]
+  ) {
+    if (!this.modalIsOpen()) return;
+    this.closeModalOptions();
+
+    const optionsParentContainer = document
+      .querySelector('#app-modal')
+      .querySelector('[data-type="app-modal-content-parent-container"]');
+    const html = this.createModalOptions(options);
+    optionsParentContainer.insertAdjacentHTML('beforeend', html);
+  }
+
+  profileContentContainer(profile) {
+    return `
+      <div id="app-modal-content-parent-container" data-type="app-modal-content-parent-container" class="app-modal__container">
+        <div
+          id="app-modal-content-container" class="app-modal__modal glassmorph app-modal__modal--no-padding profile"
+        >
+        ${profile}
+        </div>
+      </div>`;
   }
 }
 
