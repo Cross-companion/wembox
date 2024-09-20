@@ -288,7 +288,7 @@ exports.protect = async (req, res, next) => {
     // );
     return next();
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     res.redirect('/auth');
   }
 };

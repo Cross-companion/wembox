@@ -92,7 +92,6 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
     conditionToExcludeFollowing
   );
 
-  console.log('paginationKey 2: ', paginationKey);
   const { users, newPaginationData } = await USER_AGG.SUGGEST_CREATOR_AGG();
 
   if (newPaginationData) req.session[paginationKey] = newPaginationData;

@@ -383,9 +383,16 @@ main.main__interest {
 }
 @media (max-width: 23.75em) {
   .app-modal--options > [data-type=modal-option-item] a {
-    display: block;
-    margin-top: 1rem;
     margin-left: 0;
+  }
+}
+@media (max-width: 23.75em) {
+  .app-modal--options__action-continer {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
   }
 }
 

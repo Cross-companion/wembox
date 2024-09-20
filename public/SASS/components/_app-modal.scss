@@ -89,10 +89,18 @@
         margin-left: 0.8rem;
 
         @media (max-width: 23.75em) {
-          display: block;
-          margin-top: 1rem;
           margin-left: 0;
         }
+      }
+    }
+
+    &__action-continer {
+      @media (max-width: 23.75em) {
+        display: flex;
+        flex-direction: column-reverse;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
       }
     }
   }
