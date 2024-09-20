@@ -2,7 +2,6 @@
   --profile-img-width: 9.4rem;
   --profile-cover-img-max-width: 40rem;
   --profile-cover-img-max-height: 23rem;
-  --profile-min-width: 35rem;
 
   overflow: hidden;
   font-weight: 500;
@@ -25,7 +24,6 @@
     &__cover {
       max-width: var(--profile-cover-img-max-width);
       max-height: var(--profile-cover-img-max-height);
-      // min-width: var(--profile-min-width);
       min-height: 3rem;
     }
 
@@ -104,7 +102,11 @@
   &__details {
     margin: 0 1rem 1rem 1rem;
     font-weight: 500;
-    max-width: var(--profile-min-width);
+    max-width: 35rem;
+
+    @media (max-width: 26.7em) {
+      max-width: 80vw;
+    }
 
     &__identity {
       margin-bottom: 1rem;

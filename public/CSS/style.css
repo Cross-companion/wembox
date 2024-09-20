@@ -1076,7 +1076,6 @@ svg.interest__topics__follow-icon {
   --profile-img-width: 9.4rem;
   --profile-cover-img-max-width: 40rem;
   --profile-cover-img-max-height: 23rem;
-  --profile-min-width: 35rem;
   overflow: hidden;
   font-weight: 500;
   background-color: white;
@@ -1164,7 +1163,12 @@ svg.interest__topics__follow-icon {
 .profile__details {
   margin: 0 1rem 1rem 1rem;
   font-weight: 500;
-  max-width: var(--profile-min-width);
+  max-width: 35rem;
+}
+@media (max-width: 26.7em) {
+  .profile__details {
+    max-width: 80vw;
+  }
 }
 .profile__details__identity {
   margin-bottom: 1rem;
