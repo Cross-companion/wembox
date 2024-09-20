@@ -381,6 +381,13 @@ main.main__interest {
   font-size: inherit;
   margin-left: 0.8rem;
 }
+@media (max-width: 23.75em) {
+  .app-modal--options > [data-type=modal-option-item] a {
+    display: block;
+    margin-top: 1rem;
+    margin-left: 0;
+  }
+}
 
 .btn {
   border: none;
@@ -565,6 +572,12 @@ main.main__interest {
   align-items: center;
   position: relative;
 }
+@media (max-width: 29.9em) {
+  .chat__container__inputs > form {
+    gap: 0.5rem;
+    max-width: 100%;
+  }
+}
 .chat__container__inputs > form > button:not([data-type=chat-media-preview]) {
   width: var(--height-of-input-elements);
   height: var(--height-of-input-elements);
@@ -624,6 +637,11 @@ main.main__interest {
   max-height: 6.5rem;
   max-width: 27rem;
   font-family: inherit;
+}
+@media (max-width: 29.9em) {
+  .chat__container__inputs > form > textarea {
+    max-width: 66vw;
+  }
 }
 .chat__container__inputs > div[data-type=chat-media-preview-container] {
   --max-height: 15rem;

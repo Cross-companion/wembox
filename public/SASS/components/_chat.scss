@@ -190,6 +190,11 @@
         align-items: center;
         position: relative;
 
+        @media (max-width: 29.9em) {
+          gap: 0.5rem;
+          max-width: 100%;
+        }
+
         & > button:not([data-type='chat-media-preview']) {
           width: var(--height-of-input-elements);
           height: var(--height-of-input-elements);
@@ -257,6 +262,10 @@
           max-height: 6.5rem;
           max-width: 27rem;
           font-family: inherit;
+
+          @media (max-width: 29.9em) {
+            max-width: 66vw;
+          }
         }
       }
 
