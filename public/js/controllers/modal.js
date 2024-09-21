@@ -32,7 +32,7 @@ class Modal {
       ${options.map((option) => {
         return `<div data-type="modal-option-item">
             <span>${option.prompt}</span>
-            <span>
+            <span class="app-modal--options__action-continer">
               <span data-type="modal-option-item-cancel">cancel</span>
               <a href="${option.url}">${option.action}</a>
             </span>
