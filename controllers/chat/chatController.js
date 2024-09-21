@@ -42,8 +42,9 @@ exports.handleChatImages = catchAsync(async (req, res, next) => {
       });
 
       try {
-        console.log(img, 'FIRST >>>>>>');
+        console.log(img.imageName, 'FIRST >>>>>>');
         await img?.uploadToLocal({ useSharp: false });
+        console.log('After >>>>>');
       } catch (err) {
         console.log(err);
       }
