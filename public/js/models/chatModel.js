@@ -24,7 +24,10 @@ class ChatModel {
         method: 'POST',
         body: formData,
       })
-        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          return res.json();
+        })
         .then((data) => data);
 
       if (data.status !== 'success') throw new Error(data.message);
