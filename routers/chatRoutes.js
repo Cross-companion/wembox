@@ -10,10 +10,6 @@ router.use(authController.protect);
 router
   .route('/')
   .post(
-    (req, res, next) => {
-      console.log('herer >>>>');
-      next();
-    },
     chatController.uploadChatImages,
     contactController.protect,
     chatController.handleChatImages,

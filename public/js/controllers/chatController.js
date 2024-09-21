@@ -102,9 +102,7 @@ class ChatController {
       if (key === 'chatImages' && data?.size)
         return DOMChat.media.payload.push(URL.createObjectURL(data));
       DOMChat[key] = data;
-      console.log({ [`${key}`]: data });
     });
-    console.log(DOMChat);
     chatView.clearChatForm();
     chatView.mediaCheckChat(DOMChat).forEach((chat) => {
       return chatView.insertNewChat(chat);
