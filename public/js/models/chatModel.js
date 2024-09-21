@@ -19,16 +19,21 @@ class ChatModel {
   }
 
   async sendChat(formData) {
-    const data = await fetch(`${chatRoute}/`, {
-      method: 'POST',
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => data);
+    try {
+      const data = await fetch(`${chatRoute}/`, {
+        method: 'POST',
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => data);
 
-    if (data.status !== 'success') throw new Error(data.message);
+      if (data.status !== 'success') throw new Error(data.message);
 
-    return data;
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.error(err, 'BIG ONE');
+    }
   }
 
   getNotification(userId) {
