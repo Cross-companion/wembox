@@ -103,6 +103,10 @@ class ChatController {
         return DOMChat.media.payload.push(URL.createObjectURL(data));
       DOMChat[key] = data;
     });
+    const chatIsValid =
+      DOMChat.media?.payload?.length ||
+      (DOMChat.message && DOMChat.message.trim().length);
+    if (!chatIsValid) throw new Error('Chat is empty');
     chatView.clearChatForm();
     chatView.mediaCheckChat(DOMChat).forEach((chat) => {
       return chatView.insertNewChat(chat);

@@ -113,7 +113,7 @@ class ChatView {
               dataStrings: 'data-type="add-image-icon"',
             })}
           </button>
-          <textarea name="message" data-type="chat-text-input" id="" cols="30" rows="10" required></textarea>
+          <textarea name="message" data-type="chat-text-input" id="" cols="30" rows="10"></textarea>
           <button type="submit">
           ${Icons({
             type: 'send-chat',
