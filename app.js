@@ -51,9 +51,9 @@ app.use(express.json({ limit: '50mb' })); // Limits to datacan be added
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Use morgan on dev only
-if (process.env.NODE_ENV !== 'production') {
-  app.use(morgan('dev'));
-}
+// if (process.env.NODE_ENV !== 'production') {
+app.use(morgan('dev'));
+// }
 
 // Initialize sesssion storage.
 // app.use(
