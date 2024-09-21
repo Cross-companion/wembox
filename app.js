@@ -47,7 +47,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
 // Body parser, reading data from body to req.body
-app.use(express.json()); // Limits to datacan be added
+app.use(express.json({ limit: '50mb' })); // Limits to datacan be added
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Use morgan on dev only
