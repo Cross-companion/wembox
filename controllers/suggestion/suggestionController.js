@@ -94,7 +94,10 @@ exports.suggestCreator = catchAsync(async (req, res, next) => {
 
   const { users, newPaginationData } = await USER_AGG.SUGGEST_CREATOR_AGG();
 
-  if (newPaginationData) req.session[paginationKey] = newPaginationData;
+  if (newPaginationData) {
+    req.session[paginationKey] = newPaginationData; // Normally this would automatically set the session on redis, but our mock redis is just an object and isn't diractly live to the value of req.session.
+    redis.set(req.user._id, req.session); // COMPLETE REMOVAL (IF REDIS IS FIX);
+  }
 
   res.status(200).json({
     status: 'success',
