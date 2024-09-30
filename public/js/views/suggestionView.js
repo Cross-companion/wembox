@@ -8,6 +8,11 @@ class suggestionView {
     return this.suggestionContainer;
   }
 
+  defineExploreBtn() {
+    this.exploreBtn = document.querySelector('[data-type="explore-btn"]');
+    return this.exploreBtn;
+  }
+
   modalHTML(topic, interest, users = [], { data = [] } = {}) {
     return `
     <div class="suggestion__topic-heading">

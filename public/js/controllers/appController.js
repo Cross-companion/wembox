@@ -12,6 +12,7 @@ import socket from '../utils/socket.js';
 class AppController {
   constructor() {
     this.contactSuggestions = suggestionView.defineSuggestionContainer();
+    this.exploreBtn = suggestionView.defineExploreBtn();
     this.currentUser = {};
     this.notificationSwitchBtn = new SwitchBtn(
       document.querySelector('[data-type="header-notifications"]')
@@ -58,6 +59,11 @@ class AppController {
     const isProfileLogout = target.dataset.type === 'profile-logout';
     const isProfileOptionsClose =
       target.dataset.type === 'modal-option-item-cancel';
+    const isExploreBtn =
+      target.dataset.type === 'explore-btn' ||
+      target.closest('[data-type="explore-btn"]')
+        ? true
+        : false;
     const isDeleteChatMediaPreview =
       target.dataset.type === 'delete-chat-media-preview' ||
       target.closest('[data-type="delete-chat-media-preview"]')
@@ -90,6 +96,7 @@ class AppController {
         ? true
         : false;
 
+    if (isExploreBtn) return this.openExplorer();
     if (isProfileGateway) return this.handleProfileVisits(target); // Imgs in this have a higher prioity than it being part of a contact entity, hence, not needed to bubble up.
     if (isContactEntity)
       return this.openChats(target.closest('[data-type="contact-entity"]'));
@@ -385,6 +392,17 @@ class AppController {
         action: 'Log out',
       },
     ]);
+  }
+
+  openExplorer() {
+    const notActive = this.exploreBtn.classList.contains('active');
+    this.contactSuggestions.classList.toggle('explore__active');
+    this.contactSuggestions.classList.toggle('app__contact-suggestion');
+    this.contactSuggestions.classList.toggle('suggestion__container');
+    this.exploreBtn.classList.toggle('active');
+    this.exploreBtn.querySelector('span').textContent = notActive
+      ? 'explore'
+      : 'close';
   }
 }
 

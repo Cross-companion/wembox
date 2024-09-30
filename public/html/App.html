@@ -99,6 +99,21 @@
             </span>
           </div>
         </div>
+        <div data-type="follow-entity" class="entity">
+          <div>
+            <img
+              src="../Imgs/users/leo.jpg"
+              alt="profile image of Leo Conan"
+              class="entity__img"
+            />
+          </div>
+          <div class="entity__content">
+            <div><span class="entity__title">Leo Conan</span> followed you</div>
+            <span class="entity__message__time">
+              <span>12:30am</span>
+            </span>
+          </div>
+        </div>
         <div
           data-type="contact-request-entity"
           data-chat-id=""
@@ -453,10 +468,23 @@
           </div>
         </div>
       </section> -->
+      <div class="explore__btn" data-type="explore-btn">
+        <span>Explore</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <path
+            d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z"
+          />
+        </svg>
+      </div>
       <div
         id="suggestion-container"
         data-type="contact-request"
-        class="app__contact-suggestion suggestion__container glassmorph"
+        class="suggestion__container glassmorph explore"
+      ></div>
+      <!-- <div
+        id="suggestion-container"
+        data-type="contact-request"
+        class="app__contact-suggestion suggestion__container glassmorph explore explore__active"
       >
         <div
           id="suggestion-item"
@@ -539,7 +567,88 @@
             </button>
           </div>
         </div>
-      </div>
+        <div
+          id="suggestion-item"
+          data-type="contact-request"
+          class="suggestion__person"
+        >
+          <img
+            src="../Imgs/users/monica.jpg"
+            alt=""
+            class="suggestion__person__img"
+          />
+          <div class="suggestion__person__details">
+            <div>
+              <div class="suggestion__person__name">Leo C</div>
+              <div class="suggestion__person__username">@leoConan</div>
+            </div>
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="${type}"
+              data-user-id="${_id}"
+              class="suggestion__btn-main"
+            >
+              Contact Request
+            </button>
+          </div>
+        </div>
+        <div
+          id="suggestion-item"
+          data-type="contact-request"
+          class="suggestion__person"
+        >
+          <img
+            src="../Imgs/users/monica.jpg"
+            alt=""
+            class="suggestion__person__img"
+          />
+          <div class="suggestion__person__details">
+            <div>
+              <div class="suggestion__person__name">Leo C</div>
+              <div class="suggestion__person__username">@leoConan</div>
+            </div>
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="${type}"
+              data-user-id="${_id}"
+              class="suggestion__btn-main"
+            >
+              Contact Request
+            </button>
+          </div>
+        </div>
+        <div
+          id="suggestion-item"
+          data-type="contact-request"
+          class="suggestion__person"
+        >
+          <img
+            src="../Imgs/users/monica.jpg"
+            alt=""
+            class="suggestion__person__img"
+          />
+          <div class="suggestion__person__details">
+            <div>
+              <div class="suggestion__person__name">Leo C</div>
+              <div class="suggestion__person__username">@leoConan</div>
+            </div>
+            <button
+              type="button"
+              data-value="action-btn"
+              ${dataset}
+              data-type="${type}"
+              data-user-id="${_id}"
+              class="suggestion__btn-main"
+            >
+              Contact Request
+            </button>
+          </div>
+        </div>
+      </div> -->
     </section>
     <section
       class="app__chat-container chat__container active"
@@ -1038,7 +1147,7 @@
         </form>
       </div>
     </section> -->
-<section id="app-modal" class="app-modal">
+<!-- <section id="app-modal" class="app-modal">
   <div id="app-modal-overlay" class="app-modal__overlay"></div>
   <div
     id="app-modal-content-parent-container"
@@ -1108,7 +1217,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 <!-- Conciousness is a consequence of existing in time -->
 <!-- Space is (can be) infinitely small / infinitely divisible. This makes all know particles that exist in space / time infinitely large. -->
 <!-- Since space is infinitely large and, particles and systems / matter are in a real sense a limited / measurable , -->

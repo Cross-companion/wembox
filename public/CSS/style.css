@@ -889,6 +889,88 @@ main.main__interest {
   display: flex;
 }
 
+.explore {
+  transition: height 0.2s;
+}
+.explore__active {
+  --container-margin: 1rem;
+  margin: 0.5rem var(--container-margin);
+  padding: 0.5rem 0.7rem;
+  width: calc(100% - var(--container-margin) * 2);
+  position: absolute;
+  height: 100%;
+  max-height: calc(100% - 1rem) !important;
+  display: flex !important;
+  justify-content: center;
+  gap: 0.1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.explore__active > #suggestion-item {
+  display: none;
+}
+@media (min-width: 31.41em) {
+  .explore__active {
+    max-height: 31.5rem;
+  }
+}
+@media (min-width: 52em) {
+  .explore__active {
+    max-height: 21.5rem;
+  }
+}
+@media (min-width: 68em) {
+  .explore__active {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.explore__btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: auto 1rem 0;
+  background-color: var(--theme-blue);
+  color: var(--theme-blueish-white-2);
+  padding: 0 1.4rem;
+  width: 9.5rem;
+  height: 3.6rem;
+  border-radius: 3rem;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 1;
+}
+.explore__btn.active {
+  position: absolute;
+  margin: 2rem 2rem 0;
+  background-color: var(--theme-blueish-white-2);
+  border: 1px solid var(--color-dark);
+  color: var(--color-dark);
+}
+.explore__btn.active > svg {
+  fill: var(--color-dark);
+  transform: rotate(225deg);
+}
+.explore__btn > span {
+  line-height: 0;
+  text-transform: capitalize;
+}
+.explore__btn > svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: var(--theme-blueish-white-2);
+  transition: transform 0.2s;
+}
+.explore__btn:hover {
+  border-radius: 1rem;
+}
+.explore__btn:hover > svg {
+  transform: rotate(90deg);
+}
+.explore__btn:hover.active > svg {
+  transform: rotate(315deg);
+}
+
 footer {
   position: absolute;
   bottom: 0;
@@ -1518,7 +1600,6 @@ svg.interest__topics__follow-icon {
   overflow: auto;
 }
 .app__chat-list > :last-child {
-  margin-top: auto;
   min-height: 12.5rem;
 }
 .app__chat-list__list {
