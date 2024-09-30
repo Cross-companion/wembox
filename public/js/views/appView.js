@@ -61,8 +61,7 @@ class AppView {
 
   setCurrentEntity() {
     this.currentContactEntity = document.querySelector(
-      '.active[data-type="contact-entity"]',
-      '.active[data-type="contact-request-entity"]'
+      '.active[data-type="contact-entity"], .active[data-type="contact-request-entity"]'
     );
     return this.currentContactEntity;
   }
@@ -213,7 +212,10 @@ class AppView {
   }
 
   deactivateEntity(entity = this.setCurrentEntity()) {
-    if (entity?.dataset.active) entity.dataset.active = '';
+    if (entity?.dataset.active) {
+      entity.dataset.active = '';
+      entity.classList.remove('active');
+    }
   }
 
   isActiveEntity(otherUserId) {
