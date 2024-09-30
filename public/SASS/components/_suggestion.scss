@@ -21,7 +21,8 @@
 
   &__container {
     --container-margin: 1rem;
-    margin: var(--container-margin) var(--container-margin) 2rem;
+    // margin: var(--container-margin) var(--container-margin) 2rem;
+    margin: auto var(--container-margin) 2rem;
     padding: 0.5rem 0.7rem;
     display: grid;
     grid-template-columns: repeat(1, 1fr);

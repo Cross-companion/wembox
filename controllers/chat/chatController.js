@@ -41,7 +41,8 @@ exports.handleChatImages = catchAsync(async (req, res, next) => {
         folderName: AWS_CHAT_IMAGES_FOLDER,
       });
 
-      await img?.uploadToLocal({ useSharp: false });
+      await img?.uploadToAWS({ useSharp: false });
+      // await img?.uploadToLocal({ useSharp: false });
       media.payload[i] = `${ROOT_IMAGE_ROUTE}${img.imageName}`;
     })();
   });
