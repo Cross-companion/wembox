@@ -196,6 +196,8 @@ class UserAggregations {
   }
 
   SUGGEST_CREATOR_BY_COUNTRY = () => {
+    const skipBy =
+      (this.page - 1) * (this.numberOfSuggestions - this.countryWeight);
     return [
       {
         $match: {
@@ -251,9 +253,7 @@ class UserAggregations {
                   },
                 },
                 {
-                  $skip:
-                    (this.page - 1) *
-                    (this.numberOfSuggestions - this.countryWeight),
+                  $skip: skipBy,
                 },
                 {
                   $limit: this.numberOfSuggestions - this.countryWeight || 1,
@@ -297,6 +297,11 @@ class UserAggregations {
       this._geoAreaIsUseful()
         ? {
             $sort: this.sortBy,
+          }
+        : this.emptyAggregation,
+      !this._geoAreaIsUseful()
+        ? {
+            $skip: skipBy,
           }
         : this.emptyAggregation,
       !this._geoAreaIsUseful()

@@ -117,8 +117,8 @@ class suggestionView {
           <div class="profile__details__note">${
             note ||
             (!isMe
-              ? 'Gratittude is a must ♥'
-              : 'Change Dummy text  "Gratittude is a must ♥" by clicking on edit to customize your profile!.')
+              ? 'Hi, I am active on wembox inc.' // An '!' at the end might be more interactive.
+              : 'Change Dummy text  "Hi, I am active on wembox inc." by clicking on edit to customize your profile!.')
           }</div>
           <div class="profile__details__following">
             <div><span>${numberOfFollowers}</span> followers</div>
