@@ -37,7 +37,7 @@ class AppView {
     return `
     <div class="app__loader" data-loader="loader">
       <div class="app__loader__logo">
-        <img src="./../Imgs/app-images/logo-mid.png" alt="" />
+        <img src="./../Imgs/app-images/logo-512x512.png" alt="" />
         <div class="logo">
           <span class="logo__text logo__text--burn">Wembox</span>
           <span>inc.</span>

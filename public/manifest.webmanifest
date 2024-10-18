@@ -1,10 +1,10 @@
 {
-  "name": "My Awesome App",
-  "short_name": "AwesomeApp",
+  "name": "wembox",
+  "short_name": "wembox",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "./Imgs/app-images/logo-30x30.png",
+      "sizes": "30x30",
       "type": "image/png"
     },
     {
