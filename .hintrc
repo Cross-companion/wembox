@@ -21,6 +21,7 @@
         "nested-interactive": "off"
       }
     ],
-    "compat-api/css": "off"
+    "compat-api/css": "off",
+    "manifest-is-valid": "off"
   }
 }
