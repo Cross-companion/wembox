@@ -222,5 +222,22 @@
       src="/images/user-images/profile-image-65691f22eeb5df3324ac6641-1701526603721.jpeg"
       alt=""
     /> -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then(function (registration) {
+              console.log(
+                'Service Worker registered with scope:',
+                registration.scope
+              );
+            })
+            .catch(function (error) {
+              console.log('Service Worker registration failed:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>

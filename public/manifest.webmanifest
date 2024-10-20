@@ -3,13 +3,16 @@
   "short_name": "wembox",
   "start_url": "/",
   "categories": [
-    "lifestyle",
-    "social",
-    "utilities",
-    "personalization",
-    "news",
+    "education",
     "entertainment",
-    "government"
+    "government",
+    "lifestyle",
+    "news",
+    "personalization",
+    "photo",
+    "social",
+    "sports",
+    "utilities"
   ],
   "display": "standalone",
   "background_color": "#FFFFFF",
@@ -58,6 +61,48 @@
   "url_handlers": [
     {
       "origin": "https://wembox.ng"
+    }
+  ],
+  "display_override": ["window-controls-overlay"],
+  "edge_side_panel": {
+    "preferred_width": 376
+  },
+  "shortcuts": [
+    {
+      "name": "wembox inc",
+      "url": "?chat",
+      "description": "Open and chat with wembox inc",
+      "icons": [
+        {
+          "src": "https://wembox.ng/images/user-images/profile-image-66fb27733ad943b98606cea2-1727794460209.jpeg",
+          "type": "image/png",
+          "sizes": "500x500"
+        }
+      ]
+    },
+    {
+      "name": "Nwodoh Danie",
+      "url": "?chat",
+      "description": "Open and chat with Nwodoh Danie",
+      "icons": [
+        {
+          "src": "https://wembox.ng/images/user-images/default-profile-image.jpg",
+          "type": "image/png",
+          "sizes": "500x500"
+        }
+      ]
+    },
+    {
+      "name": "SpaceX",
+      "url": "?chat",
+      "description": "Open and chat with SpaceX",
+      "icons": [
+        {
+          "src": "https://wembox.ng/images/user-images/profile-image-66fc19e83ad943b986072921-1727798028790.jpeg",
+          "type": "image/png",
+          "sizes": "500x500"
+        }
+      ]
     }
   ]
 }
