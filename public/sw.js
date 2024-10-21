@@ -1,16 +1,15 @@
-const sw_version = 'v1';
-const app_cache = `wembox-${sw_version}`;
+const version = 'v1';
 
 const sw_caches = {
   assets: {
-    name: `${sw_version}assets`,
+    name: `${version}assets`,
   },
   images: {
-    name: `${sw_version}images`,
+    name: `${version}images`,
     limit: 70,
   },
   pages: {
-    name: `${sw_version}pages`,
+    name: `${version}pages`,
     limit: 10,
   },
 };
@@ -21,7 +20,6 @@ const preinstall = [
   '/CSS/style.css',
   '/js/utils/socket.io.js',
   '/js/controllers/appController.js',
-  // '/offline_page',
 ];
 
 self.addEventListener('install', function (event) {
@@ -41,7 +39,7 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           keys
             .filter((key) => {
-              return !key.startsWith(sw_version);
+              return !key.startsWith(version);
             })
             .map((key) => {
               return caches.delete(key);
