@@ -41,7 +41,7 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           keys
             .filter((key) => {
-              return !key.startsWith(version);
+              return !key.startsWith(sw_version);
             })
             .map((key) => {
               return caches.delete(key);
