@@ -27,3 +27,18 @@ html(lang='en')
         header
           h1.interest__heading interests
           p What would you like to see on wembox?
+    script.
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+          }).catch(function(error) {
+            console.log('Service Worker registration failed:', error);
+          });
+        });
+      }
+      if ( navigator.serviceWorker?.controller ) {
+        window.addEventListener( "load", function(){
+          navigator.serviceWorker.controller.postMessage( "clean up" );
+        });
+      }

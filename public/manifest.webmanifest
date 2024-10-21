@@ -70,7 +70,7 @@
   "shortcuts": [
     {
       "name": "wembox inc",
-      "url": "?chat",
+      "url": "/?chat",
       "description": "Open and chat with wembox inc",
       "icons": [
         {
@@ -82,7 +82,7 @@
     },
     {
       "name": "Nwodoh Danie",
-      "url": "?chat",
+      "url": "/?chat",
       "description": "Open and chat with Nwodoh Danie",
       "icons": [
         {
@@ -94,7 +94,7 @@
     },
     {
       "name": "SpaceX",
-      "url": "?chat",
+      "url": "/?chat",
       "description": "Open and chat with SpaceX",
       "icons": [
         {
@@ -104,5 +104,18 @@
         }
       ]
     }
-  ]
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "files": [
+        {
+          "name": "photo",
+          "accept": ["image/*"]
+        }
+      ]
+    }
+  }
 }
