@@ -1095,6 +1095,8 @@
       </section>
     </section>
     <script>
+      let serviceWorkerRegistration;
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function () {
           navigator.serviceWorker
@@ -1104,6 +1106,7 @@
                 'Service Worker registered with scope:',
                 registration.scope
               );
+              serviceWorkerRegistration = registration;
             })
             .catch(function (error) {
               console.log('Service Worker registration failed:', error);

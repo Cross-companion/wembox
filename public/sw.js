@@ -84,3 +84,16 @@ function trimCache(cache_name, limit) {
     });
   });
 }
+
+self.addEventListener('push', function (event) {
+  const data = event.data ? event.data.json() : {};
+  const title = data.title || 'Default title';
+  const options = {
+    body: data.body || 'Default body',
+    icon: data.icon || '/default-icon.png',
+    // badge: data.badge || '/badge-icon.png',
+    // tag: data.tag || 'default-tag',
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});

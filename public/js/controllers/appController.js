@@ -8,6 +8,7 @@ import userViews from '../views/userViews.js';
 import chatController from './chatController.js';
 import SwitchBtn from '../utils/switchBtn.js';
 import socket from '../utils/socket.js';
+import Notifications from '../utils/Notifications.js';
 
 class AppController {
   constructor() {
@@ -362,7 +363,21 @@ class AppController {
 
   chatReceived(chatData) {
     appView.updateContactList(chatData);
-    appModel.updateRemoteData('contacts', chatData.updatedContact);
+    const { lastMessage, otherUser } = appModel.updateRemoteData(
+      'contacts',
+      chatData.updatedContact
+    )[0];
+    const wasSentByOtherUser = lastMessage.sender === otherUser._id;
+
+    wasSentByOtherUser &&
+      Notifications.send(
+        lastMessage.message,
+        otherUser.profileImage,
+        otherUser.name,
+        lastMessage.media.type === 'image'
+          ? lastMessage.media.payload[0]
+          : undefined
+      );
   }
 
   notificationToogle() {
