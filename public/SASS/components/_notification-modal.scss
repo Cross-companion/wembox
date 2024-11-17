@@ -1,0 +1,38 @@
+.notification-modal {
+  width: 90vw;
+  max-width: 45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.5rem 1rem;
+    gap: 1.5rem;
+  }
+
+  & button {
+    background-color: gray;
+    border: 1px solid gray;
+    color: white;
+    border-radius: 5px;
+    padding: 0.7rem 1.1rem;
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s;
+
+    &[data-value='accepted'] {
+      background-color: #5b42f3;
+      border: 1px solid #5b42f3;
+
+      &:hover {
+        color: #5b42f3;
+      }
+    }
+
+    &:hover {
+      background-color: white;
+      color: grey;
+    }
+  }
+}

@@ -7,11 +7,12 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require('socket.io');
 const io = new Server(server);
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
+const webPush = require('web-push');
 // const session = require('express-session'); COMPLETE COMMENT
 // const RedisStore = require('connect-redis').default; COMPLETE COMMENT
 // const redisClient = require('./utilities/redisInit'); COMPLETE COMMENT
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
 
 //Importing Custom modules
 const viewRouter = require('./routers/viewRoutes');
@@ -21,15 +22,16 @@ const suggestionRouter = require('./routers/suggestionRoutes');
 const followRouter = require('./routers/followRoutes');
 const contactRouter = require('./routers/contactRoutes');
 const chatRouter = require('./routers/chatRoutes');
-const chatSocket = require('./sockets/chatSocket');
 const notificationRouter = require('./routers/notificationRoutes');
 const globalErrorHandler = require('./controllers/globalErrorHandler');
 const TRAP = require('./utilities/trap'); // For testing purpose only
-const {
-  parseCookies,
-  getDecodedData,
-  createChatRoomStr,
-} = require('./utilities/helpers');
+const IOHandler = require('./sockets/IOHandler');
+
+webPush.setVapidDetails(
+  'mailto:wembox.inc@gmail.com',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
 
 // Initialize store.
 // const redisStore = new RedisStore({
@@ -80,34 +82,11 @@ app.use('/api/v1/chat', chatRouter);
 app.use('/api/v1/notifications', notificationRouter);
 app.use('/', viewRouter);
 
-io.on('connection', (socket) => {
-  const jwtToken = parseCookies(socket?.handshake.headers.cookie)['jwt'];
-  if (jwtToken)
-    getDecodedData(jwtToken).then((decoded) => {
-      if (!decoded.id) return;
-      decoded.id && socket.join(decoded.id);
-      socket.user = { id: decoded.id, username: decoded.username };
-    });
-
-  socket.on('chatSent', (queryObj) =>
-    chatSocket.chatSent(socket, queryObj, io)
-  );
-
-  socket.on('updateChatStatus', (queryObj) =>
-    chatSocket.updateChatStatus(socket, queryObj)
-  );
-
-  socket.on('changeChatRoom', (queryObj) => {
-    socket.leave(createChatRoomStr(queryObj?.leave, socket.user.id));
-    if (!queryObj?.join || !socket.user.id) return;
-    socket.join(createChatRoomStr(queryObj.join, socket.user.id));
-  });
-});
+new IOHandler(io);
 
 app.all('*', (req, res, next) => {
   const errMessage = `Can't find ${req.originalUrl} on this server`;
 
-  //   next(new AppError(errMessage, 404))
   res.status(404).json({
     status: 'failed',
     message: errMessage,

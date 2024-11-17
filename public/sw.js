@@ -1,4 +1,6 @@
 const version = 'v1';
+const VAPID_PUBLIC_KEY =
+  'BEupSbOpRl884f0QwBROp7SGWE--XMwcleVyMGKN7y0IGWd-xL3hOgFpWnQrEo5UJBLqWYFdOHT7mIwdUXH4E4Q';
 
 const sw_caches = {
   assets: {
@@ -86,6 +88,8 @@ function trimCache(cache_name, limit) {
 }
 
 self.addEventListener('push', function (event) {
+  console.log(self, self?.scope);
+  console.log('////----/////');
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'Default title';
   const options = {
@@ -97,3 +101,26 @@ self.addEventListener('push', function (event) {
 
   event.waitUntil(self.registration.showNotification(title, options));
 });
+
+self.addEventListener('message', (event) => {
+  if (event.data.action === 'subcribe_notifications') {
+    subscribeNotification();
+  }
+});
+
+function subscribeNotification() {
+  self.registration.pushManager
+    .subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: VAPID_PUBLIC_KEY,
+    })
+    .then((subscription) => {
+      fetch('/api/v1/notifications/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(subscription),
+      });
+    });
+}

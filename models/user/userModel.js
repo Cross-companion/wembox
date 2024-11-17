@@ -284,6 +284,24 @@ const userSchema = new mongoose.Schema(
         lng: Number,
       },
     },
+    subscription: {
+      type: {
+        endpoint: { type: String },
+        keys: {
+          type: {
+            p256dh: { type: String },
+            auth: { type: String },
+          },
+        },
+      },
+      default: {
+        endpoint: '',
+        keys: {
+          p256dh: '',
+          auth: '',
+        },
+      },
+    },
   },
   {
     toJSON: { virtuals: true },

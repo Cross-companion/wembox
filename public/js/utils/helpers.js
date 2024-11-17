@@ -5,3 +5,11 @@ export function formify(dataObject) {
   });
   return form;
 }
+
+export function sendMessageToSW(message = { action: '', payload: {} }) {
+  if (navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage(message);
+  } else {
+    console.error('No active service worker to send message to.');
+  }
+}

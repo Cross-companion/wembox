@@ -1157,6 +1157,40 @@ svg.interest__topics__follow-icon {
   left: 0;
 }
 
+.notification-modal {
+  width: 90vw;
+  max-width: 45rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+.notification-modal__buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  gap: 1.5rem;
+}
+.notification-modal button {
+  background-color: gray;
+  border: 1px solid gray;
+  color: white;
+  border-radius: 5px;
+  padding: 0.7rem 1.1rem;
+  cursor: pointer;
+  transition: color 0.15s, background-color 0.15s;
+}
+.notification-modal button[data-value=accepted] {
+  background-color: #5b42f3;
+  border: 1px solid #5b42f3;
+}
+.notification-modal button[data-value=accepted]:hover {
+  color: #5b42f3;
+}
+.notification-modal button:hover {
+  background-color: white;
+  color: grey;
+}
+
 .person__img {
   width: var(--person-img-width);
   height: var(--person-img-width);

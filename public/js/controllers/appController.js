@@ -42,6 +42,10 @@ class AppController {
       { event: 'chatReceived', func: this.chatReceived.bind(this) },
       { event: 'chatProcessed', func: this.chatReceived.bind(this) },
       { event: 'chatStatusUpdated', func: this.updateContactStatus.bind(this) },
+      {
+        event: 'requestNotificationSubscription',
+        func: Notifications.showPermissionModal.bind(Notifications),
+      },
     ];
     socket.socketListeners(handlers);
   }
@@ -96,6 +100,8 @@ class AppController {
       target.closest('[data-type="header-notifications"]')
         ? true
         : false;
+    const isNotificationPromptBtn =
+      target.dataset.type === 'notifications-prompt-btn';
 
     if (isExploreBtn) return this.openExplorer();
     if (isProfileGateway) return this.handleProfileVisits(target); // Imgs in this have a higher prioity than it being part of a contact entity, hence, not needed to bubble up.
@@ -116,6 +122,10 @@ class AppController {
     if (isNotificationToogle) return this.notificationToogle();
     if (isProfileLogout) return this.logout();
     if (isProfileOptionsClose) return modal.closeModalOptions();
+    if (isNotificationPromptBtn)
+      return Notifications.requestPermission(
+        target.dataset.value === 'accepted'
+      );
   }
 
   submitHandlers(e) {
@@ -374,7 +384,7 @@ class AppController {
         lastMessage.message,
         otherUser.profileImage,
         otherUser.name,
-        lastMessage.media.type === 'image'
+        lastMessage?.media?.type === 'image'
           ? lastMessage.media.payload[0]
           : undefined
       );

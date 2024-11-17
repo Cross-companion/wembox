@@ -257,40 +257,46 @@ exports.protect = async (req, res, next) => {
     if (!decoded)
       throw new Error('Your session has exprired. Please login again.');
 
-    const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
-    const cachedUser = JSON.parse((await redis.get(userKey)) || 0);
-    const user =
-      cachedUser ||
-      (await User.findById(decoded.id).select('+interests +contentType'));
-
-    if (!user) throw new Error('Sorry, this User no longer exits.');
-    if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
-      throw new Error(
-        'Looks like you have changed your password. Please login with your new password'
-      );
-    }
-    if (!cachedUser) {
-      await redis.set(
-        userKey,
-        JSON.stringify(user),
-        'ex',
-        process.env.REDIS_USER_EXP
-      );
-    }
+    const user = await getAndCacheUser(decoded);
 
     req.user = user;
     res.locals.user = user; // Store in response locals for possible rendering
-    // Artificail session
-    req.session = redis.get(user._id) || {};
-    // console.log(
-    //   `${req.user.username}: ${req.user.IPGeoLocation.city}, ${req.user.IPGeoLocation.country}`
-    // );
+    req.session = redis.get(user._id) || {}; // Artificial session
+
     return next();
   } catch (err) {
     // console.error(err);
     res.redirect('/auth');
   }
 };
+
+const getAndCacheUser = async function (decoded) {
+  const userKey = `${process.env.USER_CACHE_KEY}${decoded.id}`;
+  const cachedUser = JSON.parse((await redis.get(userKey)) || 0);
+  const user =
+    cachedUser ||
+    (await User.findById(decoded.id).select('+interests +contentType'));
+
+  if (!user) throw new Error('Sorry, this User no longer exits.');
+  if (DocumentMethods.isPasswordChanged(user, decoded.iat)) {
+    throw new Error(
+      'Looks like you have changed your password. Please login with your new password'
+    );
+  }
+
+  if (!cachedUser) {
+    await redis.set(
+      userKey,
+      JSON.stringify(user),
+      'ex',
+      process.env.REDIS_USER_EXP
+    );
+  }
+
+  return user;
+};
+
+exports.getAndCacheUser = getAndCacheUser;
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const { email, username } = req.body;

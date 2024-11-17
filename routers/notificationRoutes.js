@@ -8,5 +8,9 @@ router
   .route('/')
   .get(authController.protect, notificationController.getNotifications);
 
+router
+  .route('/subscribe')
+  .post(authController.protect, notificationController.subscribe);
+
 //-- <> -- //
 module.exports = router;
