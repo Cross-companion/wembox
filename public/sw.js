@@ -19,6 +19,7 @@ const sw_caches = {
 const preinstall = [
   '/',
   '/Imgs/app-images/logo-30x30.png',
+  '/Imgs/app-images/logo-72x72.png',
   '/CSS/style.css',
   '/js/utils/socket.io.js',
   '/js/controllers/appController.js',
@@ -54,10 +55,6 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', async (event) => {
   const destination = event.request.destination;
-  // console.log(destination, event.request.url);
-  // const res = await app_cache.match('/CSS/style.css');
-  // console.log(res);
-  // You can handle requests here
 });
 
 self.addEventListener('message', (messageEvent) => {
@@ -87,21 +84,6 @@ function trimCache(cache_name, limit) {
   });
 }
 
-self.addEventListener('push', function (event) {
-  console.log(self, self?.scope);
-  console.log('////----/////');
-  const data = event.data ? event.data.json() : {};
-  const title = data.title || 'Default title';
-  const options = {
-    body: data.body || 'Default body',
-    icon: data.icon || '/default-icon.png',
-    // badge: data.badge || '/badge-icon.png',
-    // tag: data.tag || 'default-tag',
-  };
-
-  event.waitUntil(self.registration.showNotification(title, options));
-});
-
 self.addEventListener('message', (event) => {
   if (event.data.action === 'subcribe_notifications') {
     subscribeNotification();
@@ -124,3 +106,17 @@ function subscribeNotification() {
       });
     });
 }
+
+self.addEventListener('push', function (event) {
+  const data = event.data ? event.data.json() : {};
+  const title = data.title || 'New Message';
+  const options = {
+    body: data.body,
+    icon: data.icon,
+    image: data.image,
+    badge: data.badge || '/Imgs/app-images/logo-72x72.png',
+    // tag: data.tag || 'default-tag',
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});

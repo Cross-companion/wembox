@@ -114,7 +114,10 @@ class ChatController {
     // This else block is called when an Image is sent along and it appends any message only to the last img
 
     try {
-      const { newChat, updatedContact } = await chatModel.sendChat(formData);
+      let { newChat, updatedContact } = await chatModel.sendChat(formData);
+      if (updatedContact?.otherUser?.length)
+        updatedContact.otherUser = updatedContact.otherUser[0];
+
       socket.emit('chatSent', {
         newChat,
         updatedContact,

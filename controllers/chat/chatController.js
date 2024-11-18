@@ -82,7 +82,12 @@ exports.sendChat = catchAsync(async (req, res, next) => {
       new: true,
       runValidators: true,
     }
-  );
+  ).populate('otherUser', 'name frontEndUsername profileImage subscription');
+
+  if (updatedContact?.otherUser?.length)
+    updatedContact.otherUser = updatedContact.otherUser.find(
+      (user) => String(user.id) !== req.user._id
+    );
 
   res.status(200).json({
     status: 'success',

@@ -60,6 +60,7 @@ exports.getContactsQuery = async (query, { userID, contactsLimit, skipBy }) => {
         'otherUser.name': 1,
         'otherUser.profileImage': 1,
         'otherUser.frontEndUsername': 1,
+        'otherUser.subscription': 1,
         'lastMessage.status': 1,
         'lastMessage.sender': 1,
         'lastMessage.receiver': 1,

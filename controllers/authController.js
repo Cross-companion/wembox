@@ -293,6 +293,8 @@ const getAndCacheUser = async function (decoded) {
     );
   }
 
+  user.id = decoded.id;
+
   return user;
 };
 

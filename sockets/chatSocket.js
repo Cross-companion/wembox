@@ -1,3 +1,4 @@
+const webpush = require('web-push');
 const Chat = require('../models/chat/chatModel');
 const chatConfig = require('../config/chatConfig');
 const { chatStatusEnum, deliveredStatus, seenStatus } = chatConfig; // Making `this` available
@@ -12,14 +13,17 @@ exports.chatSent = async (
   chatData = { newChat: {}, updatedContact: {} },
   io
 ) => {
-  const userId = socket?.user?.id;
+  const userId = String(socket?.user?.id);
   const receiver = chatData?.newChat?.receiver;
+  const otherUser = chatData?.updatedContact?.otherUser;
   const sender = chatData?.newChat?.sender;
   const contactId = chatData?.updatedContact?._id;
   const newChatId = chatData?.newChat?._id;
   let receiverInChatRoom = false;
 
-  if (!userId || !receiver || !sender || !contactId || !newChatId) return;
+  if (!userId || !receiver || !sender || !contactId || !newChatId || !otherUser)
+    return;
+
   chatData.updatedContact.unseenMessages =
     chatData?.updatedContact.unseens[receiver];
   socket.to(receiver).emit('chatReceived', {
@@ -29,6 +33,19 @@ exports.chatSent = async (
       lastMessage: chatData.newChat,
     },
   });
+
+  if (otherUser.subscription?.endpoint && otherUser.subscription?.keys?.auth) {
+    const payload = {
+      title: socket.user.name,
+      body: chatData.newChat.message,
+      icon: socket.user.profileImage,
+      image: chatData.newChat?.media?.payload?.[0],
+    };
+
+    webpush
+      .sendNotification(otherUser.subscription, JSON.stringify(payload))
+      .catch((err) => console.error(err));
+  }
 
   if (!getNumSocketClients(io, receiver)) return; // Is basically not online.
   if (getNumSocketClients(io, createChatRoomStr(contactId, receiver))) {

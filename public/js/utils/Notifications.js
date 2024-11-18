@@ -23,14 +23,14 @@ class Notifications {
   }
 
   send(body, icon, title = 'New Message', image, tag) {
-    if (Notification.permission === 'granted') return;
+    if (Notification.permission !== 'granted') return;
 
-    serviceWorkerRegistration.showNotification(title, {
-      body,
-      icon,
-      image,
-      tag,
-    });
+    // serviceWorkerRegistration.showNotification(title, {
+    //   body,
+    //   icon,
+    //   image,
+    //   tag,
+    // });
   }
 
   notificationPrompt() {
