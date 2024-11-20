@@ -1,3 +1,5 @@
+// import socket from './js/utils/socket';
+
 const version = 'v1';
 const VAPID_PUBLIC_KEY =
   'BEupSbOpRl884f0QwBROp7SGWE--XMwcleVyMGKN7y0IGWd-xL3hOgFpWnQrEo5UJBLqWYFdOHT7mIwdUXH4E4Q';
@@ -107,9 +109,10 @@ function subscribeNotification() {
     });
 }
 
-self.addEventListener('push', function (event) {
+self.addEventListener('push', async (event) => {
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'New Message';
+  const { isOnline } = await checkAppIsOpen();
   const options = {
     body: data.body,
     icon: data.icon,
@@ -119,4 +122,20 @@ self.addEventListener('push', function (event) {
   };
 
   event.waitUntil(self.registration.showNotification(title, options));
+  if (isOnline) return;
 });
+
+async function checkAppIsOpen() {
+  const allClients = await clients.matchAll({
+    type: 'window',
+    includeUncontrolled: true,
+  });
+
+  const isOnline = allClients.length;
+
+  const appIsOpen = allClients.some(
+    (client) => client.visibilityState === 'visible'
+  );
+
+  return { appIsOpen, isOnline };
+}

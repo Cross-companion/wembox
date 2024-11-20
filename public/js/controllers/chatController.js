@@ -9,6 +9,8 @@ class ChatController {
   constructor() {
     this.page = document.querySelector('[data-page-name="chats"]');
     this.currentChatRoom = undefined;
+    this.currentOtherUser = undefined;
+    this.eventHandler();
     this.setSocketHandlers();
   }
 
@@ -22,6 +24,33 @@ class ChatController {
       },
     ];
     socket.socketListeners(handlers);
+  }
+
+  eventHandler() {
+    document.addEventListener(
+      'visibilitychange',
+      this.visibilitychangeHandlers.bind(this)
+    );
+  }
+
+  async visibilitychangeHandlers() {
+    if (document.visibilityState === 'visible') {
+      const conditionToContinue =
+        chatView.contactIsActive(this.currentChatRoom) &&
+        this.currentChatRoom &&
+        this.currentOtherUser;
+
+      if (!conditionToContinue) return;
+
+      this.changeChatRoom(this.currentChatRoom);
+      this.updateChatStatus('seen', {
+        otherUser: this.currentOtherUser,
+        contactId: this.currentChatRoom,
+      });
+      await chatModel.updateToSeen(this.currentOtherUser);
+    } else if (document.visibilityState === 'hidden') {
+      this.changeChatRoom(undefined, { storeCurrentChatRoom: true });
+    }
   }
 
   addChatInputListener() {
@@ -50,24 +79,23 @@ class ChatController {
     const { chats } = await chatModel.getChats(userData.otherUserId);
     const chatsHtml = chatView.chatsHtml(chats, userData.otherUserId);
     chatContentContainer.innerHTML = chatsHtml;
-    socket.emit('updateChatStatus', {
-      newStatus: 'seen',
-      contactData: [
-        {
-          otherUser: userData.otherUserId,
-          contactId: userData.contactId,
-        },
-      ],
+    this.updateChatStatus('seen', {
+      otherUser: userData.otherUserId,
+      contactId: userData.contactId,
     });
     this.addChatInputListener();
+
+    this.currentOtherUser = userData.otherUserId;
   }
 
-  changeChatRoom(contactId) {
+  changeChatRoom(contactId, { storeCurrentChatRoom } = {}) {
     socket.emit('changeChatRoom', {
       leave: this.currentChatRoom,
       join: contactId,
     });
-    this.currentChatRoom = contactId;
+    this.currentChatRoom = !storeCurrentChatRoom
+      ? contactId
+      : this.currentChatRoom;
   }
 
   openCR(
@@ -88,6 +116,8 @@ class ChatController {
       chatView.chatsHtml([chat], userData.otherUserId);
     chatContentContainer.innerHTML = chatsHtml;
     this.addChatInputListener();
+
+    this.currentOtherUser = userData.otherUserId;
   }
 
   async sendChat(formData) {
@@ -194,6 +224,19 @@ class ChatController {
     if (!this.currentChatRoom) return;
     this.changeChatRoom();
     chatView.insertPreload();
+    this.currentOtherUser = undefined;
+  }
+
+  updateChatStatus(newChatStatus = 'seen', { otherUser, contactId } = {}) {
+    socket.emit('updateChatStatus', {
+      newStatus: newChatStatus,
+      contactData: [
+        {
+          otherUser: otherUser,
+          contactId: contactId,
+        },
+      ],
+    });
   }
 }
 

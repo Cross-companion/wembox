@@ -1,5 +1,7 @@
 const multer = require('multer');
 const Chat = require('../../models/chat/chatModel');
+const { seenStatus, deliveredStatus } = require('../../config/chatConfig');
+const Contact = require('../../models/contact/contactsModel');
 
 const getChatsFromDB = async (usersArr, skipBy, chatsLimit) => {
   const recentChats = await Chat.find({
@@ -14,6 +16,24 @@ const getChatsFromDB = async (usersArr, skipBy, chatsLimit) => {
   return recentChats;
 };
 
+const updateToSeen = async function (userId, otherUserId) {
+  await Chat.updateMany(
+    {
+      receiver: userId,
+      sender: otherUserId,
+      status: deliveredStatus,
+    },
+    { status: seenStatus }
+  );
+
+  await Contact.updateOne(
+    {
+      users: { $all: [userId, otherUserId] },
+    },
+    { [`unseens.${userId}`]: 0 }
+  );
+};
+
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -26,6 +46,7 @@ const multerFilter = (req, file, cb) => {
 
 module.exports = {
   getChatsFromDB,
+  updateToSeen,
   multerStorage,
   multerFilter,
 };

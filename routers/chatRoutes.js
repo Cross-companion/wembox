@@ -18,6 +18,7 @@ router
   .delete(chatController.deleteChat);
 
 router.route('/:otherUserID').get(chatController.getRecentChats);
+router.route('/seen/:otherUserId').get(chatController.seenRecentChats);
 
 //-- <> -- //
 module.exports = router;

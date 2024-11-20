@@ -1,10 +1,14 @@
 const multer = require('multer');
 const Chat = require('../../models/chat/chatModel');
 const Contact = require('../../models/contact/contactsModel');
-const { getChatsFromDB, multerStorage, multerFilter } = require('./helpers');
+const {
+  getChatsFromDB,
+  multerStorage,
+  multerFilter,
+  updateToSeen,
+} = require('./helpers');
 const {
   defaultChatStatus,
-  seenStatus,
   deliveredStatus,
   deletedStatus,
   deletedMessageString,
@@ -108,21 +112,7 @@ exports.getRecentChats = catchAsync(async (req, res, next) => {
   if (page < 1)
     return next(new AppError('Invalid page number specified.', 401));
 
-  await Chat.updateMany(
-    {
-      receiver: userID,
-      sender: otherUserID,
-      status: deliveredStatus,
-    },
-    { status: seenStatus }
-  );
-
-  await Contact.updateOne(
-    {
-      users: { $all: [userID, otherUserID] },
-    },
-    { [`unseens.${userID}`]: 0 }
-  );
+  await updateToSeen(userID, otherUserID);
 
   const recentChats = await getChatsFromDB(usersArr, skipBy, chatsLimit);
 
@@ -131,6 +121,18 @@ exports.getRecentChats = catchAsync(async (req, res, next) => {
     results: recentChats.length,
     chats: recentChats,
   });
+});
+
+exports.seenRecentChats = catchAsync(async (req, res, next) => {
+  const { _id: userId } = req.user;
+  const { otherUserId } = req.params;
+
+  if (!otherUserId || userId == otherUserId)
+    return next(new AppError('Invalid users specified.', 401));
+
+  await updateToSeen(userId, otherUserId);
+
+  res.status(200).json({ status: 'success' });
 });
 
 exports.deleteChat = catchAsync(async (req, res, next) => {

@@ -31,6 +31,17 @@ class ChatModel {
     return data;
   }
 
+  async updateToSeen(otherUserId) {
+    const data = await fetch(`${chatRoute}/seen/${otherUserId}`)
+      .then((res) => res.json())
+      .then((data) => data);
+
+    console.log(data);
+    if (data.status !== 'success') throw new Error(data.message);
+
+    return data;
+  }
+
   getNotification(userId) {
     return [...localStore.getItem('notifications')]?.find(
       (note) => note?._id === userId
