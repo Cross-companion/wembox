@@ -6,6 +6,7 @@ const {
   multerStorage,
   multerFilter,
   updateToSeen,
+  updateRecentChatStatus,
 } = require('./helpers');
 const {
   defaultChatStatus,
@@ -131,6 +132,18 @@ exports.seenRecentChats = catchAsync(async (req, res, next) => {
     return next(new AppError('Invalid users specified.', 401));
 
   await updateToSeen(userId, otherUserId);
+
+  res.status(200).json({ status: 'success' });
+});
+
+exports.updateRecentStatus = catchAsync(async (req, res, next) => {
+  const userId = String(req.user._id);
+  const { otherUserId, status } = req.params;
+
+  if (!otherUserId || userId == otherUserId)
+    return next(new AppError('Invalid users specified.', 401));
+
+  await updateRecentChatStatus(userId, otherUserId, status);
 
   res.status(200).json({ status: 'success' });
 });

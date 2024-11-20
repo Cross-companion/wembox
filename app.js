@@ -72,6 +72,9 @@ app.use((req, res, next) => {
   next();
 });
 
+//
+const IO = new IOHandler(io);
+
 // MOUNTING ROUTERS
 app.use('/api/v1/users', userRouter);
 app.use('/images', imageRouter);
@@ -80,9 +83,8 @@ app.use('/api/v1/follow', followRouter);
 app.use('/api/v1/contacts', contactRouter);
 app.use('/api/v1/chat', chatRouter);
 app.use('/api/v1/notifications', notificationRouter);
+app.post('/api/v1/socket/deliver-chat', IO.deliverChats);
 app.use('/', viewRouter);
-
-new IOHandler(io);
 
 app.all('*', (req, res, next) => {
   const errMessage = `Can't find ${req.originalUrl} on this server`;

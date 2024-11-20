@@ -1,4 +1,10 @@
+const {
+  deliveredStatus,
+  seenStatus,
+  defaultChatStatus,
+} = require('../config/chatConfig');
 const { getAndCacheUser } = require('../controllers/authController');
+const AppError = require('../utilities/AppError');
 const {
   parseCookies,
   getDecodedData,
@@ -7,8 +13,10 @@ const {
 const { chatSent, updateChatStatus } = require('./chatSocket');
 const { notificationSubIsSet } = require('./notificationSocket');
 
+let BASE_IO;
 class IOHandler {
   constructor(io) {
+    BASE_IO = io;
     io.on('connection', async (socket) => {
       const jwtToken = parseCookies(socket?.handshake.headers.cookie)['jwt'];
       if (!jwtToken) return;
@@ -34,6 +42,24 @@ class IOHandler {
         socket.join(createChatRoomStr(queryObj.join, socket.user.id));
       });
     });
+  }
+
+  deliverChats(req, res, next) {
+    try {
+      const { sentBy, chatData } = req.body;
+
+      if (chatData?.newChat?.status !== defaultChatStatus)
+        return next(
+          new AppError('Invalid chat data @deliverChats/IOHandler.js', 400)
+        );
+
+      chatData.newChat.status = deliveredStatus;
+      BASE_IO.to(sentBy).emit('chatProcessed', chatData);
+
+      res.status(200).json({ status: 'success' });
+    } catch (err) {
+      console.error(err);
+    }
   }
 }
 

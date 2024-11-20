@@ -19,6 +19,9 @@ router
 
 router.route('/:otherUserID').get(chatController.getRecentChats);
 router.route('/seen/:otherUserId').get(chatController.seenRecentChats);
+router
+  .route('/update/:otherUserId/:status')
+  .get(chatController.updateRecentStatus);
 
 //-- <> -- //
 module.exports = router;

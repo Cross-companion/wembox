@@ -40,6 +40,9 @@ exports.chatSent = async (
       body: chatData.newChat.message,
       icon: socket.user.profileImage,
       image: chatData.newChat?.media?.payload?.[0],
+      sentBy: userId,
+      receivedBy: receiver,
+      chatData,
     };
 
     webpush

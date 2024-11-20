@@ -109,10 +109,9 @@ function subscribeNotification() {
     });
 }
 
-self.addEventListener('push', async (event) => {
+self.addEventListener('push', (event) => {
   const data = event.data ? event.data.json() : {};
   const title = data.title || 'New Message';
-  const { isOnline } = await checkAppIsOpen();
   const options = {
     body: data.body,
     icon: data.icon,
@@ -121,8 +120,28 @@ self.addEventListener('push', async (event) => {
     // tag: data.tag || 'default-tag',
   };
 
-  event.waitUntil(self.registration.showNotification(title, options));
-  if (isOnline) return;
+  event.waitUntil(
+    (async () => {
+      const { isOnline } = await checkAppIsOpen();
+
+      await self.registration.showNotification(title, options);
+
+      if (!isOnline) {
+        fetch(`/api/v1/chat/update/${data.sentBy}/delivered`);
+        fetch(`/api/v1/socket/deliver-chat`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            sentBy: data.sentBy,
+            receivedBy: data.receivedBy,
+            chatData: data.chatData,
+          }),
+        });
+      }
+    })()
+  );
 });
 
 async function checkAppIsOpen() {
@@ -131,7 +150,7 @@ async function checkAppIsOpen() {
     includeUncontrolled: true,
   });
 
-  const isOnline = allClients.length;
+  const isOnline = allClients.length > 0;
 
   const appIsOpen = allClients.some(
     (client) => client.visibilityState === 'visible'
