@@ -158,3 +158,26 @@ async function checkAppIsOpen() {
 
   return { appIsOpen, isOnline };
 }
+
+self.addEventListener('notificationclick', function (event) {
+  console.log('Notification clicked:', event.notification);
+
+  event.notification.close();
+
+  const action = event.action;
+  if (action === 'open_url') {
+    event.waitUntil(clients.openWindow(event.notification.data.url));
+  } else {
+    event.waitUntil(
+      clients
+        .matchAll({ type: 'window', includeUncontrolled: true })
+        .then((clientList) => {
+          if (clientList.length > 0) {
+            return clientList[0].focus();
+          } else {
+            return clients.openWindow('/'); // Default to homepage
+          }
+        })
+    );
+  }
+});
