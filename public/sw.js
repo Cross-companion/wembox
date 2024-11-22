@@ -117,6 +117,7 @@ self.addEventListener('push', (event) => {
     icon: data.icon,
     image: data.image,
     badge: data.badge || '/Imgs/app-images/logo-72x72.png',
+    data: { contactId: data.contactId },
     // tag: data.tag || 'default-tag',
   };
 
@@ -160,14 +161,11 @@ async function checkAppIsOpen() {
 }
 
 self.addEventListener('notificationclick', function (event) {
-  console.log('Notification clicked:', event.notification);
-
   event.notification.close();
 
-  const action = event.action;
-  if (action === 'open_url') {
-    event.waitUntil(clients.openWindow(event.notification.data.url));
-  } else {
+  const contactId = event.notification?.data?.contactId;
+
+  if (!contactId) {
     event.waitUntil(
       clients
         .matchAll({ type: 'window', includeUncontrolled: true })
@@ -176,6 +174,24 @@ self.addEventListener('notificationclick', function (event) {
             return clientList[0].focus();
           } else {
             return clients.openWindow('/'); // Default to homepage
+          }
+        })
+    );
+  } else {
+    event.waitUntil(
+      clients
+        .matchAll({ type: 'window', includeUncontrolled: true })
+        .then((clientList) => {
+          if (clientList.length > 0) {
+            clientList[0].focus();
+            clientList[0].postMessage({
+              action: 'open_chat',
+              contactId,
+            });
+            return;
+          } else {
+            clients.openWindow(`/?chats=${contactId}`);
+            return;
           }
         })
     );

@@ -43,6 +43,7 @@ exports.chatSent = async (
       sentBy: userId,
       receivedBy: receiver,
       chatData,
+      contactId,
     };
 
     webpush

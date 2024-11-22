@@ -27,13 +27,23 @@ class AppController {
     this.eventHandler();
     this.setSocketHandlers();
     this.windowEvent();
+    this.navigatorEvents();
   }
 
   windowEvent() {
     window.addEventListener('popstate', (event) => {
-      if (!window.location.search) {
-        this.closeChat();
-      }
+      this.closeChat();
+    });
+  }
+
+  navigatorEvents() {
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      const action = event?.data?.action;
+      const contactId = event?.data?.contactId;
+      if (!action) return;
+
+      if (action === 'open_chat' && contactId)
+        this.openChatsWithContactId(contactId);
     });
   }
 
@@ -167,7 +177,8 @@ class AppController {
         newStatus: 'delivered',
         contactData,
       });
-      history.pushState(null, '', '/');
+
+      this.checkURLParams();
     } catch (err) {
       console.error(err.message);
     } finally {
@@ -359,6 +370,12 @@ class AppController {
       entity.dataset.entityState = 'received-seen';
   }
 
+  async openChatsWithContactId(contactId) {
+    const contactEntity = appView.getContactEntity(contactId);
+    if (!contactEntity) return;
+    this.openChats(contactEntity);
+  }
+
   async openCR(entity) {
     this.activatePage('chats');
     appView.activateChatEntity(entity);
@@ -428,6 +445,17 @@ class AppController {
     this.exploreBtn.querySelector('span').textContent = notActive
       ? 'explore'
       : 'close';
+  }
+
+  checkURLParams() {
+    const queryString = window.location.search;
+    if (!queryString) return;
+
+    const urlParams = new URLSearchParams(queryString);
+    const contactId = urlParams.get('chats');
+
+    if (contactId) this.openChatsWithContactId(contactId);
+    else history.pushState(null, '', '/');
   }
 }
 
