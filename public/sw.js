@@ -21,7 +21,7 @@ const sw_caches = {
 const preinstall = [
   '/',
   '/Imgs/app-images/logo-30x30.png',
-  '/Imgs/app-images/logo-72x72.png',
+  'https://wembox.ng/images/app-images/logo-72x72.png',
   '/CSS/style.css',
   '/js/utils/socket.io.js',
   '/js/controllers/appController.js',
@@ -116,7 +116,7 @@ self.addEventListener('push', (event) => {
     body: data.body,
     icon: data.icon,
     image: data.image,
-    badge: data.badge || '/Imgs/app-images/logo-72x72.png',
+    badge: data.badge || 'https://wembox.ng/images/app-images/logo-72x72.png',
     data: { contactId: data.contactId },
     // tag: data.tag || 'default-tag',
   };

@@ -26,7 +26,6 @@ exports.subscribe = catchAsync(async (req, res, next) => {
     { subscription },
     { new: true, select: '+interests +contentType' }
   );
-  setCachedUser(subscribedUser);
 
   res.status(201).json({ message: 'Subscription received.' });
 });

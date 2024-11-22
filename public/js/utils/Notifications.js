@@ -3,6 +3,7 @@ import { sendMessageToSW } from './helpers.js';
 
 class Notifications {
   showPermissionModal() {
+    console.log(Notification.permission);
     if (Notification.permission != 'default') return;
 
     setTimeout(() => {
@@ -20,17 +21,6 @@ class Notifications {
       if (!permissionGranted) return;
       else sendMessageToSW({ action: 'subcribe_notifications' });
     });
-  }
-
-  send(body, icon, title = 'New Message', image, tag) {
-    if (Notification.permission !== 'granted') return;
-
-    // serviceWorkerRegistration.showNotification(title, {
-    //   body,
-    //   icon,
-    //   image,
-    //   tag,
-    // });
   }
 
   notificationPrompt() {

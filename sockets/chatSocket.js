@@ -48,8 +48,14 @@ exports.chatSent = async (
 
     webpush
       .sendNotification(otherUser.subscription, JSON.stringify(payload))
-      .catch((err) => console.error(err));
-  }
+      .catch((err) => {
+        console.error(
+          `Error from User ${otherUser.name} (@${otherUser.frontEndUsername}): Notification permision denied.`
+        );
+
+        socket.to(receiver).emit('requestNotificationSubscription');
+      });
+  } else socket.to(receiver).emit('requestNotificationSubscription');
 
   if (!getNumSocketClients(io, receiver)) return; // Is basically not online.
   if (getNumSocketClients(io, createChatRoomStr(contactId, receiver))) {

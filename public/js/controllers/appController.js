@@ -371,7 +371,13 @@ class AppController {
   }
 
   async openChatsWithContactId(contactId) {
+    const currentContactEntity = appView.setCurrentEntity();
+    const isActiveEntity =
+      currentContactEntity?.dataset.contactId === contactId;
+    if (isActiveEntity) return;
+
     const contactEntity = appView.getContactEntity(contactId);
+
     if (!contactEntity) return;
     this.openChats(contactEntity);
   }
@@ -390,21 +396,7 @@ class AppController {
 
   chatReceived(chatData) {
     appView.updateContactList(chatData);
-    const { lastMessage, otherUser } = appModel.updateRemoteData(
-      'contacts',
-      chatData.updatedContact
-    )[0];
-    const wasSentByOtherUser = lastMessage.sender === otherUser._id;
-
-    wasSentByOtherUser &&
-      Notifications.send(
-        lastMessage.message,
-        otherUser.profileImage,
-        otherUser.name,
-        lastMessage?.media?.type === 'image'
-          ? lastMessage.media.payload[0]
-          : undefined
-      );
+    appModel.updateRemoteData('contacts', chatData.updatedContact)[0];
   }
 
   notificationToogle() {
