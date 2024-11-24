@@ -51,6 +51,11 @@ class AppModel {
   }
 
   updateContactStatus(newStatus, contactId) {
+    const { lastMessage } = localStore.findElement('contacts', {
+      key: '_id',
+      value: contactId,
+    });
+    if (lastMessage.wasReceived) return;
     const contact = localStore.findElement('contacts', {
       key: '_id',
       value: contactId,
