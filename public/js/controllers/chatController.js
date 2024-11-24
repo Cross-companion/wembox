@@ -48,6 +48,7 @@ class ChatController {
         contactId: this.currentChatRoom,
       });
       await chatModel.updateToSeen(this.currentOtherUser);
+      chatModel.updateLocalUnseens(this.currentChatRoom);
     } else if (document.visibilityState === 'hidden') {
       this.changeChatRoom(undefined, { storeCurrentChatRoom: true });
     }
@@ -86,6 +87,7 @@ class ChatController {
     this.addChatInputListener();
 
     this.currentOtherUser = userData.otherUserId;
+    chatModel.updateLocalUnseens(userData.contactId);
   }
 
   changeChatRoom(contactId, { storeCurrentChatRoom } = {}) {

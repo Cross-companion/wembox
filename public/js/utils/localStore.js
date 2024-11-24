@@ -9,6 +9,10 @@ class LocalStore {
     return data;
   }
 
+  setElement(propertyName = '', value) {
+    const data = this.getItem(propertyName);
+  }
+
   removeItem(propertyName = '') {
     const data = localStorage.removeItem(propertyName);
     return data;

@@ -197,3 +197,8 @@ self.addEventListener('notificationclick', function (event) {
     );
   }
 });
+
+//1. Update Manifest.js file automatically
+//2. Fixed num of unseen chats after a switch to notifications
+//3. Send notificationson CR request with action, and on CR acceptance
+//4. Forwarding text / images

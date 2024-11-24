@@ -63,6 +63,17 @@ class ChatModel {
     return data;
   }
 
+  updateLocalUnseens(contactId) {
+    const NumOFUnseensAfterOpenChat = 0;
+    localStore.findAndUpdateElement('contacts', {
+      key: '_id',
+      value: contactId,
+      update: {
+        unseenMessages: NumOFUnseensAfterOpenChat,
+      },
+    });
+  }
+
   setAbortController(name) {
     this[`${name}AbortController`]?.abort();
     this[`${name}AbortController`] = new AbortController();
