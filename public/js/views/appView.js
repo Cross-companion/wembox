@@ -141,7 +141,10 @@ class AppView {
     }
   }
 
-  contactEntity(contact = {}, isActive) {
+  contactEntity(
+    contact = {},
+    isActive = this.currentContactId === contact?._id
+  ) {
     const { _id: contactId, otherUser, lastMessage, unseenMessages } = contact;
     const {
       _id: otherUserId,
@@ -209,6 +212,7 @@ class AppView {
     if (currentEntity?.dataset.active) currentEntity.dataset.active = '';
     selectedEntity.classList.add('active');
     selectedEntity.dataset.active = 'active';
+    this.currentContactId = selectedEntity.dataset.contactId;
   }
 
   deactivateEntity(entity = this.setCurrentEntity()) {
