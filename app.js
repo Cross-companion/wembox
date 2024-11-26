@@ -18,6 +18,7 @@ const webPush = require('web-push');
 const viewRouter = require('./routers/viewRoutes');
 const userRouter = require('./routers/userRoutes');
 const imageRouter = require('./routers/imageRoutes');
+const manifestRoutes = require('./routers/manifestRoutes');
 const suggestionRouter = require('./routers/suggestionRoutes');
 const followRouter = require('./routers/followRoutes');
 const contactRouter = require('./routers/contactRoutes');
@@ -77,6 +78,7 @@ const IO = new IOHandler(io);
 
 // MOUNTING ROUTERS
 app.use('/api/v1/users', userRouter);
+app.use('/manifest', manifestRoutes);
 app.use('/images', imageRouter);
 app.use('/api/v1/suggest', suggestionRouter);
 app.use('/api/v1/follow', followRouter);
