@@ -10,11 +10,11 @@ exports.getAuthManifest = catchAsync(async (req, res, next) => {
 exports.getAppManifest = catchAsync(async (req, res, next) => {
   try {
     const userId = req.user._id;
-    const maxShortcuts = 3;
+    const maxShortcuts = 5;
     const skipBy = 0;
     const contacts = await getContactsQuery(
       { users: userId },
-      { userID: userId, maxShortcuts, skipBy }
+      { userID: userId, contactsLimit: maxShortcuts, skipBy }
     );
     const shortcuts = contacts.map((contact) => {
       const {
