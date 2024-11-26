@@ -1,4 +1,3 @@
-const Contact = require('../../models/contact/contactsModel');
 const catchAsync = require('../../utilities/catchAsync');
 const { getContactsQuery } = require('../contact/helper');
 const { populateManifest } = require('./helper');
