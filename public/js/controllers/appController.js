@@ -28,6 +28,7 @@ class AppController {
     this.setSocketHandlers();
     this.windowEvent();
     this.navigatorEvents();
+    Notifications.init();
   }
 
   windowEvent() {

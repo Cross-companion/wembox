@@ -2,6 +2,18 @@ import modal from '../controllers/modal.js';
 import { sendMessageToSW } from './helpers.js';
 
 class Notifications {
+  async init() {
+    const registration = await navigator.serviceWorker.ready;
+    const subscription = await registration.pushManager
+      .getSubscription()
+      .then((sub) => sub);
+
+    if (Notification.permission == 'granted' && subscription) return;
+    else if (Notification.permission == 'granted' && !subscription)
+      sendMessageToSW({ action: 'subcribe_notifications' });
+    else this.showPermissionModal();
+  }
+
   showPermissionModal() {
     console.log(Notification.permission);
     if (Notification.permission != 'default') return;
